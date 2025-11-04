@@ -1,0 +1,28 @@
+/* assets/css/main.css - global base styles */
+/* You can add your project's global styles and variables here */
+
+html, body, #__nuxt, #app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', 'Helvetica Neue', Arial, 'Hiragino Sans TC', 'Microsoft JhengHei', sans-serif;
+  color: #222;
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+/* Utility */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+/* Header/footer basic spacing */
+.ls-header, .ls-footer { padding: 12px 0; }
