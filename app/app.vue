@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
-import LSection1 from './components/LSection1.vue';
-import LSection2 from './components/LSection2.vue';
-import LSection3 from './components/LSection3.vue';
-import LSection4 from './components/LSection4.vue';
-import LSection5 from './components/LSection5.vue';
-import LSection6 from './components/LSection6.vue';
+import LSectionA from './components/LSectionA.vue';
+import LSectionB from './components/LSectionB.vue';
+import LSectionC from './components/LSectionC.vue';
+import LSectionD from './components/LSectionD.vue';
+import LSectionE from './components/LSectionE.vue';
+import LSectionF from './components/LSectionF.vue';
 
 useSeoMeta({
   title: 'The Love Story - A Beautiful Landing Page',
@@ -26,12 +26,12 @@ useJsonld({
 <template>
   <NuxtLayout>
     <AppHeader />
-    <LSection1 />
-    <LSection2 />
-    <LSection3 />
-    <LSection4 />
-    <LSection5 />
-    <LSection6 />
+    <LSectionA />
+    <LSectionB />
+    <LSectionC />
+    <LSectionD />
+    <LSectionE />
+    <LSectionF />
     <AppFooter />
   </NuxtLayout>
 </template>

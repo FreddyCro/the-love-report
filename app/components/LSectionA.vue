@@ -4,6 +4,8 @@ const imgSrc = 'https://picsum.photos/1200/800?random=1';
 
 <template>
   <section class="section container">
+    <h2 class="section__title">Section A — Mock Image</h2>
+
     <NuxtImg
       :src="imgSrc"
       width="800"
@@ -12,8 +14,15 @@ const imgSrc = 'https://picsum.photos/1200/800?random=1';
       format="webp"
       class="mock-image"
     />
-    <p>Section 1</p>
   </section>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.section {
+  padding: 2rem 0;
+}
+.section__title {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+</style>
