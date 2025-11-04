@@ -33,14 +33,5 @@ img {
 }
 
 /* Utility */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 16px;
-}
 
-/* Header/footer basic spacing */
-.ls-header,
-.ls-footer {
-  padding: 12px 0;
-}
+/* Typography */
