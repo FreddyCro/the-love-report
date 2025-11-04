@@ -28,12 +28,10 @@ export default defineNuxtConfig({
     '@nuxt/test-utils',
     '@nuxt/ui',
     '@nuxtjs/google-fonts',
+    'nuxt-jsonld',
   ],
 
-  css: [
-    'normalize.css',
-    '~/assets/styles/main.css',
-  ],
+  css: ['normalize.css', '~/assets/styles/main.css'],
 
   // Google Fonts configuration
   googleFonts: {
