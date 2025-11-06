@@ -32,6 +32,11 @@ img {
   display: block;
 }
 
-/* Utility */
+/* Layout */
+.l-container {
+  max-width: 620px;
+  margin: 0 auto;
+}
 
 /* Typography */
+/* Utility */

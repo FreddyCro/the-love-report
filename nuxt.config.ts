@@ -29,6 +29,7 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxtjs/google-fonts',
     'nuxt-jsonld',
+    'lenis/nuxt',
   ],
 
   css: ['normalize.css', '~/assets/styles/main.css'],
