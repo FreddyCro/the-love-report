@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue';
 import LChatBubbleF from './LChatBubble.vue';
+import type LSectionB from './LSectionB.vue';
 
 const imgSrc = 'https://picsum.photos/1200/800?random=1';
 const imgWrapA = ref<HTMLElement | null>(null);
@@ -12,7 +13,20 @@ const imgWrapE = ref<HTMLElement | null>(null);
 const imgWrapF = ref<HTMLElement | null>(null);
 const imgWrapG = ref<HTMLElement | null>(null);
 const imgWrapH = ref<HTMLElement | null>(null);
+const sectionBRef = ref<InstanceType<typeof LSectionB> | null>(null);
 const scrollTriggerInstances: any[] = [];
+
+// Watch for isEntered changes from LSectionB
+watch(
+  () => sectionBRef.value?.isEntered,
+  (newValue) => {
+    if (newValue) {
+      console.log('LSectionB has been entered!');
+      // You can add any logic here when LSectionB is entered
+    }
+  },
+  { deep: true }
+);
 
 onMounted(async () => {
   // Use the composable to get GSAP, ScrollTrigger, and Lenis
@@ -94,15 +108,15 @@ function handleAnimationPartA(gsap: any) {
   }
 }
 
-function handleAnimationPartB(gsap: any) {
+function handleAnimationPartB(_gsap: any) {
   // Placeholder for potential future use
 }
 
-function handleAnimationPartC(gsap: any) {
+function handleAnimationPartC(_gsap: any) {
   // Placeholder for potential future use
 }
 
-function handleAnimationPartD(gsap: any) {
+function handleAnimationPartD(_gsap: any) {
   // Placeholder for potential future use
 }
 </script>
@@ -283,6 +297,9 @@ function handleAnimationPartD(gsap: any) {
         最後一個聊天泡泡
       </LChatBubbleF>
     </div>
+
+    <!-- LSectionB with ref -->
+    <LSectionB ref="sectionBRef" />
   </section>
 </template>
 
