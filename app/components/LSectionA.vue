@@ -1,10 +1,17 @@
 <script lang="ts" setup>
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import LChatBubbleF from './LChatBubble.vue';
 
 const imgSrc = 'https://picsum.photos/1200/800?random=1';
 const imgWrapA = ref<HTMLElement | null>(null);
 const imgWrapB = ref<HTMLElement | null>(null);
+const imgWrapC = ref<HTMLElement | null>(null);
+const imgWrapD = ref<HTMLElement | null>(null);
+const imgWrapE = ref<HTMLElement | null>(null);
+const imgWrapF = ref<HTMLElement | null>(null);
+const imgWrapG = ref<HTMLElement | null>(null);
+const imgWrapH = ref<HTMLElement | null>(null);
 const scrollTriggerInstances: any[] = [];
 
 onMounted(async () => {
@@ -14,6 +21,23 @@ onMounted(async () => {
   // Wait for DOM and image to layout
   await nextTick();
 
+  handleAnimationPartA(gsap);
+  handleAnimationPartB(gsap);
+  handleAnimationPartC(gsap);
+  handleAnimationPartD(gsap);
+});
+
+// Register lifecycle hook BEFORE any async operations
+onBeforeUnmount(() => {
+  // Clean up all ScrollTriggers created by this component
+  scrollTriggerInstances.forEach((trigger) => {
+    if (trigger) trigger.kill();
+  });
+
+  scrollTriggerInstances.length = 0;
+});
+
+function handleAnimationPartA(gsap: any) {
   // Animation A: left to right
   const wrapA = imgWrapA.value;
   if (wrapA) {
@@ -68,40 +92,196 @@ onMounted(async () => {
 
     scrollTriggerInstances.push(animationB.scrollTrigger);
   }
-});
+}
 
-// Register lifecycle hook BEFORE any async operations
-onBeforeUnmount(() => {
-  // Clean up all ScrollTriggers created by this component
-  scrollTriggerInstances.forEach((trigger) => {
-    if (trigger) trigger.kill();
-  });
-  scrollTriggerInstances.length = 0;
-});
+function handleAnimationPartB(gsap: any) {
+  // Placeholder for potential future use
+}
+
+function handleAnimationPartC(gsap: any) {
+  // Placeholder for potential future use
+}
+
+function handleAnimationPartD(gsap: any) {
+  // Placeholder for potential future use
+}
 </script>
 
 <template>
   <section class="section container">
-    <h2 class="section__title">Section A — Mock Image</h2>
-    <div ref="imgWrapA" class="mock-image-wrapper">
-      <NuxtImg
-        :src="imgSrc"
-        width="800"
-        height="450"
-        alt="Mock image from picsum"
-        format="webp"
-        class="mock-image"
-      />
+    <!-- part a -->
+    <div class="part">
+      <div ref="imgWrapA" class="mock-image-wrapper">
+        <NuxtImg
+          :src="imgSrc"
+          width="800"
+          height="450"
+          alt="Mock image from picsum"
+          format="webp"
+          class="mock-image"
+        />
+      </div>
+      <div ref="imgWrapB" class="mock-image-wrapper">
+        <NuxtImg
+          :src="imgSrc"
+          width="800"
+          height="450"
+          alt="Mock image from picsum"
+          format="webp"
+          class="mock-image"
+        />
+      </div>
+
+      <LChatBubbleF
+        shadow="0 4px 12px rgba(0, 0, 0, 0.1)"
+        pointer="top-right"
+        radius="16px"
+      >
+        這是一個聊天泡泡範例
+      </LChatBubbleF>
     </div>
-    <div ref="imgWrapB" class="mock-image-wrapper">
-      <NuxtImg
-        :src="imgSrc"
-        width="800"
-        height="450"
-        alt="Mock image from picsum"
-        format="webp"
-        class="mock-image"
-      />
+
+    <!-- part b -->
+    <div class="part">
+      <div ref="imgWrapC" class="mock-image-wrapper">
+        <NuxtImg
+          :src="imgSrc"
+          width="800"
+          height="450"
+          alt="Mock image from picsum"
+          format="webp"
+          class="mock-image"
+        />
+      </div>
+      <div ref="imgWrapD" class="mock-image-wrapper">
+        <NuxtImg
+          :src="imgSrc"
+          width="800"
+          height="450"
+          alt="Mock image from picsum"
+          format="webp"
+          class="mock-image"
+        />
+      </div>
+
+      <LChatBubbleF
+        shadow="0 4px 12px rgba(0, 0, 0, 0.1)"
+        pointer="bottom-left"
+        radius="16px"
+      >
+        聊天泡泡 B1
+      </LChatBubbleF>
+
+      <LChatBubbleF
+        shadow="0 4px 12px rgba(0, 0, 0, 0.1)"
+        pointer="bottom-right"
+        radius="16px"
+      >
+        聊天泡泡 B2
+      </LChatBubbleF>
+    </div>
+
+    <!-- part c -->
+    <div class="part">
+      <div ref="imgWrapE" class="mock-image-wrapper">
+        <NuxtImg
+          :src="imgSrc"
+          width="800"
+          height="450"
+          alt="Mock image from picsum"
+          format="webp"
+          class="mock-image"
+        />
+      </div>
+      <div ref="imgWrapF" class="mock-image-wrapper">
+        <NuxtImg
+          :src="imgSrc"
+          width="800"
+          height="450"
+          alt="Mock image from picsum"
+          format="webp"
+          class="mock-image"
+        />
+      </div>
+      <div ref="imgWrapG" class="mock-image-wrapper">
+        <NuxtImg
+          :src="imgSrc"
+          width="800"
+          height="450"
+          alt="Mock image from picsum"
+          format="webp"
+          class="mock-image"
+        />
+      </div>
+      <div ref="imgWrapH" class="mock-image-wrapper">
+        <NuxtImg
+          :src="imgSrc"
+          width="800"
+          height="450"
+          alt="Mock image from picsum"
+          format="webp"
+          class="mock-image"
+        />
+      </div>
+
+      <LChatBubbleF
+        shadow="0 4px 12px rgba(0, 0, 0, 0.1)"
+        pointer="top-left"
+        radius="16px"
+      >
+        聊天泡泡 C1
+      </LChatBubbleF>
+
+      <LChatBubbleF
+        shadow="0 4px 12px rgba(0, 0, 0, 0.1)"
+        pointer="top-right"
+        radius="16px"
+      >
+        聊天泡泡 C2
+      </LChatBubbleF>
+
+      <LChatBubbleF
+        shadow="0 4px 12px rgba(0, 0, 0, 0.1)"
+        pointer="bottom-left"
+        radius="16px"
+      >
+        聊天泡泡 C3
+      </LChatBubbleF>
+
+      <LChatBubbleF
+        shadow="0 4px 12px rgba(0, 0, 0, 0.1)"
+        pointer="bottom-right"
+        radius="16px"
+      >
+        聊天泡泡 C4
+      </LChatBubbleF>
+
+      <LChatBubbleF
+        shadow="0 4px 12px rgba(0, 0, 0, 0.1)"
+        pointer="top-left"
+        radius="16px"
+      >
+        聊天泡泡 C5
+      </LChatBubbleF>
+
+      <LChatBubbleF
+        shadow="0 4px 12px rgba(0, 0, 0, 0.1)"
+        pointer="top-right"
+        radius="16px"
+      >
+        聊天泡泡 C6
+      </LChatBubbleF>
+    </div>
+
+    <!-- part d -->
+    <div class="part">
+      <LChatBubbleF
+        shadow="0 4px 12px rgba(0, 0, 0, 0.1)"
+        pointer="bottom-left"
+        radius="16px"
+      >
+        最後一個聊天泡泡
+      </LChatBubbleF>
     </div>
   </section>
 </template>
