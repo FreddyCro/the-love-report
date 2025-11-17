@@ -3,7 +3,51 @@ import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
 import LStateCard from './LStateCard.vue';
 import LStateCardGroup from './LStateCardGroup.vue';
 
+type CartType = {
+  title: string;
+  description: string;
+  note: string;
+};
+
+const data: CartType[] = [
+  {
+    title: '全球Z世代近7成單身',
+    description:
+      '數據研究公司GlobalWebIndex（GWI）2025年發布的《Z世代報告》針對32個地區、年齡介於16至27歲的20萬名年輕人進行調查，該報告指出，目前僅有3成受訪者的感情狀態為「已婚或戀愛中」，其餘7成為「單身」（69％）或「離婚及其他」（1％）。',
+    note: '資料來源／GWI 2025年《Z世代報告》<br>註：該報告針對32個地區、年齡介於16至27歲的20萬名年輕人進行調查。',
+  },
+  {
+    title: '台灣有4成年輕人母胎單身',
+    description:
+      '不只是國外婚戀市場冷清，中央研究院2024年《家庭動態調查》顯示，16至25歲的未婚受訪者中，從未交過男女朋友的比例達40％。該調查為中研院自1999年起針對台灣家庭樣貌進行的長期調查，目前持續追蹤超過6000位受訪者 。',
+    note: '資料來源／中央研究院2024年《家庭動態調查》<br>註：該調查以全台428位16至25歲的未婚受訪者為分析樣本。',
+  },
+  {
+    title: '女性更不想結婚',
+    description:
+      '根據中央研究院2024年《家庭動態調查》統計顯示，在未婚族群中，女性「不太想結婚」與「非常不想結婚」的比例皆超過5成且明顯高於同齡男性。',
+    note: '資料來源／中央研究院2024年《家庭動態調查》<br>註：該調查以全台2250位16至45歲的未婚受訪者為分析樣本。',
+  },
+  {
+    title: '享受一個人 不想結婚的理由',
+    description: '進一步詢問16至45歲未婚者為何沒有結婚，主要原因包含：',
+    note: '資料來源／中央研究院2024年《家庭動態調查》<br>註：該調查以全台2991位16至45歲的未婚受訪者為分析樣本。',
+  },
+  {
+    title: '超過25%的青年人口找不到對象',
+    description:
+      '現代人步入親密關係的機會似乎比想像中更少。研究顯示，16至45歲的人口中，有超過60％的人表示，日常生活中「很少有機會」或「幾乎沒有機會」遇到理想的交往對象。',
+    note: '資料來源／中央研究院2024年《家庭動態調查》<br>註：該調查以全台2250位16至45歲的未婚受訪者為分析樣本。',
+  },
+  {
+    title: '青壯世代未婚率持續攀升',
+    description: '缺乏戀愛經驗加上理想伴侶難尋，台灣各年齡層的未婚率近15年持續攀升。內政部人口統計資料顯示，2024年35至39歲人口未婚率達41.4％，較15年前增加17.6％。',
+    note: '資料來源／內政部人口統計資料。 單位：%<br>註1：未婚率計算公式為（該年齡區間未婚人數÷該年齡區間總人數）×100％。註2：統計中的「未婚」不包括已婚、離婚、婚姻關係終止和喪偶者。',
+  },
+];
+
 const isEntered = ref(false);
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const scrollTriggerInstances: any[] = [];
 
@@ -17,7 +61,7 @@ onMounted(async () => {
 
   // Wait for DOM and image to layout
   await nextTick();
-  
+
   // Add a small delay to ensure everything is rendered
   setTimeout(() => {
     handleIsEntered();
@@ -64,16 +108,20 @@ function handleAnimation(gsap: any, ScrollTrigger: any, _lenis: any) {
   });
 
   // Set initial state at the beginning of timeline (position 0)
-  tl.set(cards, {
-    y: '100vh',
-    opacity: 0,
-  }, 0);
+  tl.set(
+    cards,
+    {
+      y: '100vh',
+      opacity: 0,
+    },
+    0
+  );
 
   // Add each card to timeline with stacking effect
   cards.forEach((card, index) => {
     const yOffset = index * 20; // Each card slightly offset from previous
     const rotation = (index - 2.5) * 2; // Slight rotation for visual interest
-    
+
     tl.to(
       card,
       {
@@ -108,35 +156,17 @@ function handleIsEntered() {
     <div class="l-container">
       <LStateCardGroup>
         <LStateCard
+          v-for="(item, index) in data"
+          :key="index"
           class="state-card"
-          title="成長"
-          description="在這段關係中，我們彼此成長，學會了如何更好地理解和支持對方。"
-        />
-        <LStateCard
-          class="state-card"
-          title="信任"
-          description="我們建立了深厚的信任，知道無論發生什麼事情，我們都能依靠彼此。"
-        />
-        <LStateCard
-          class="state-card"
-          title="溝通"
-          description="我們學會了開放和誠實的溝通，讓彼此的心聲都能被聽見。"
-        />
-        <LStateCard
-          class="state-card"
-          title="包容"
-          description="我們接納彼此的不完美，理解每個人都有自己的獨特之處。"
-        />
-        <LStateCard
-          class="state-card"
-          title="支持"
-          description="無論順境或逆境，我們始終站在彼此身邊，給予最堅定的支持。"
-        />
-        <LStateCard
-          class="state-card"
-          title="愛"
-          description="最重要的是，我們深深地愛著彼此，這份愛是我們一切的基礎。"
-        />
+          :title="item.title"
+          :description="item.description"
+          :note="item.note"
+        >
+          <div class="chart-placeholder">
+            <span>圖表 {{ index + 1 }}</span>
+          </div>
+        </LStateCard>
       </LStateCardGroup>
     </div>
   </section>
@@ -161,5 +191,19 @@ function handleIsEntered() {
   left: 50%;
   transform: translate(-50%, -50%);
   will-change: transform, opacity;
+}
+
+.chart-placeholder {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: bold;
+  opacity: 0.8;
 }
 </style>
