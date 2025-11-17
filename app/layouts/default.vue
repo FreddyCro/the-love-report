@@ -1,9 +1,9 @@
 <template>
   <div class="l-default-layout">
-    <div class="my-20">
+    <!-- <div class="my-20">
       <p>測試中文文字</p>
       <p>Test English Text</p>
-    </div>
+    </div> -->
     <slot />
   </div>
 </template>
