@@ -8,7 +8,7 @@
   </section>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 .section { padding: 2rem 0; }
 .section__title { margin-bottom: 1rem; font-size: 1.5rem; }
 </style>

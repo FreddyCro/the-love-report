@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 .state-card-group {
   position: relative;
   width: 100%;
