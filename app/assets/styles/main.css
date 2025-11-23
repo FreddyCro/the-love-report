@@ -15,7 +15,7 @@ body {
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans',
     'Helvetica Neue', Arial, 'Hiragino Sans TC', 'Microsoft JhengHei',
     sans-serif;
-  color: #222;
+  color: #404040;
   background: #fff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -39,4 +39,58 @@ img {
 }
 
 /* Typography */
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+p {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 36px;
+}
+
+h1 {
+  font-size: 40px;
+}
+
+h2 {
+  font-size: 42px;
+  line-height: 56px;
+}
+
+h3 {
+  font-size: 32px;
+  line-height: 48px;
+}
+
+h4 {
+  font-size: 28px;
+  line-height: 46px;
+}
+
+h5 {
+  font-size: 20px;
+  line-height: 32px;
+}
+
 /* Utility */
+.text-card-regular {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 32px;
+}
+
+.text-card-bold {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 32px;
+}
