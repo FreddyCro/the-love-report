@@ -3,6 +3,17 @@
 @import 'tailwindcss';
 @import '@nuxt/ui';
 
+@theme {
+  --color-love-blue-01: #d6f2fa;
+  --color-love-blue-02: #9fd8f0;
+  --color-love-blue-03: #0095cc;
+  --color-love-red-01: #ffeded;
+  --color-love-red-02: #ffa59b;
+  --color-love-red-03: #fe7152;
+  --color-love-dark: #4c4c4c;
+  --color-text: #404040;
+}
+
 html,
 body,
 #__nuxt,
@@ -44,13 +55,11 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: 'Noto Sans TC', sans-serif;
   font-weight: 700;
   line-height: 1.2;
 }
 
 p {
-  font-family: 'Noto Sans TC', sans-serif;
   font-weight: 400;
   font-size: 18px;
   line-height: 36px;
@@ -82,14 +91,12 @@ h5 {
 
 /* Utility */
 .text-card-regular {
-  font-family: 'Noto Sans TC', sans-serif;
   font-weight: 400;
   font-size: 18px;
   line-height: 32px;
 }
 
 .text-card-bold {
-  font-family: 'Noto Sans TC', sans-serif;
   font-weight: 700;
   font-size: 18px;
   line-height: 32px;
