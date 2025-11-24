@@ -8,27 +8,27 @@ defineProps<{
 
 <template>
   <div class="state-card">
+    <h3 class="state-card__title">{{ title }}</h3>
+    <p class="state-card__description">{{ description }}</p>
     <div v-if="$slots.default" class="state-card__chart">
       <slot />
     </div>
-    <h3 class="state-card__title">{{ title }}</h3>
-    <p class="state-card__description">{{ description }}</p>
     <p v-if="note" class="state-card__note">{{ note }}</p>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 .state-card {
   background: white;
   border-radius: 12px;
-  padding: 2rem;
+  padding: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
 
   &__chart {
-    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
