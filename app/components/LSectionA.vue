@@ -4,6 +4,195 @@ import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue';
 import LChatBubbleF from './LChatBubble.vue';
 
 const imgSrc = 'https://picsum.photos/1200/800?random=1';
+// Test images array: all assets from `public/img` (use /img/<filename>)
+const testImages = ref<string[]>([
+  '/img/button_card_change_back_pacpadmob.svg',
+  '/img/button_card_click_left_pacpadmob.svg',
+  '/img/button_card_click_right_pacpadmob.svg',
+  '/img/button_card_flip_pacpadmob.svg',
+  '/img/button_card_plus_corner_pacpadmob.svg',
+  '/img/button_click_down_below_pacpadmob.svg',
+  '/img/intimate_relationships_love_blue01_pcpadmob.svg',
+  '/img/intimate_relationships_love_blue02_pcpadmob.svg',
+  '/img/intimate_relationships_love_red01_pcpadmob.svg',
+  '/img/intimate_relationships_love_red02_pcpadmob.svg',
+  '/img/intimate_relationships_p01_frame01_00_pcpad.jpg',
+  '/img/intimate_relationships_p01_frame01_00_pcpad.webp',
+  '/img/intimate_relationships_p01_frame01_01_mob.png',
+  '/img/intimate_relationships_p01_frame01_01_mob.webp',
+  '/img/intimate_relationships_p01_frame01_01_pcpad.png',
+  '/img/intimate_relationships_p01_frame01_01_pcpad.webp',
+  '/img/intimate_relationships_p01_frame01_02_mob.png',
+  '/img/intimate_relationships_p01_frame01_02_mob.webp',
+  '/img/intimate_relationships_p01_frame01_02_pcpad.png',
+  '/img/intimate_relationships_p01_frame01_02_pcpad.webp',
+  '/img/intimate_relationships_p01_frame01_03_mob.png',
+  '/img/intimate_relationships_p01_frame01_03_mob.webp',
+  '/img/intimate_relationships_p01_frame01_03_pcpad.png',
+  '/img/intimate_relationships_p01_frame01_03_pcpad.webp',
+  '/img/intimate_relationships_p01_frame02_04_mob.png',
+  '/img/intimate_relationships_p01_frame02_04_mob.webp',
+  '/img/intimate_relationships_p01_frame02_04_pcpad.png',
+  '/img/intimate_relationships_p01_frame02_04_pcpad.webp',
+  '/img/intimate_relationships_p01_frame03_05_mob.png',
+  '/img/intimate_relationships_p01_frame03_05_mob.webp',
+  '/img/intimate_relationships_p01_frame03_05_pcpad.png',
+  '/img/intimate_relationships_p01_frame03_05_pcpad.webp',
+  '/img/intimate_relationships_p01_frame04_06_mob.png',
+  '/img/intimate_relationships_p01_frame04_06_mob.webp',
+  '/img/intimate_relationships_p01_frame04_06_pcpad.png',
+  '/img/intimate_relationships_p01_frame04_06_pcpad.webp',
+  '/img/intimate_relationships_p01_frame04_07_mob.png',
+  '/img/intimate_relationships_p01_frame04_07_mob.webp',
+  '/img/intimate_relationships_p01_frame04_07_pcpad.png',
+  '/img/intimate_relationships_p01_frame04_07_pcpad.webp',
+  '/img/intimate_relationships_p01_frame04_08_mob.png',
+  '/img/intimate_relationships_p01_frame04_08_mob.webp',
+  '/img/intimate_relationships_p01_frame04_08_pcpad.png',
+  '/img/intimate_relationships_p01_frame04_08_pcpad.webp',
+  '/img/intimate_relationships_p01_frame05_09_mob.png',
+  '/img/intimate_relationships_p01_frame05_09_mob.webp',
+  '/img/intimate_relationships_p01_frame05_09_pcpad.png',
+  '/img/intimate_relationships_p01_frame05_09_pcpad.webp',
+  '/img/intimate_relationships_p01_frame06_10_mob.jpg',
+  '/img/intimate_relationships_p01_frame06_10_mob.webp',
+  '/img/intimate_relationships_p01_frame06_10_pcpad.jpg',
+  '/img/intimate_relationships_p01_frame06_10_pcpad.webp',
+  '/img/intimate_relationships_p0201_dialogbox_pad.svg',
+  '/img/intimate_relationships_p0201_maintext_01_mob.svg',
+  '/img/intimate_relationships_p0201_maintext_01_pcpad.svg',
+  '/img/intimate_relationships_p0201_maintext_02_mob.svg',
+  '/img/intimate_relationships_p0201_maintext_02_pcpad.svg',
+  '/img/intimate_relationships_p0202_card03_info_mob.svg',
+  '/img/intimate_relationships_p0202_card03_info_pad.svg',
+  '/img/intimate_relationships_p0202_card03_info_pc.svg',
+  '/img/intimate_relationships_p0202_card04_info01_mob.svg',
+  '/img/intimate_relationships_p0202_card04_info01_pad.svg',
+  '/img/intimate_relationships_p0202_card04_info01_pc.svg',
+  '/img/intimate_relationships_p0202_card04_info02_mob.svg',
+  '/img/intimate_relationships_p0202_card04_info02_pad.svg',
+  '/img/intimate_relationships_p0202_card04_info02_pc.svg',
+  '/img/intimate_relationships_p0202_card04_info03_mob.svg',
+  '/img/intimate_relationships_p0202_card04_info03_pad.svg',
+  '/img/intimate_relationships_p0202_card04_info03_pc.svg',
+  '/img/intimate_relationships_p0202_card04_info04_mob.svg',
+  '/img/intimate_relationships_p0202_card04_info04_pad.svg',
+  '/img/intimate_relationships_p0202_card04_info04_pc.svg',
+  '/img/intimate_relationships_p0202_card04_info05_mob.svg',
+  '/img/intimate_relationships_p0202_card04_info05_pad.svg',
+  '/img/intimate_relationships_p0202_card04_info05_pc.svg',
+  '/img/intimate_relationships_p0202_card05_info_mob.svg',
+  '/img/intimate_relationships_p0202_card05_info_pad.svg',
+  '/img/intimate_relationships_p0202_card06_info_mob.svg',
+  '/img/intimate_relationships_p0202_card06_info_pad.svg',
+  '/img/intimate_relationships_p0202_card06_info_pc.svg',
+  '/img/intimate_relationships_p0301_dialogbox_mob.svg',
+  '/img/intimate_relationships_p0301_dialogbox_pad.svg',
+  '/img/intimate_relationships_p0301_dialogbox_pc.svg',
+  '/img/intimate_relationships_p0302_card01_piccir_b_pcpadmob.png',
+  '/img/intimate_relationships_p0302_card01_piccir_b_pcpadmob.webp',
+  '/img/intimate_relationships_p0302_card01_piccir_s_pcpadmob.png',
+  '/img/intimate_relationships_p0302_card01_piccir_s_pcpadmob.webp',
+  '/img/intimate_relationships_p0302_card01_picsq_mob.jpg',
+  '/img/intimate_relationships_p0302_card01_picsq_mob.webp',
+  '/img/intimate_relationships_p0302_card01_picsq_pcpad.jpg',
+  '/img/intimate_relationships_p0302_card01_picsq_pcpad.webp',
+  '/img/intimate_relationships_p0302_card02_piccir_b_pcpadmob.png',
+  '/img/intimate_relationships_p0302_card02_piccir_b_pcpadmob.webp',
+  '/img/intimate_relationships_p0302_card02_piccir_s_pcpadmob.png',
+  '/img/intimate_relationships_p0302_card02_piccir_s_pcpadmob.webp',
+  '/img/intimate_relationships_p0302_card02_picsq_mob.jpg',
+  '/img/intimate_relationships_p0302_card02_picsq_mob.webp',
+  '/img/intimate_relationships_p0302_card02_picsq_pcpad.jpg',
+  '/img/intimate_relationships_p0302_card02_picsq_pcpad.webp',
+  '/img/intimate_relationships_p0302_card03_piccir_b_pcpadmob.png',
+  '/img/intimate_relationships_p0302_card03_piccir_b_pcpadmob.webp',
+  '/img/intimate_relationships_p0302_card03_piccir_s_pcpadmob.png',
+  '/img/intimate_relationships_p0302_card03_piccir_s_pcpadmob.webp',
+  '/img/intimate_relationships_p0302_card03_picsq_mob.jpg',
+  '/img/intimate_relationships_p0302_card03_picsq_mob.webp',
+  '/img/intimate_relationships_p0302_card03_picsq_pcpad.jpg',
+  '/img/intimate_relationships_p0302_card03_picsq_pcpad.webp',
+  '/img/intimate_relationships_p0302_card04_piccir_b_pcpadmob.png',
+  '/img/intimate_relationships_p0302_card04_piccir_b_pcpadmob.webp',
+  '/img/intimate_relationships_p0302_card04_piccir_s_pcpadmob.png',
+  '/img/intimate_relationships_p0302_card04_piccir_s_pcpadmob.webp',
+  '/img/intimate_relationships_p0302_card04_picsq_mob.jpg',
+  '/img/intimate_relationships_p0302_card04_picsq_mob.webp',
+  '/img/intimate_relationships_p0302_card04_picsq_pcpad.jpg',
+  '/img/intimate_relationships_p0302_card04_picsq_pcpad.webp',
+  '/img/intimate_relationships_p0302_card05_piccir_b_pcpadmob.png',
+  '/img/intimate_relationships_p0302_card05_piccir_b_pcpadmob.webp',
+  '/img/intimate_relationships_p0302_card05_piccir_s_pcpadmob.png',
+  '/img/intimate_relationships_p0302_card05_piccir_s_pcpadmob.webp',
+  '/img/intimate_relationships_p0302_card05_picsq_mob.jpg',
+  '/img/intimate_relationships_p0302_card05_picsq_mob.webp',
+  '/img/intimate_relationships_p0302_card05_picsq_pcpad.jpg',
+  '/img/intimate_relationships_p0302_card05_picsq_pcpad.webp',
+  '/img/intimate_relationships_p0302_card06_piccir_b_pcpadmob.png',
+  '/img/intimate_relationships_p0302_card06_piccir_b_pcpadmob.webp',
+  '/img/intimate_relationships_p0302_card06_piccir_s_pcpadmob.png',
+  '/img/intimate_relationships_p0302_card06_piccir_s_pcpadmob.webp',
+  '/img/intimate_relationships_p0302_card06_picsq_mob.jpg',
+  '/img/intimate_relationships_p0302_card06_picsq_mob.webp',
+  '/img/intimate_relationships_p0302_card06_picsq_pcpad.jpg',
+  '/img/intimate_relationships_p0302_card06_picsq_pcpad.webp',
+  '/img/intimate_relationships_p0401_dialogbox_mob.svg',
+  '/img/intimate_relationships_p0401_dialogbox_pc.svg',
+  '/img/intimate_relationships_p0402_heartsign_pcpadmob.svg',
+  '/img/intimate_relationships_p0403_piccir_liora_pcpadmob.png',
+  '/img/intimate_relationships_p0403_piccir_liora_pcpadmob.webp',
+  '/img/intimate_relationships_p0403_piccir_luma_pcpadmob.png',
+  '/img/intimate_relationships_p0403_piccir_luma_pcpadmob.webp',
+  '/img/intimate_relationships_p0404_picsq_liora__pcpadmob.jpg',
+  '/img/intimate_relationships_p0404_picsq_liora__pcpadmob.webp',
+  '/img/intimate_relationships_p0404_picsq_luma__pcpadmob.jpg',
+  '/img/intimate_relationships_p0404_picsq_luma__pcpadmob.webp',
+  '/img/intimate_relationships_p0405_picsq01_luma__pcpadmob.jpg',
+  '/img/intimate_relationships_p0405_picsq01_luma__pcpadmob.webp',
+  '/img/intimate_relationships_p0405_picsq02_luma__pcpadmob.jpg',
+  '/img/intimate_relationships_p0405_picsq02_luma__pcpadmob.webp',
+  '/img/intimate_relationships_p0501_dialogbox_mob.svg',
+  '/img/intimate_relationships_p0501_dialogbox_pad.svg',
+  '/img/intimate_relationships_p0501_dialogbox_pc.svg',
+  '/img/intimate_relationships_p0502_dialogboxes_mob.png',
+  '/img/intimate_relationships_p0502_dialogboxes_mob.webp',
+  '/img/intimate_relationships_p0502_dialogboxes_pad.png',
+  '/img/intimate_relationships_p0502_dialogboxes_pad.webp',
+  '/img/intimate_relationships_p0502_dialogboxes_pc.png',
+  '/img/intimate_relationships_p0502_dialogboxes_pc.webp',
+  '/img/intimate_relationships_p0502_picsq01_pcpadmob.jpg',
+  '/img/intimate_relationships_p0502_picsq01_pcpadmob.webp',
+  '/img/intimate_relationships_p0502_picsq02_pcpadmob.jpg',
+  '/img/intimate_relationships_p0502_picsq02_pcpadmob.webp',
+  '/img/intimate_relationships_p0601_dialogbox_mob.svg',
+  '/img/intimate_relationships_p0601_dialogbox_pad.svg',
+  '/img/intimate_relationships_p0601_dialogbox_pc.svg',
+  '/img/intimate_relationships_p0601_picsq01_mob.jpg',
+  '/img/intimate_relationships_p0601_picsq01_mob.webp',
+  '/img/intimate_relationships_p0602_picsq01_mob.jpg',
+  '/img/intimate_relationships_p0602_picsq01_mob.webp',
+  '/img/intimate_relationships_p0602_picsq01_pcpad.jpg',
+  '/img/intimate_relationships_p0602_picsq01_pcpad.webp',
+  '/img/intimate_relationships_p0602_picsq02_pcpad.jpg',
+  '/img/intimate_relationships_p0602_picsq02_pcpad.webp',
+  '/img/intimate_relationships_p0602_picsq03_pcpad.jpg',
+  '/img/intimate_relationships_p0602_picsq03_pcpad.webp',
+  '/img/intimate_relationships_p0602_picsq04_pcpad.jpg',
+  '/img/intimate_relationships_p0602_picsq04_pcpad.webp',
+  '/img/intimate_relationships_p0602_picsq05_pcpad.jpg',
+  '/img/intimate_relationships_p0602_picsq05_pcpad.webp',
+  '/img/intimate_relationships_p0602_picsq06_pcpad.jpg',
+  '/img/intimate_relationships_p0602_picsq06_pcpad.webp',
+  '/img/intimate_relationships_p0603_picsq01_mob.jpg',
+  '/img/intimate_relationships_p0603_picsq01_mob.webp',
+  '/img/intimate_relationships_p0604_picsq01_mob.jpg',
+  '/img/intimate_relationships_p0604_picsq01_mob.webp',
+  '/img/intimate_relationships_p0605_picsq01_mob.jpg',
+  '/img/intimate_relationships_p0605_picsq01_mob.webp',
+  '/img/intimate_relationships_p0606_picsq01_mob.jpg',
+  '/img/intimate_relationships_p0606_picsq01_mob.webp',
+]);
 const imgWrapA = ref<HTMLElement | null>(null);
 const imgWrapB = ref<HTMLElement | null>(null);
 const imgWrapC = ref<HTMLElement | null>(null);
@@ -234,7 +423,24 @@ function handleAnimationPartD(_gsap: any) {
 </script>
 
 <template>
-  <section v-if="true" class="h-screen bg-blue-100" />
+  <section v-if="true" class="h-screen bg-blue-100">
+    <div class="test-grid">
+      <div
+        v-for="(src, index) in testImages"
+        :key="index"
+        class="test-img-wrapper"
+      >
+        <NuxtImg
+          :src="src"
+          width="100"
+          height="100"
+          alt="test image"
+          class="mock-image"
+          format="webp"
+        />
+      </div>
+    </div>
+  </section>
   <section v-else class="section container">
     <!-- part a -->
     <div class="part part-a-stack">
@@ -503,5 +709,23 @@ function handleAnimationPartD(_gsap: any) {
   background: #d4f1f4;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
   border-radius: 999px;
+}
+</style>
+<style lang="scss">
+.test-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+.test-img-wrapper {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
