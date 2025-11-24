@@ -25,8 +25,7 @@ useJsonld({
 
 <template>
   <NuxtLayout>
-    <!-- <AppHeader /> -->
-    <TestAllImg />
+    <AppHeader />
     <LSectionA />
     <LSectionB />
     <LSectionC />
@@ -34,5 +33,6 @@ useJsonld({
     <LSectionE />
     <LSectionF />
     <AppFooter />
+    <TestAllImg />
   </NuxtLayout>
 </template>

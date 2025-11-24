@@ -234,7 +234,7 @@ function handleAnimationPartD(_gsap: any) {
 </script>
 
 <template>
-  <section v-if="true" class="h-screen bg-blue-100" />
+  <section v-if="true" class="h-screen" />
   <section v-else class="section container">
     <!-- part a -->
     <div class="part part-a-stack">
