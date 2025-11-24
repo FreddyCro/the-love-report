@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, onMounted, watch, type Ref } from 'vue';
+import str from '../locales/section-a.json';
 import { useScroll, useIntersectionObserver } from '@vueuse/core';
 
 // refs for frame 1~7 elements
@@ -9,7 +10,6 @@ const frame3 = ref<HTMLElement | null>(null);
 const frame4 = ref<HTMLElement | null>(null);
 const frame5 = ref<HTMLElement | null>(null);
 const frame6 = ref<HTMLElement | null>(null);
-const frame7 = ref<HTMLElement | null>(null);
 
 // boolean flags indicating whether each frame is currently in "ENTER" state
 const isFrame1Enter = ref(false);
@@ -18,10 +18,9 @@ const isFrame3Enter = ref(false);
 const isFrame4Enter = ref(false);
 const isFrame5Enter = ref(false);
 const isFrame6Enter = ref(false);
-const isFrame7Enter = ref(false);
 
 // Group refs into arrays for iteration
-const frameRefs = [frame1, frame2, frame3, frame4, frame5, frame6, frame7];
+const frameRefs = [frame1, frame2, frame3, frame4, frame5, frame6];
 const enterFlags = [
   isFrame1Enter,
   isFrame2Enter,
@@ -29,7 +28,6 @@ const enterFlags = [
   isFrame4Enter,
   isFrame5Enter,
   isFrame6Enter,
-  isFrame7Enter,
 ];
 
 // track scroll position and previous value
@@ -135,6 +133,9 @@ function watchFrameIntersection(
 
 <template>
   <section>
+    <!-- visually hidden -->
+    {{ str.title }}
+
     <!-- frame 1 -->
     <div
       ref="frame1"
@@ -147,6 +148,7 @@ function watchFrameIntersection(
       <div class="meta">
         {{ isFrame1Enter ? 'true' : 'false' }}
       </div>
+      <div>{{ str.frame1_1 }}</div>
     </div>
 
     <!-- frame 2 -->
@@ -161,6 +163,7 @@ function watchFrameIntersection(
       <div class="meta">
         {{ isFrame2Enter ? 'true' : 'false' }}
       </div>
+      <div>{{ str.frame2_1 }}</div>
     </div>
 
     <!-- frame 3  -->
@@ -175,6 +178,7 @@ function watchFrameIntersection(
       <div class="meta">
         {{ isFrame3Enter ? 'true' : 'false' }}
       </div>
+      <div>{{ str.frame3_1 }}</div>
     </div>
 
     <!-- frame 4 -->
@@ -189,6 +193,9 @@ function watchFrameIntersection(
       <div class="meta">
         {{ isFrame4Enter ? 'true' : 'false' }}
       </div>
+      <div>{{ str.frame4_1 }}</div>
+      <div>{{ str.frame4_2 }}</div>
+      <div>{{ str.frame4_3 }}</div>
     </div>
 
     <!-- frame 5 -->
@@ -203,6 +210,8 @@ function watchFrameIntersection(
       <div class="meta">
         {{ isFrame5Enter ? 'true' : 'false' }}
       </div>
+      <div>{{ str.frame5_1 }}</div>
+      <div>{{ str.frame5_2 }}</div>
     </div>
 
     <!-- frame 6 -->
@@ -217,20 +226,7 @@ function watchFrameIntersection(
       <div class="meta">
         {{ isFrame6Enter ? 'true' : 'false' }}
       </div>
-    </div>
-
-    <!-- frame 7 -->
-    <div
-      ref="frame7"
-      class="part"
-      :class="{
-        'bg-love-blue-01': isFrame7Enter,
-      }"
-    >
-      <div>frame 7</div>
-      <div class="meta">
-        {{ isFrame7Enter ? 'true' : 'false' }}
-      </div>
+      <div>{{ str.frame6_1 }}</div>
     </div>
   </section>
 </template>

@@ -7,6 +7,8 @@ type CartType = {
   title: string;
   description: string;
   note: string;
+  // small marker to choose which chart/placeholder to render
+  chart?: 'chartA' | 'chartB' | 'chartC';
 };
 
 const data: CartType[] = [
@@ -14,35 +16,42 @@ const data: CartType[] = [
     title: str.card1Title,
     description: str.card1Description,
     note: str.card1Note,
+    chart: 'chartA',
   },
   {
     title: str.card2Title,
     description: str.card2Description,
     note: str.card2Note,
+    chart: 'chartB',
   },
   {
     title: str.card3Title,
     description: str.card3Description,
     note: str.card3Note,
+    chart: 'chartC',
   },
   {
     title: str.card4Title,
     description: str.card4Description,
     note: str.card4Note,
+    chart: 'chartA',
   },
   {
     title: str.card5Title,
     description: str.card5Description,
     note: str.card5Note,
+    chart: 'chartB',
   },
   {
     title: str.card6Title,
     description: str.card6Description,
     note: str.card6Note,
+    chart: 'chartC',
   },
 ];
 
 const isEntered = ref(false);
+const isAnimationReady = ref(false);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const scrollTriggerInstances: any[] = [];
@@ -55,14 +64,21 @@ onMounted(async () => {
   // Use the composable to get GSAP, ScrollTrigger, and Lenis
   const { gsap, ScrollTrigger, lenis } = await useScrollAnimation();
 
+  // Guard: ensure GSAP and ScrollTrigger are loaded
+  if (!gsap || !ScrollTrigger) {
+    console.warn('GSAP or ScrollTrigger not loaded');
+    return;
+  }
+
   // Wait for DOM and image to layout
   await nextTick();
 
-  // Add a small delay to ensure everything is rendered
-  setTimeout(() => {
-    handleIsEntered();
-    handleAnimation(gsap, ScrollTrigger, lenis);
-  }, 100);
+  // Initialize animation and wait for it to be ready
+  await handleAnimation(gsap, ScrollTrigger, lenis);
+
+  // Mark as ready - triggers fade-in via CSS transition
+  isAnimationReady.value = true;
+  handleIsEntered();
 });
 
 // Register lifecycle hook BEFORE any async operations
@@ -76,7 +92,11 @@ onBeforeUnmount(() => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function handleAnimation(gsap: any, ScrollTrigger: any, _lenis: any) {
+async function handleAnimation(
+  gsap: any,
+  ScrollTrigger: any,
+  _lenis: any
+): Promise<void> {
   const section = document.querySelector('.section-b');
   if (!section) return;
 
@@ -141,9 +161,16 @@ function handleAnimation(gsap: any, ScrollTrigger: any, _lenis: any) {
   }
 
   // Refresh ScrollTrigger after setup to ensure correct calculations
-  setTimeout(() => {
-    ScrollTrigger.refresh();
-  }, 100);
+  // Use requestAnimationFrame to wait for next paint cycle (more reliable than setTimeout)
+  return new Promise<void>((resolve) => {
+    requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+      // Wait one more frame to ensure refresh is complete
+      requestAnimationFrame(() => {
+        resolve();
+      });
+    });
+  });
 }
 
 function handleIsEntered() {
@@ -154,7 +181,7 @@ function handleIsEntered() {
 <template>
   <section class="section-b">
     <div class="l-container">
-      <div class="state-card-group">
+      <div class="state-card-group" :class="{ 'is-ready': isAnimationReady }">
         <div
           v-for="(item, index) in data"
           :key="index"
@@ -166,8 +193,27 @@ function handleIsEntered() {
             :description="item.description"
             :note="item.note"
           >
-            <div class="chart-placeholder">
-              <span>圖表 {{ index + 1 }}</span>
+            <!-- Scheme A: simple conditional content per item.chart -->
+            <div v-if="item.chart === 'chartA'" class="chart-placeholder">
+              <span>Chart A — 圖表 {{ index + 1 }}</span>
+            </div>
+
+            <div v-else-if="item.chart === 'chartB'" class="chart-placeholder">
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 8px;
+                "
+              >
+                <strong>Chart B</strong>
+                <small>輔助描述 {{ index + 1 }}</small>
+              </div>
+            </div>
+
+            <div v-else class="chart-placeholder">
+              <span>Default chart {{ index + 1 }}</span>
             </div>
           </LStateCard>
         </div>
@@ -196,6 +242,12 @@ function handleIsEntered() {
   display: flex;
   align-items: center;
   justify-content: center;
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+
+  &.is-ready {
+    opacity: 1;
+  }
 }
 
 .state-card-wrapper {
