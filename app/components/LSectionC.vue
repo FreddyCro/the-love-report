@@ -8,14 +8,14 @@ interface CaseItem {
 	occupation: string;
 	tag?: string;
 	story: string;
-	highlight: string;
+	title: string;
+	desc: string;
 	avatar?: string;
 }
 
 const content = {
 	title: sectionCData.title,
-	intro: sectionCData.intro,
-	intro2: sectionCData.intro2,
+	intro: sectionCData.intro as string[],
 };
 
 const cases = sectionCData.cases as CaseItem[];
@@ -40,8 +40,9 @@ const avatarPlaceholders = [
 
 			<!-- Intro Text -->
 			<div class="section-c__intro">
-				<p>{{ content.intro }}</p>
-				<p>{{ content.intro2 }}</p>
+				<p v-for="(paragraph, index) in content.intro" :key="index">
+					{{ paragraph }}
+				</p>
 			</div>
 
 			<!-- Avatar Selection -->
@@ -85,9 +86,9 @@ const avatarPlaceholders = [
 					</div>
 
 					<div class="case-card__content">
-						<p class="case-card__highlight">{{ caseItem.highlight }}</p>
+						<p class="case-card__highlight">{{ caseItem.title }}</p>
 						<p class="case-card__detail">
-							有些人可能會習慣獨身的生活，從頭來過工作忙碌、結束這段關係，也花時間重新調整與身心狀態，也算是個人經驗的一種成長期。公司特別的感覺眼神展開後，也必須要與對方建立之間。
+							{{ caseItem.desc }}
 						</p>
 					</div>
 
