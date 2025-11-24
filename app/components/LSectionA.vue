@@ -50,6 +50,20 @@ type FrameState = {
   STATE: `${Action}_${Direction}`;
 };
 
+onMounted(() => {
+  // Wire up all 7 frames with their respective handlers
+  frameRefs.forEach((frame, i) => {
+    const flag = enterFlags[i];
+    if (!flag) return;
+
+    // Choose appropriate handler for frame 1 vs others
+    const handler =
+      i === 0 ? createStrictHandler(i + 1, flag) : createHandler(i + 1, flag);
+
+    watchFrameIntersection(frame, handler);
+  });
+});
+
 // Factory function to create handler for each frame
 function createHandler(frameNum: number, flag: Ref<boolean>) {
   return (state: FrameState) => {
@@ -77,20 +91,6 @@ function createStrictHandler(frameNum: number, flag: Ref<boolean>) {
     }
   };
 }
-
-onMounted(() => {
-  // Wire up all 7 frames with their respective handlers
-  frameRefs.forEach((frame, i) => {
-    const flag = enterFlags[i];
-    if (!flag) return;
-
-    // Choose appropriate handler for frame 1 vs others
-    const handler =
-      i === 0 ? createStrictHandler(i + 1, flag) : createHandler(i + 1, flag);
-
-    watchFrameIntersection(frame, handler);
-  });
-});
 
 // Reusable function to watch frame intersection and call callback with state
 function watchFrameIntersection(
