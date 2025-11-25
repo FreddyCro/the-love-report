@@ -132,9 +132,11 @@ function watchFrameIntersection(
 </script>
 
 <template>
-  <section>
-    <!-- visually hidden -->
-    {{ str.title }}
+  <section class="sec-a">
+    <!-- visually hidden for seo -->
+    <h1 class="visually-hidden">
+      {{ str.title }}
+    </h1>
 
     <!-- frame 1 -->
     <div
@@ -241,5 +243,14 @@ function watchFrameIntersection(
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap; /* added line */
 }
 </style>
