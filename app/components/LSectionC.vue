@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import sectionCData from "~/locales/section-c.json";
+import LPic from './LPic.vue';
 
 interface CaseItem {
 	id: string;
@@ -11,6 +12,8 @@ interface CaseItem {
 	title: string;
 	desc: string;
 	avatar?: string;
+	imgCircle: string;
+	imgSquare: string;
 }
 
 const content = {
@@ -34,10 +37,11 @@ const avatarPlaceholders = [
 	<section class="section-c bg-love-blue-01 rounded-t-[120px]">
 		<div class="l-container">
 			<!-- Title -->
-			<div class="section-c__header">
-				<h2 class="section-c__title">{{ content.title }}</h2>
+			<div class="text-center mb-6">
+				<div class="section-c__dialogbox">
+					<h2 class="text-love-blue-03">{{ content.title }}</h2>
+				</div>
 			</div>
-
 			<!-- Intro Text -->
 			<div class="section-c__intro">
 				<p v-for="(paragraph, index) in content.intro" :key="index">
@@ -46,19 +50,39 @@ const avatarPlaceholders = [
 			</div>
 
 			<!-- Avatar Selection -->
-			<div class="section-c__avatars">
+			<div class="section-c__avatars my-6 flex justify-between items-center gap-4">
+				<button class="avatar-nav--prev" aria-label="上一個">
+					<LPic
+						src="/img/button_card_click_left"
+						ext="svg"
+						:use-prefix="false"
+						:use2x="false"
+						:webp="false"
+					/>
+				</button>
 				<div
-					v-for="(avatar, index) in avatarPlaceholders"
-					:key="index"
-					class="avatar-item"
-					:class="{ 'avatar-item--selected': avatar.selected }"
+					v-for="caseItem in cases"
+					:key="caseItem.id"
+					class=""
 				>
-					<div class="avatar-circle" :class="`avatar-circle--${avatar.gender}`">
-						<span class="avatar-icon">👤</span>
+					<div class="">
+						<LPic
+						:src="caseItem.imgCircle"
+						ext="png"
+						:use-prefix="false"
+						:use2x="false"
+						:webp="true"
+					/>
 					</div>
 				</div>
-				<button class="avatar-nav avatar-nav--next" aria-label="下一個">
-					›
+				<button class="avatar-nav--next" aria-label="下一個">
+					<LPic
+						src="/img/button_card_click_right"
+						ext="svg"
+						:use-prefix="false"
+						:use2x="false"
+						:webp="false"
+					/>
 				</button>
 			</div>
 
@@ -106,31 +130,23 @@ const avatarPlaceholders = [
 	min-height: 100vh;
 	padding: 80px 0 120px;
 
-	&__header {
-		text-align: center;
-		margin-bottom: 60px;
-	}
-
-	&__title {
-		display: inline-block;
-		font-size: 32px;
-		font-weight: 700;
-		color: #404040;
-		padding: 12px 40px;
-		border: 3px solid #0095cc;
-		border-radius: 60px;
-		background: transparent;
+	&__dialogbox {
+		width: 240px;
+		height: 90px;
+		background-image: url('/img/intimate_relationships_p0201_dialogbox_pad.svg');
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+		display: flex;
+		justify-content: center;
+		margin: 0 auto;
+		padding-top: 6px;
 	}
 
 	&__intro {
-		max-width: 620px;
-		margin: 0 auto 80px;
-		font-size: 18px;
-		line-height: 36px;
-		color: #404040;
 
 		p {
-			margin-bottom: 24px;
+			margin-bottom: 36px;
 
 			&:last-child {
 				margin-bottom: 0;
@@ -138,14 +154,13 @@ const avatarPlaceholders = [
 		}
 	}
 
-	&__avatars {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 16px;
-		margin-bottom: 80px;
-		position: relative;
-	}
+	// &__avatars {
+	// 	display: flex;
+	// 	align-items: center;
+	// 	justify-content: center;
+	// 	gap: 16px;
+	// 	position: relative;
+	// }
 
 	&__cards {
 		max-width: 620px;
@@ -188,35 +203,35 @@ const avatarPlaceholders = [
 		background: linear-gradient(135deg, #9fd8f0 0%, #d6f2fa 100%);
 	}
 
-	.avatar-icon {
-		font-size: 32px;
-		opacity: 0.6;
-	}
+	// .avatar-icon {
+	// 	font-size: 32px;
+	// 	opacity: 0.6;
+	// }
 }
 
-.avatar-nav {
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-	border: 2px solid #0095cc;
-	background: #fff;
-	color: #0095cc;
-	font-size: 24px;
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: all 0.3s ease;
+// .avatar-nav {
+// 	width: 40px;
+// 	height: 40px;
+// 	border-radius: 50%;
+// 	border: 2px solid #0095cc;
+// 	background: #fff;
+// 	color: #0095cc;
+// 	font-size: 24px;
+// 	cursor: pointer;
+// 	display: flex;
+// 	align-items: center;
+// 	justify-content: center;
+// 	transition: all 0.3s ease;
 
-	&:hover {
-		background: #0095cc;
-		color: #fff;
-	}
+// 	&:hover {
+// 		background: #0095cc;
+// 		color: #fff;
+// 	}
 
-	&--next {
-		margin-left: 8px;
-	}
-}
+// 	&--next {
+// 		margin-left: 8px;
+// 	}
+// }
 
 .case-card {
 	background: #fff;
@@ -337,9 +352,13 @@ const avatarPlaceholders = [
 	.section-c {
 		padding: 60px 20px 100px;
 
+		&__dialogbox {
+			width: 180px;
+			height: 68px;
+		}
+
 		&__title {
 			font-size: 24px;
-			padding: 10px 30px;
 		}
 
 		&__intro {
@@ -392,4 +411,5 @@ const avatarPlaceholders = [
 		}
 	}
 }
+
 </style>

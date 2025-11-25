@@ -227,13 +227,14 @@ function handleIsEntered() {
   min-height: 100vh;
   padding: 4rem 0;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+  .l-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
 }
 
-.l-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
 
 .state-card-group {
   position: relative;
