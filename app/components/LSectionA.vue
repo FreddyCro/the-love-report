@@ -148,6 +148,16 @@ function watchFrameIntersection(
     >
       <div>frame 1</div>
 
+      <!-- <LPic
+        :src="item.src"
+        :srcset="item.srcset"
+        :default="item.default"
+        :ext="item.ext"
+        :use-prefix="item.usePrefix"
+        :use2x="false"
+        :webp="item.webp"
+      /> -->
+
       <!-- img back -->
       <!-- /img/intimate_relationships_p01_frame01_00_pcpad -->
       <!-- /img/intimate_relationships_p01_frame01_01 -->
@@ -171,6 +181,7 @@ function watchFrameIntersection(
       <div>frame 2</div>
 
       <!-- img -->
+      <!-- /img/intimate_relationships_p01_frame02_04 -->
 
       <!-- text -->
       <div>{{ str.frame2_1 }}</div>
@@ -207,8 +218,13 @@ function watchFrameIntersection(
       </div>
 
       <!-- img 1 -->
+      <!-- /img/intimate_relationships_p01_frame04_06 -->
+
       <!-- img 2 -->
+      <!-- /img/intimate_relationships_p01_frame04_07 -->
+
       <!-- img 3 -->
+      <!-- /img/intimate_relationships_p01_frame04_08 -->
 
       <!-- text 1 -->
       <div>{{ str.frame4_1 }}</div>
@@ -232,10 +248,14 @@ function watchFrameIntersection(
       }"
     >
       <div>frame 5</div>
-      <div class="meta">
-        {{ isFrame5Enter ? 'true' : 'false' }}
-      </div>
+
+      <!-- img 1 -->
+      <!-- /img/intimate_relationships_p01_frame05_09 -->
+
+      <!-- text 1 -->
       <div>{{ str.frame5_1 }}</div>
+
+      <!-- text 2 -->
       <div>{{ str.frame5_2 }}</div>
     </div>
 
@@ -248,9 +268,11 @@ function watchFrameIntersection(
       }"
     >
       <div>frame 6</div>
-      <div class="meta">
-        {{ isFrame6Enter ? 'true' : 'false' }}
-      </div>
+
+      <!-- img 1 -->
+      <!-- /img/intimate_relationships_p01_frame06_10 -->
+
+      <!-- text 1 -->
       <div>{{ str.frame6_1 }}</div>
     </div>
   </section>
