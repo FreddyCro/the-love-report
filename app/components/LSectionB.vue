@@ -7,8 +7,9 @@ type CartType = {
   title: string;
   description: string;
   note: string;
+
   // small marker to choose which chart/placeholder to render
-  chart?: 'chartA' | 'chartB' | 'chartC';
+  chart?: 'chartA' | 'chartB' | 'chartC' | 'chartD' | 'chartE' | 'chartF';
 };
 
 const data: CartType[] = [
@@ -34,19 +35,19 @@ const data: CartType[] = [
     title: str.card4Title,
     description: str.card4Description,
     note: str.card4Note,
-    chart: 'chartA',
+    chart: 'chartD',
   },
   {
     title: str.card5Title,
     description: str.card5Description,
     note: str.card5Note,
-    chart: 'chartB',
+    chart: 'chartE',
   },
   {
     title: str.card6Title,
     description: str.card6Description,
     note: str.card6Note,
-    chart: 'chartC',
+    chart: 'chartF',
   },
 ];
 
@@ -223,7 +224,7 @@ function handleIsEntered() {
               :description="item.description"
               :note="item.note"
             >
-              <!-- Scheme A: simple conditional content per item.chart -->
+              <!-- Render different placeholder content based on item.chart (A..F) -->
               <div v-if="item.chart === 'chartA'" class="chart-placeholder">
                 <span>Chart A — 圖表 {{ index + 1 }}</span>
               </div>
@@ -242,6 +243,69 @@ function handleIsEntered() {
                 >
                   <strong>Chart B</strong>
                   <small>輔助描述 {{ index + 1 }}</small>
+                </div>
+              </div>
+
+              <div
+                v-else-if="item.chart === 'chartC'"
+                class="chart-placeholder"
+              >
+                <div style="display: flex; align-items: center; gap: 12px">
+                  <svg
+                    width="36"
+                    height="36"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="rgba(255,255,255,0.6)"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <div>
+                    <strong>Chart C</strong>
+                    <div class="text-sm">圖表說明 {{ index + 1 }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                v-else-if="item.chart === 'chartD'"
+                class="chart-placeholder"
+              >
+                <div style="padding: 12px; text-align: center">
+                  <strong>Chart D</strong>
+                  <p class="text-sm">示意圖 D — 圖表 {{ index + 1 }}</p>
+                </div>
+              </div>
+
+              <div
+                v-else-if="item.chart === 'chartE'"
+                class="chart-placeholder"
+              >
+                <div style="display: grid; place-items: center">
+                  <strong>Chart E</strong>
+                  <small>附註 {{ index + 1 }}</small>
+                </div>
+              </div>
+
+              <div
+                v-else-if="item.chart === 'chartF'"
+                class="chart-placeholder"
+              >
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                  "
+                >
+                  <strong>Chart F</strong>
+                  <small>最後一張 — {{ index + 1 }}</small>
                 </div>
               </div>
 
