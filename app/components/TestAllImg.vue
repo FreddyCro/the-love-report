@@ -518,7 +518,7 @@ const testImages = ref([
       <div
         v-for="(item, index) in testImages"
         :key="index"
-        class="flex items-center justify-center w-[100px] h-[100px] bg-gray-50"
+        class="relative group flex items-center justify-center w-[100px] h-[100px] bg-gray-50"
       >
         <LPic
           :src="item.src"
@@ -529,6 +529,14 @@ const testImages = ref([
           :use2x="false"
           :webp="item.webp"
         />
+
+        <div
+          class="absolute inset-0 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 group-hover:opacity-100 bg-black/60 text-white text-xs p-2 text-center"
+        >
+          <div class="z-10 bg-black p-1">
+            {{ item.src }}
+          </div>
+        </div>
       </div>
     </div>
   </div>

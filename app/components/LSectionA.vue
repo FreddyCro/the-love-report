@@ -132,9 +132,11 @@ function watchFrameIntersection(
 </script>
 
 <template>
-  <section>
-    <!-- visually hidden -->
-    {{ str.title }}
+  <section class="sec-a">
+    <!-- visually hidden for seo -->
+    <h1 class="visually-hidden">
+      {{ str.title }}
+    </h1>
 
     <!-- frame 1 -->
     <div
@@ -145,9 +147,26 @@ function watchFrameIntersection(
       }"
     >
       <div>frame 1</div>
-      <div class="meta">
-        {{ isFrame1Enter ? 'true' : 'false' }}
-      </div>
+
+      <!-- <LPic
+        :src="item.src"
+        :srcset="item.srcset"
+        :default="item.default"
+        :ext="item.ext"
+        :use-prefix="item.usePrefix"
+        :use2x="false"
+        :webp="item.webp"
+      /> -->
+
+      <!-- img back -->
+      <!-- /img/intimate_relationships_p01_frame01_00_pcpad -->
+      <!-- /img/intimate_relationships_p01_frame01_01 -->
+      <!-- /img/intimate_relationships_p01_frame01_02 -->
+
+      <!-- img front -->
+      <!-- /img/intimate_relationships_p01_frame01_03 -->
+
+      <!-- text -->
       <div>{{ str.frame1_1 }}</div>
     </div>
 
@@ -160,9 +179,11 @@ function watchFrameIntersection(
       }"
     >
       <div>frame 2</div>
-      <div class="meta">
-        {{ isFrame2Enter ? 'true' : 'false' }}
-      </div>
+
+      <!-- img -->
+      <!-- /img/intimate_relationships_p01_frame02_04 -->
+
+      <!-- text -->
       <div>{{ str.frame2_1 }}</div>
     </div>
 
@@ -175,9 +196,11 @@ function watchFrameIntersection(
       }"
     >
       <div>frame 3</div>
-      <div class="meta">
-        {{ isFrame3Enter ? 'true' : 'false' }}
-      </div>
+
+      <!-- img -->
+      <!-- /img/intimate_relationships_p01_frame03_05 -->
+
+      <!-- text -->
       <div>{{ str.frame3_1 }}</div>
     </div>
 
@@ -193,9 +216,27 @@ function watchFrameIntersection(
       <div class="meta">
         {{ isFrame4Enter ? 'true' : 'false' }}
       </div>
+
+      <!-- img 1 -->
+      <!-- /img/intimate_relationships_p01_frame04_06 -->
+
+      <!-- img 2 -->
+      <!-- /img/intimate_relationships_p01_frame04_07 -->
+
+      <!-- img 3 -->
+      <!-- /img/intimate_relationships_p01_frame04_08 -->
+
+      <!-- text 1 -->
       <div>{{ str.frame4_1 }}</div>
+
+      <!-- text 2 -->
       <div>{{ str.frame4_2 }}</div>
+
+      <!-- text 3 -->
       <div>{{ str.frame4_3 }}</div>
+
+      <!-- text 4 -->
+      <div>{{ str.frame4_4 }}</div>
     </div>
 
     <!-- frame 5 -->
@@ -207,10 +248,14 @@ function watchFrameIntersection(
       }"
     >
       <div>frame 5</div>
-      <div class="meta">
-        {{ isFrame5Enter ? 'true' : 'false' }}
-      </div>
+
+      <!-- img 1 -->
+      <!-- /img/intimate_relationships_p01_frame05_09 -->
+
+      <!-- text 1 -->
       <div>{{ str.frame5_1 }}</div>
+
+      <!-- text 2 -->
       <div>{{ str.frame5_2 }}</div>
     </div>
 
@@ -223,9 +268,11 @@ function watchFrameIntersection(
       }"
     >
       <div>frame 6</div>
-      <div class="meta">
-        {{ isFrame6Enter ? 'true' : 'false' }}
-      </div>
+
+      <!-- img 1 -->
+      <!-- /img/intimate_relationships_p01_frame06_10 -->
+
+      <!-- text 1 -->
       <div>{{ str.frame6_1 }}</div>
     </div>
   </section>
@@ -241,5 +288,14 @@ function watchFrameIntersection(
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap; /* added line */
 }
 </style>

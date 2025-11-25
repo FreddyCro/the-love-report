@@ -53,7 +53,15 @@ const data: CartType[] = [
 const isEntered = ref(false);
 const isAnimationReady = ref(false);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// JS-prefixed selector class names (used by script to query DOM)
+// Simplified keys + values for concise usage
+const JS_CLASSES = {
+  SECTION: 'js-sec-b', // section wrapper
+  GROUP: 'js-scg', // state-card-group
+  CARD: 'js-sc', // state-card
+  WRAPPER: 'js-scw', // state-card-wrapper
+};
+
 const scrollTriggerInstances: any[] = [];
 
 defineExpose({
@@ -91,16 +99,21 @@ onBeforeUnmount(() => {
   scrollTriggerInstances.length = 0;
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function handleAnimation(
   gsap: any,
   ScrollTrigger: any,
   _lenis: any
 ): Promise<void> {
-  const section = document.querySelector('.section-b');
+  const section =
+    document.querySelector(`.${JS_CLASSES.SECTION}`) ||
+    document.querySelector('.sec-b');
   if (!section) return;
 
-  const cards = section.querySelectorAll('.state-card');
+  // Prefer JS-prefixed selector for script queries; fall back to regular class if missing
+  let cards = section.querySelectorAll(`.${JS_CLASSES.CARD}`);
+  if (!cards || cards.length === 0) {
+    cards = section.querySelectorAll('.state-card');
+  }
   if (cards.length === 0) return;
 
   // Create timeline for the stacking animation
@@ -179,43 +192,64 @@ function handleIsEntered() {
 </script>
 
 <template>
-  <section class="section-b">
+  <section class="sec-b">
     <div class="l-container">
-      <div class="state-card-group" :class="{ 'is-ready': isAnimationReady }">
+      <!-- intro -->
+      <div class="intro">
+        <!-- title -->
+        <h2 v-html="str.sectionTitle" />
+        <p>{{ str.sectionTitleSub }}</p>
+        <p>{{ str.introText1 }}</p>
+        <p>{{ str.introText2 }}</p>
+      </div>
+
+      <!-- cards -->
+      <div :class="JS_CLASSES.SECTION">
         <div
-          v-for="(item, index) in data"
-          :key="index"
-          class="state-card-wrapper"
+          :class="[
+            'state-card-group',
+            JS_CLASSES.GROUP,
+            { 'is-ready': isAnimationReady },
+          ]"
         >
-          <LStateCard
-            class="state-card"
-            :title="item.title"
-            :description="item.description"
-            :note="item.note"
+          <div
+            v-for="(item, index) in data"
+            :key="index"
+            :class="['state-card-wrapper', JS_CLASSES.WRAPPER]"
           >
-            <!-- Scheme A: simple conditional content per item.chart -->
-            <div v-if="item.chart === 'chartA'" class="chart-placeholder">
-              <span>Chart A — 圖表 {{ index + 1 }}</span>
-            </div>
-
-            <div v-else-if="item.chart === 'chartB'" class="chart-placeholder">
-              <div
-                style="
-                  display: flex;
-                  flex-direction: column;
-                  align-items: center;
-                  gap: 8px;
-                "
-              >
-                <strong>Chart B</strong>
-                <small>輔助描述 {{ index + 1 }}</small>
+            <LStateCard
+              :class="['state-card', JS_CLASSES.CARD]"
+              :title="item.title"
+              :description="item.description"
+              :note="item.note"
+            >
+              <!-- Scheme A: simple conditional content per item.chart -->
+              <div v-if="item.chart === 'chartA'" class="chart-placeholder">
+                <span>Chart A — 圖表 {{ index + 1 }}</span>
               </div>
-            </div>
 
-            <div v-else class="chart-placeholder">
-              <span>Default chart {{ index + 1 }}</span>
-            </div>
-          </LStateCard>
+              <div
+                v-else-if="item.chart === 'chartB'"
+                class="chart-placeholder"
+              >
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 8px;
+                  "
+                >
+                  <strong>Chart B</strong>
+                  <small>輔助描述 {{ index + 1 }}</small>
+                </div>
+              </div>
+
+              <div v-else class="chart-placeholder">
+                <span>Default chart {{ index + 1 }}</span>
+              </div>
+            </LStateCard>
+          </div>
         </div>
       </div>
     </div>
@@ -223,7 +257,7 @@ function handleIsEntered() {
 </template>
 
 <style lang="scss">
-.section-b {
+.sec-b {
   min-height: 100vh;
   padding: 4rem 0;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
@@ -234,7 +268,6 @@ function handleIsEntered() {
     padding: 0 1rem;
   }
 }
-
 
 .state-card-group {
   position: relative;
