@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-// import AppHeader from './components/AppHeader.vue';
+import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
 import LSectionA from './components/LSectionA.vue';
 import LSectionB from './components/LSectionB.vue';

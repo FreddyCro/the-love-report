@@ -147,9 +147,16 @@ function watchFrameIntersection(
       }"
     >
       <div>frame 1</div>
-      <div class="meta">
-        {{ isFrame1Enter ? 'true' : 'false' }}
-      </div>
+
+      <!-- img back -->
+      <!-- /img/intimate_relationships_p01_frame01_00_pcpad -->
+      <!-- /img/intimate_relationships_p01_frame01_01 -->
+      <!-- /img/intimate_relationships_p01_frame01_02 -->
+
+      <!-- img front -->
+      <!-- /img/intimate_relationships_p01_frame01_03 -->
+
+      <!-- text -->
       <div>{{ str.frame1_1 }}</div>
     </div>
 
@@ -162,9 +169,10 @@ function watchFrameIntersection(
       }"
     >
       <div>frame 2</div>
-      <div class="meta">
-        {{ isFrame2Enter ? 'true' : 'false' }}
-      </div>
+
+      <!-- img -->
+
+      <!-- text -->
       <div>{{ str.frame2_1 }}</div>
     </div>
 
@@ -177,9 +185,11 @@ function watchFrameIntersection(
       }"
     >
       <div>frame 3</div>
-      <div class="meta">
-        {{ isFrame3Enter ? 'true' : 'false' }}
-      </div>
+
+      <!-- img -->
+      <!-- /img/intimate_relationships_p01_frame03_05 -->
+
+      <!-- text -->
       <div>{{ str.frame3_1 }}</div>
     </div>
 
@@ -195,9 +205,22 @@ function watchFrameIntersection(
       <div class="meta">
         {{ isFrame4Enter ? 'true' : 'false' }}
       </div>
+
+      <!-- img 1 -->
+      <!-- img 2 -->
+      <!-- img 3 -->
+
+      <!-- text 1 -->
       <div>{{ str.frame4_1 }}</div>
+
+      <!-- text 2 -->
       <div>{{ str.frame4_2 }}</div>
+
+      <!-- text 3 -->
       <div>{{ str.frame4_3 }}</div>
+
+      <!-- text 4 -->
+      <div>{{ str.frame4_4 }}</div>
     </div>
 
     <!-- frame 5 -->
