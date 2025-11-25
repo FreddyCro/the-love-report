@@ -23,9 +23,7 @@ interface CaseItem {
 
 const content = {
 	title: sectionDData.title,
-	intro: sectionDData.intro,
-	intro2: sectionDData.intro2,
-	intro3: sectionDData.intro3,
+	intro: sectionDData.intro as string[],
 };
 
 const cases = sectionDData.cases as CaseItem[];
@@ -41,18 +39,18 @@ const cases = sectionDData.cases as CaseItem[];
 
 			<!-- Intro Text -->
 			<div class="section-d__intro">
-				<p>{{ content.intro }}</p>
-				<p>{{ content.intro2 }}</p>
-				<p>{{ content.intro3 }}</p>
-			</div>
-
-			<!-- Step Indicator -->
-			<div class="section-d__step">
-				<div class="step-number">1</div>
+				<p v-for="(paragraph, index) in content.intro" :key="index">
+					{{ paragraph }}
+				</p>
 			</div>
 
 			<!-- Cases -->
 			<div v-for="caseItem in cases" :key="caseItem.index" class="case-section">
+				<!-- Step Indicator -->
+				<div class="section-d__step">
+					<div class="step-number">{{ caseItem.index }}</div>
+				</div>
+
 				<h3 class="case-section__title">{{ caseItem.title }}</h3>
 				<p class="case-section__desc">{{ caseItem.desc }}</p>
 
