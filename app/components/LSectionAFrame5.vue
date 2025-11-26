@@ -48,32 +48,37 @@ defineProps<{
   width: 100%;
 
   &__img-wrap {
-    // 圖片樣式
+    opacity: 0;
+    transition: opacity 1s ease;
   }
 
   &__text1-wrap {
     position: absolute;
     top: 0;
     right: 0;
+    opacity: 0;
+    transition: opacity 1s ease;
   }
 
   &__text2-wrap {
     position: absolute;
     bottom: 0;
     left: 0;
+    opacity: 0;
+    transition: opacity 1s ease;
   }
 
   &.active {
     .l-seca-f5__img-wrap {
-      // 激活狀態的圖片樣式
+      opacity: 1;
     }
 
     .l-seca-f5__text1-wrap {
-      // 激活狀態的文字1樣式
+      opacity: 1;
     }
 
     .l-seca-f5__text2-wrap {
-      // 激活狀態的文字2樣式
+      opacity: 1;
     }
   }
 }

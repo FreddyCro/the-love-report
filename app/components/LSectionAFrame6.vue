@@ -41,7 +41,8 @@ defineProps<{
   width: 100%;
 
   &__img-wrap {
-    // 圖片樣式
+    opacity: 0;
+    transition: opacity 1s ease;
   }
 
   &__text-wrap {
@@ -49,15 +50,17 @@ defineProps<{
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 1s ease;
   }
 
   &.active {
     .l-seca-f6__img-wrap {
-      // 激活狀態的圖片樣式
+      opacity: 1;
     }
 
     .l-seca-f6__text-wrap {
-      // 激活狀態的文字樣式
+      opacity: 1;
     }
   }
 }

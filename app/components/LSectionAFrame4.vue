@@ -99,65 +99,76 @@ defineProps<{
   }
 
   &__img1-wrap {
-    // 圖片1樣式
+    opacity: 0;
+    transition: opacity 1s ease;
   }
 
   &__text1-wrap {
     position: absolute;
     top: 0;
     left: 0;
+    opacity: 0;
+    transition: opacity 1s ease;
   }
 
   &__img2-wrap {
-    // 圖片2樣式
+    opacity: 0;
+    transition: opacity 1s 0.75s ease;
   }
 
   &__text2-wrap {
     position: absolute;
     top: 0;
     left: 0;
+    opacity: 0;
+    transition: opacity 1s 0.75s ease;
   }
 
   &__img3-wrap {
-    // 圖片3樣式
+    opacity: 0;
+    transition: opacity 1s 1.5s ease;
   }
 
   &__text3-wrap {
     position: absolute;
     top: 0;
     left: 0;
+    opacity: 0;
+    transition: opacity 1s 1.5s ease;
   }
 
   &__text4-wrap {
+    opacity: 0;
+    transition: opacity 1s 1.5s ease;
   }
 
   &.active {
     .l-seca-f4__img1-wrap {
-      // 激活狀態的圖片1樣式
+      opacity: 1;
     }
 
     .l-seca-f4__text1-wrap {
-      // 激活狀態的文字1樣式
+      opacity: 1;
     }
 
     .l-seca-f4__img2-wrap {
-      // 激活狀態的圖片2樣式
+      opacity: 1;
     }
 
     .l-seca-f4__text2-wrap {
-      // 激活狀態的文字2樣式
+      opacity: 1;
     }
 
     .l-seca-f4__img3-wrap {
-      // 激活狀態的圖片3樣式
+      opacity: 1;
     }
 
     .l-seca-f4__text3-wrap {
-      // 激活狀態的文字3樣式
+      opacity: 1;
     }
 
     .l-seca-f4__text4-wrap {
-      // 激活狀態的文字4樣式
+      opacity: 1;
     }
   }
 }

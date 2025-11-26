@@ -73,6 +73,23 @@ watch(y, (newY, oldY) => {
   lastY.value = oldY ?? lastY.value;
 });
 
+// Animation tracking: watch each frame's isEnter state and manage animation completion
+frames.forEach((frame) => {
+  watch(frame.isEnter, (newValue, oldValue) => {
+    // From inactive to active: start animation timer
+    if (newValue && !oldValue) {
+      frame.isAnimationComplete.value = false;
+      setTimeout(() => {
+        frame.isAnimationComplete.value = true;
+      }, frame.animationDuration);
+    }
+    // From active to inactive: reset animation state
+    else if (!newValue && oldValue) {
+      frame.isAnimationComplete.value = false;
+    }
+  });
+});
+
 // Structured frame state with uppercase underscore constants
 type Action = 'ENTER' | 'LEAVE';
 type Direction = 'UP' | 'DOWN';
@@ -100,10 +117,46 @@ function createHandler(frameIndex: number) {
   return (state: FrameState) => {
     const frame = frames[frameIndex];
     if (!frame) return;
-
-    // console.log(`Frame ${frameIndex + 1}:`, state.STATE, state);
+    
     if (state.STATE === 'ENTER_DOWN') {
-      frame.isEnter.value = true;
+      // Frame 1 (index 0) has no previous frame, activate immediately
+      if (frameIndex === 0) {
+        frame.isEnter.value = true;
+        return;
+      }
+
+      const prevFrame = frames[frameIndex - 1];
+      if (!prevFrame) return; // Safety check
+      
+      // Check if previous frame has left (not entered) - activate immediately
+      if (!prevFrame.isEnter.value) {
+        frame.isEnter.value = true;
+        return;
+      }
+
+      // Check if previous frame is entered AND animation complete - activate immediately
+      if (prevFrame.isEnter.value && prevFrame.isAnimationComplete.value) {
+        frame.isEnter.value = true;
+        return;
+      }
+
+      // Previous frame is entered but animation not complete - wait using watchEffect
+      if (prevFrame.isEnter.value && !prevFrame.isAnimationComplete.value) {
+        const stopWatch = watchEffect(() => {
+          // Condition 1: Previous frame has left, activate immediately
+          if (!prevFrame.isEnter.value) {
+            frame.isEnter.value = true;
+            stopWatch();
+            return;
+          }
+
+          // Condition 2: Previous frame animation complete, activate
+          if (prevFrame.isEnter.value && prevFrame.isAnimationComplete.value) {
+            frame.isEnter.value = true;
+            stopWatch();
+          }
+        });
+      }
     } else if (state.STATE === 'LEAVE_UP') {
       frame.isEnter.value = false;
     }
@@ -160,9 +213,9 @@ function watchFrameIntersection(
       callback(state);
     },
     {
-      threshold: 0.1,
+      threshold: 0.3, // 30% 可見時觸發（降低門檻）
       root: null,
-      rootMargin: '0px',
+      rootMargin: '0px', // 移除 margin 限制
     }
   );
 }
@@ -233,7 +286,7 @@ function watchFrameIntersection(
 
 <style lang="scss">
 .sec-a-part {
-  min-height: 100vh;
+  /* min-height: 100vh; */
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;

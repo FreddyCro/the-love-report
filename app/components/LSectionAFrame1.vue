@@ -73,6 +73,7 @@ defineProps<{
     position: absolute;
     right: 0;
     top: 0;
+    max-width: 300px;
     display: inline-block;
     transform: translateX(100%);
     transition: transform 1s 0.5s ease;
