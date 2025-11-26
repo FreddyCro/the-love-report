@@ -24,7 +24,7 @@ useJsonld({
 </script>
 
 <template>
-  <NuxtLayout style="opacity: 0.1;">
+  <NuxtLayout>
     <AppHeader />
     <LSectionA />
     <LSectionB />

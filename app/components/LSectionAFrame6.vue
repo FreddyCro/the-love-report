@@ -45,7 +45,10 @@ defineProps<{
   }
 
   &__text-wrap {
-    // 文字樣式
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   &.active {

@@ -52,11 +52,15 @@ defineProps<{
   }
 
   &__text1-wrap {
-    // 文字1樣式
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 
   &__text2-wrap {
-    // 文字2樣式
+    position: absolute;
+    bottom: 0;
+    left: 0;
   }
 
   &.active {

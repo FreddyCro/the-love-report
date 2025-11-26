@@ -13,7 +13,7 @@ defineProps<{
       active: active,
     }"
   >
-    <div class="w-full max-w-7xl aspect-1280/720 mx-auto">
+    <div class="relative w-full max-w-7xl aspect-1280/720 mx-auto">
       <!-- img back -->
       <div class="l-seca-f1__img1-wrap">
         <LPic
@@ -62,7 +62,6 @@ defineProps<{
 
 <style lang="scss">
 .l-seca-f1 {
-  position: relative;
   width: 100%;
 
   &__img1-wrap {

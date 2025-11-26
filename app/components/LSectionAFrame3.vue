@@ -13,7 +13,7 @@ defineProps<{
       active: active,
     }"
   >
-    <div class="w-full max-w-7xl aspect-1280/720 mx-auto">
+    <div class="relative w-full max-w-7xl aspect-1280/720 mx-auto">
       <!-- img -->
       <div class="l-seca-f3__img-wrap">
         <LPic
@@ -41,20 +41,27 @@ defineProps<{
   width: 100%;
 
   &__img-wrap {
-    // 圖片樣式
+    opacity: 0;
+    transition: opacity 1s ease;
   }
 
   &__text-wrap {
-    // 文字樣式
+    position: absolute;
+    top: 50%;
+    left: 0;
+    opacity: 0;
+    transform: translate(-100%, -50%);
+    transition: transform 1s 1s ease;
   }
 
   &.active {
     .l-seca-f3__img-wrap {
-      // 激活狀態的圖片樣式
+      opacity: 1;
     }
 
     .l-seca-f3__text-wrap {
-      // 激活狀態的文字樣式
+      opacity: 1;
+      transform: translate(0, -50%);
     }
   }
 }

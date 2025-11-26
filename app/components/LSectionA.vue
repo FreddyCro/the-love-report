@@ -208,7 +208,7 @@ function watchFrameIntersection(
 
 <style lang="scss">
 .sec-a-part {
-  height: 100vh;
+  min-height: 100vh;
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
