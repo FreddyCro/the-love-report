@@ -1,5 +1,4 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-console.log("process.env.NUXT_URL", process.env.NUXT_URL);
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
@@ -24,16 +23,16 @@ export default defineNuxtConfig({
 
   // Base URL for the application (extracts path from NUXT_URL or defaults to '/')
   app: {
-    baseURL: process.env.NUXT_URL,
-    // baseURL: (() => {
-    //   const nuxtUrl = process.env.NUXT_URL;
-    //   if (!nuxtUrl) return "/";
-    //   try {
-    //     return new URL(nuxtUrl).pathname;
-    //   } catch {
-    //     return "/";
-    //   }
-    // })(),
+    // baseURL: process.env.NUXT_URL,
+    baseURL: (() => {
+      const nuxtUrl = process.env.NUXT_URL;
+      if (!nuxtUrl) return "/";
+      try {
+        return new URL(nuxtUrl).pathname;
+      } catch {
+        return "/";
+      }
+    })(),
   },
 
   // add google fonts module
@@ -62,6 +61,10 @@ export default defineNuxtConfig({
     display: "swap",
     preconnect: true,
     preload: true,
+    outputDir: "public/_fonts",
+    stylePath: "css/fonts.css",
+    fontsDir: "_fonts",
+    fontsPath: "/_fonts",
   },
 
   // Pre-bundle CJS-only dependency in dev to avoid ESM default export issues
