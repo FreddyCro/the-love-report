@@ -2,6 +2,12 @@
 import { ref, onMounted, watch, type Ref } from 'vue';
 import str from '../locales/section-a.json';
 import { useScroll, useIntersectionObserver } from '@vueuse/core';
+import LSectionAFrame1 from './LSectionAFrame1.vue';
+import LSectionAFrame2 from './LSectionAFrame2.vue';
+import LSectionAFrame3 from './LSectionAFrame3.vue';
+import LSectionAFrame4 from './LSectionAFrame4.vue';
+import LSectionAFrame5 from './LSectionAFrame5.vue';
+import LSectionAFrame6 from './LSectionAFrame6.vue';
 
 // refs for frame 1~7 elements
 const frame1 = ref<HTMLElement | null>(null);
@@ -132,170 +138,82 @@ function watchFrameIntersection(
 </script>
 
 <template>
-  <section class="sec-a">
+  <section class="sec-a l-article">
     <!-- visually hidden for seo -->
     <h1 class="visually-hidden">
       {{ str.title }}
     </h1>
 
     <!-- frame 1 -->
-    <div
-      ref="frame1"
-      class="part"
-      :class="{
-        'bg-love-blue-01': isFrame1Enter,
-      }"
-    >
-      <div>frame 1</div>
-
-      <!-- <LPic
-        :src="item.src"
-        :srcset="item.srcset"
-        :default="item.default"
-        :ext="item.ext"
-        :use-prefix="item.usePrefix"
-        :use2x="false"
-        :webp="item.webp"
-      /> -->
-
-      <!-- img back -->
-      <!-- /img/intimate_relationships_p01_frame01_00_pcpad -->
-      <!-- /img/intimate_relationships_p01_frame01_01 -->
-      <!-- /img/intimate_relationships_p01_frame01_02 -->
-
-      <!-- img front -->
-      <!-- /img/intimate_relationships_p01_frame01_03 -->
-
-      <!-- text -->
-      <div>{{ str.frame1_1 }}</div>
+    <div ref="frame1" class="sec-a-part">
+      <LSectionAFrame1 :active="isFrame1Enter" />
     </div>
 
     <!-- frame 2 -->
     <div
       ref="frame2"
-      class="part"
+      class="sec-a-part"
       :class="{
-        'bg-love-blue-01': isFrame2Enter,
+        active: isFrame2Enter,
       }"
     >
-      <div>frame 2</div>
-
-      <!-- img -->
-      <!-- /img/intimate_relationships_p01_frame02_04 -->
-
-      <!-- text -->
-      <div>{{ str.frame2_1 }}</div>
+      <LSectionAFrame2 :active="isFrame2Enter" />
     </div>
 
     <!-- frame 3  -->
     <div
       ref="frame3"
-      class="part"
+      class="sec-a-part"
       :class="{
-        'bg-love-blue-01': isFrame3Enter,
+        active: isFrame3Enter,
       }"
     >
-      <div>frame 3</div>
-
-      <!-- img -->
-      <!-- /img/intimate_relationships_p01_frame03_05 -->
-
-      <!-- text -->
-      <div>{{ str.frame3_1 }}</div>
+      <LSectionAFrame3 :active="isFrame3Enter" />
     </div>
 
     <!-- frame 4 -->
     <div
       ref="frame4"
-      class="part"
+      class="sec-a-part"
       :class="{
-        'bg-love-blue-01': isFrame4Enter,
+        active: isFrame4Enter,
       }"
     >
-      <div>frame 4</div>
-      <div class="meta">
-        {{ isFrame4Enter ? 'true' : 'false' }}
-      </div>
-
-      <!-- img 1 -->
-      <!-- /img/intimate_relationships_p01_frame04_06 -->
-
-      <!-- img 2 -->
-      <!-- /img/intimate_relationships_p01_frame04_07 -->
-
-      <!-- img 3 -->
-      <!-- /img/intimate_relationships_p01_frame04_08 -->
-
-      <!-- text 1 -->
-      <div>{{ str.frame4_1 }}</div>
-
-      <!-- text 2 -->
-      <div>{{ str.frame4_2 }}</div>
-
-      <!-- text 3 -->
-      <div>{{ str.frame4_3 }}</div>
-
-      <!-- text 4 -->
-      <div>{{ str.frame4_4 }}</div>
+      <LSectionAFrame4 :active="isFrame4Enter" />
     </div>
 
     <!-- frame 5 -->
     <div
       ref="frame5"
-      class="part"
+      class="sec-a-part"
       :class="{
-        'bg-love-blue-01': isFrame5Enter,
+        active: isFrame5Enter,
       }"
     >
-      <div>frame 5</div>
-
-      <!-- img 1 -->
-      <!-- /img/intimate_relationships_p01_frame05_09 -->
-
-      <!-- text 1 -->
-      <div>{{ str.frame5_1 }}</div>
-
-      <!-- text 2 -->
-      <div>{{ str.frame5_2 }}</div>
+      <LSectionAFrame5 :active="isFrame5Enter" />
     </div>
 
     <!-- frame 6 -->
     <div
       ref="frame6"
-      class="part"
+      class="sec-a-part"
       :class="{
-        'bg-love-blue-01': isFrame6Enter,
+        active: isFrame6Enter,
       }"
     >
-      <div>frame 6</div>
-
-      <!-- img 1 -->
-      <!-- /img/intimate_relationships_p01_frame06_10 -->
-
-      <!-- text 1 -->
-      <div>{{ str.frame6_1 }}</div>
+      <LSectionAFrame6 :active="isFrame6Enter" />
     </div>
   </section>
 </template>
 
 <style lang="scss">
-.part {
+.sec-a-part {
   height: 100vh;
-  border: 1px solid #000;
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-}
-
-.visually-hidden {
-  position: absolute !important;
-  height: 1px;
-  width: 1px;
   overflow: hidden;
-  clip: rect(1px, 1px, 1px, 1px);
-  white-space: nowrap; /* added line */
 }
 </style>

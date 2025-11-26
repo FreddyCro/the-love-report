@@ -32,7 +32,11 @@ export default defineNuxtConfig({
     'lenis/nuxt',
   ],
 
-  css: ['normalize.css', '~/assets/styles/main.css'],
+  css: [
+    'normalize.css',
+    '~/assets/styles/base.css',
+    '~/assets/styles/main.scss',
+  ],
 
   // Google Fonts configuration
   googleFonts: {

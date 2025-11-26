@@ -513,7 +513,7 @@ const testImages = ref([
 </script>
 
 <template>
-  <div class="test-all-img w-full p-10">
+  <div class="test-all-img w-full p-10 overflow-hidden">
     <div class="flex gap-4 flex-wrap">
       <div
         v-for="(item, index) in testImages"

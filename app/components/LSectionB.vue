@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
-import LStateCard from './LStateCard.vue';
+import LSectionBCard from './LSectionBCard.vue';
+import LSectionBIntro from './LSectionBIntro.vue';
+import LPic from './LPic.vue';
 import str from '../locales/section-b.json';
 
 type CartType = {
@@ -193,127 +195,101 @@ function handleIsEntered() {
 </script>
 
 <template>
-  <section class="sec-b">
+  <section class="sec-b l-article">
     <div class="l-container">
       <!-- intro -->
       <div class="intro">
         <!-- title -->
-        <h2 v-html="str.sectionTitle" />
-        <p>{{ str.sectionTitleSub }}</p>
-        <p>{{ str.introText1 }}</p>
-        <p>{{ str.introText2 }}</p>
+        <div class="intro-title flex justify-center mb-[38px] lg:mb-10">
+          <LSectionBIntro />
+
+          <h2 class="visually-hidden">
+            {{ str.sectionTitle1 }} {{ str.sectionTitle2 }}
+            {{ str.sectionTitle3 }}
+          </h2>
+
+          <!-- 先用圖片試試 -->
+          <!-- <h2 class="intro-title__h2 flex items-center gap-2">
+            <span>{{ str.sectionTitle1 }}</span>
+            <LRedLove />
+            <span>{{ str.sectionTitle2 }}</span>
+            <span>{{ str.sectionTitle3 }}</span>
+          </h2>
+          <div>
+            <p>{{ str.sectionTitleSub }}</p>
+          </div> -->
+        </div>
+        <p class="l-p">{{ str.introText1 }}</p>
+        <p class="l-p">{{ str.introText2 }}</p>
       </div>
+    </div>
 
-      <!-- cards -->
-      <div :class="JS_CLASSES.SECTION">
+    <!-- cards -->
+    <div :class="JS_CLASSES.SECTION">
+      <div
+        :class="[
+          'state-card-group',
+          JS_CLASSES.GROUP,
+          { 'is-ready': isAnimationReady },
+        ]"
+      >
         <div
-          :class="[
-            'state-card-group',
-            JS_CLASSES.GROUP,
-            { 'is-ready': isAnimationReady },
-          ]"
+          v-for="(item, index) in data"
+          :key="index"
+          :class="['state-card-wrapper', JS_CLASSES.WRAPPER]"
         >
-          <div
-            v-for="(item, index) in data"
-            :key="index"
-            :class="['state-card-wrapper', JS_CLASSES.WRAPPER]"
+          <LSectionBCard
+            :class="['state-card', JS_CLASSES.CARD]"
+            :title="item.title"
+            :description="item.description"
+            :note="item.note"
           >
-            <LStateCard
-              :class="['state-card', JS_CLASSES.CARD]"
-              :title="item.title"
-              :description="item.description"
-              :note="item.note"
-            >
-              <!-- Render different placeholder content based on item.chart (A..F) -->
-              <div v-if="item.chart === 'chartA'" class="chart-placeholder">
-                <span>Chart A — 圖表 {{ index + 1 }}</span>
-              </div>
+            <!-- Render different placeholder content based on item.chart (A..F) -->
+            <div v-if="item.chart === 'chartA'" class="contents">
+              <div class="chart-a-placeholder" />
+            </div>
 
-              <div
-                v-else-if="item.chart === 'chartB'"
-                class="chart-placeholder"
-              >
-                <div
-                  style="
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 8px;
-                  "
-                >
-                  <strong>Chart B</strong>
-                  <small>輔助描述 {{ index + 1 }}</small>
-                </div>
-              </div>
+            <div v-else-if="item.chart === 'chartB'" class="contents">
+              <div class="chart-a-placeholder" />
+            </div>
 
-              <div
-                v-else-if="item.chart === 'chartC'"
-                class="chart-placeholder"
-              >
-                <div style="display: flex; align-items: center; gap: 12px">
-                  <svg
-                    width="36"
-                    height="36"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    aria-hidden
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="rgba(255,255,255,0.6)"
-                      stroke-width="2"
-                    />
-                  </svg>
-                  <div>
-                    <strong>Chart C</strong>
-                    <div class="text-sm">圖表說明 {{ index + 1 }}</div>
-                  </div>
-                </div>
-              </div>
+            <div v-else-if="item.chart === 'chartC'">
+              <LPic
+                src="/img/intimate_relationships_p0202_card03_info"
+                ext="svg"
+                :use2x="false"
+                :webp="false"
+              />
+            </div>
 
-              <div
-                v-else-if="item.chart === 'chartD'"
-                class="chart-placeholder"
-              >
-                <div style="padding: 12px; text-align: center">
-                  <strong>Chart D</strong>
-                  <p class="text-sm">示意圖 D — 圖表 {{ index + 1 }}</p>
-                </div>
-              </div>
+            <div v-else-if="item.chart === 'chartD'">
+              <LPic
+                src="/img/intimate_relationships_p0202_card04_info01"
+                ext="svg"
+                :use2x="false"
+                :webp="false"
+              />
+            </div>
 
-              <div
-                v-else-if="item.chart === 'chartE'"
-                class="chart-placeholder"
-              >
-                <div style="display: grid; place-items: center">
-                  <strong>Chart E</strong>
-                  <small>附註 {{ index + 1 }}</small>
-                </div>
-              </div>
+            <div v-else-if="item.chart === 'chartE'">
+              <LPic
+                src="/img/intimate_relationships_p0202_card05_info"
+                :srcset="['pad', 'mob']"
+                ext="svg"
+                :use2x="false"
+                :webp="false"
+              />
+            </div>
 
-              <div
-                v-else-if="item.chart === 'chartF'"
-                class="chart-placeholder"
-              >
-                <div
-                  style="
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                  "
-                >
-                  <strong>Chart F</strong>
-                  <small>最後一張 — {{ index + 1 }}</small>
-                </div>
-              </div>
-
-              <div v-else class="chart-placeholder">
-                <span>Default chart {{ index + 1 }}</span>
-              </div>
-            </LStateCard>
-          </div>
+            <div v-else-if="item.chart === 'chartF'">
+              <LPic
+                src="/img/intimate_relationships_p0202_card06_info"
+                ext="svg"
+                :use2x="false"
+                :webp="false"
+              />
+            </div>
+          </LSectionBCard>
         </div>
       </div>
     </div>
@@ -321,16 +297,12 @@ function handleIsEntered() {
 </template>
 
 <style lang="scss">
+@use '@/assets/styles/mixins' as *;
+
 .sec-b {
   min-height: 100vh;
   padding: 4rem 0;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-
-  .l-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-  }
 }
 
 .state-card-group {
@@ -359,22 +331,23 @@ function handleIsEntered() {
   justify-content: center;
 }
 
+// LSectionBCard.vue
 .state-card {
   will-change: transform, opacity;
 }
 
-.chart-placeholder {
+.chart-a-placeholder {
   width: 100%;
-  height: 300px;
-  aspect-ratio: 265 / 300;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 1.25rem;
-  font-weight: bold;
-  opacity: 0.8;
+  height: 100%;
+  aspect-ratio: 308 / 269;
+  background-color: gray;
+
+  @include rwd-min(sm) {
+    aspect-ratio: 492 / 197;
+  }
+
+  @include rwd-min(lg) {
+    aspect-ratio: 640 / 206;
+  }
 }
 </style>

@@ -28,11 +28,13 @@ useJsonld({
     <AppHeader />
     <LSectionA />
     <LSectionB />
-    <LSectionC />
-    <LSectionD />
-    <LSectionE />
-    <LSectionF />
-    <AppFooter />
+    <div class="yumi">
+      <LSectionC />
+      <LSectionD />
+      <LSectionE />
+      <LSectionF />
+      <AppFooter />
+    </div>
     <TestAllImg />
   </NuxtLayout>
 </template>

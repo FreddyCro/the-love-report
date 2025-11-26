@@ -1,0 +1,184 @@
+@import './mixins';
+
+:root {
+  /* PC headings (font-size / line-height) */
+  --pc-h1-font-size: 50px;
+  --pc-h1-line-height: 68px;
+  --pc-h2-font-size: 42px;
+  --pc-h2-line-height: 56px;
+  --pc-h3-font-size: 32px;
+  --pc-h3-line-height: 48px;
+  --pc-h4-font-size: 28px;
+  --pc-h4-line-height: 46px;
+  --pc-h5-font-size: 20px;
+  --pc-h5-line-height: 32px;
+  --pc-h6-font-size: 16px;
+  --pc-h6-line-height: 24px;
+  --pc-quote-font-size: 32px;
+  --pc-quote-line-height: 54px;
+  --pc-quote-title-font-size: 18px;
+  --pc-quote-title-line-height: 24px;
+  --pc-extended-font-size: 18px; /* 延伸閱讀 */
+  --pc-extended-line-height: 30px;
+
+  /* Mobile headings (font-size / line-height) */
+  --mob-h1-font-size: 36px;
+  --mob-h1-line-height: 46px;
+  --mob-h2-font-size: 32px;
+  --mob-h2-line-height: 46px;
+  --mob-h3-font-size: 28px;
+  --mob-h3-line-height: 40px;
+  --mob-h4-font-size: 22px;
+  --mob-h4-line-height: 36px;
+  --mob-h5-font-size: 18px;
+  --mob-h5-line-height: 30px;
+  --mob-h6-font-size: 16px;
+  --mob-h6-line-height: 24px;
+  --mob-quote-font-size: 27px;
+  --mob-quote-line-height: 45px;
+  --mob-quote-title-font-size: 15px;
+  --mob-quote-title-line-height: 21px;
+  --mob-extended-font-size: 16px; /* 延伸閱讀 */
+  --mob-extended-line-height: 28px;
+}
+
+/* Layout */
+.l-container {
+  width: 100%;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  @include rwd-min(xxs) {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  @include rwd-min(pad) {
+    max-width: calc(530px + 60px * 2);
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+
+  @include rwd-min(pc) {
+    max-width: calc(620px + 120px * 2);
+    padding-left: 120px;
+    padding-right: 120px;
+  }
+}
+
+/* Typography */
+.l-article {
+  .l-p {
+    font-size: 18px;
+    line-height: 36px;
+  }
+
+  // p + p spacing
+  p:not(.l-quote) + p:not(.l-quote) {
+    margin-top: 36px;
+  }
+
+  .l-h2 {
+    font-size: var(--mob-h2-font-size);
+    line-height: var(--mob-h2-line-height);
+
+    @include rwd-min(pad) {
+      font-size: var(--pc-h2-font-size);
+      line-height: var(--pc-h2-line-height);
+    }
+  }
+
+  .l-h3 {
+    font-size: var(--mob-h3-font-size);
+    line-height: var(--mob-h3-line-height);
+
+    @include rwd-min(pad) {
+      font-size: var(--pc-h3-font-size);
+      line-height: var(--pc-h3-line-height);
+    }
+  }
+
+  .l-h4 {
+    font-size: var(--mob-h4-font-size);
+    line-height: var(--mob-h4-line-height);
+
+    @include rwd-min(pad) {
+      font-size: var(--pc-h4-font-size);
+      line-height: var(--pc-h4-line-height);
+    }
+  }
+
+  .l-h5 {
+    font-size: var(--mob-h5-font-size);
+    line-height: var(--mob-h5-line-height);
+
+    @include rwd-min(pad) {
+      font-size: var(--pc-h5-font-size);
+      line-height: var(--pc-h5-line-height);
+    }
+  }
+}
+
+.yumi {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  p {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 36px;
+  }
+
+  h1 {
+    font-size: 40px;
+  }
+
+  h2 {
+    font-size: 42px;
+    line-height: 56px;
+  }
+
+  h3 {
+    font-size: 32px;
+    line-height: 48px;
+  }
+
+  h4 {
+    font-size: 28px;
+    line-height: 46px;
+  }
+
+  h5 {
+    font-size: 20px;
+    line-height: 32px;
+  }
+}
+
+/* Utility */
+.text-card-regular {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 32px;
+}
+
+.text-card-bold {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 32px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap; /* added line */
+}
