@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import sectionCData from "~/locales/section-c.json";
 import LPic from "./LPic.vue";
-
 interface CaseItem {
 	id: string;
 	name: string;
@@ -22,10 +21,17 @@ const content = {
 };
 
 const cases = sectionCData.cases as CaseItem[];
+
+// 截斷文字到指定字數
+const truncateText = (text: string, limit: number = 104): string => {
+	if (text.length <= limit) return text;
+	return text.slice(0, limit) + '...';
+};
+
 </script>
 
 <template>
-	<section class="section-c bg-love-blue-01 rounded-t-[120px]">
+	<section class="section-c bg-love-blue-01 rounded-t-[120px] overflow-x-hidden">
 		<!-- Title -->
 		<div class="text-center mb-6">
 			<div class="section-c__dialogbox">
@@ -89,12 +95,11 @@ const cases = sectionCData.cases as CaseItem[];
 		</div>
 
 		<!-- Case Cards -->
-		<!-- TODO: 卡牌向右出現、文字104... -->
-		<div class="section-c__cards l-container flex gap-6 overflow-x-hidden">
+		<div class="section-c__cards l-container flex gap-6 overflow-visible">
 			<div
 				v-for="caseItem in cases"
 				:key="caseItem.id"
-				class="bg-white rounded-[30px] border-2 border-love-blue-02 pt-10 px-7 pb-[52px] relative overflow-hidden shrink-0 w-full max-w-[561px] max-h-[486px]"
+				class="bg-white rounded-[30px] border-2 border-love-blue-02 pt-[38px] px-[26px] pb-[50px] relative overflow-hidden shrink-0 w-full max-w-[561px] max-h-[486px]"
 			>
 				<div class="flex gap-6 mb-7">
 					<div class="w-[154px] h-[158px] py-0.5">
@@ -120,14 +125,14 @@ const cases = sectionCData.cases as CaseItem[];
 						<p v-if="caseItem.tag" class="text-card-bold mb-2">
 							{{ caseItem.tag }}
 						</p>
-						<p>{{ caseItem.story }}</p>
+						<p class="text-card-regular">{{ caseItem.story }}</p>
 					</div>
 				</div>
 
 				<div class="pt-7 border-t border-black">
 					<h5 class="text-love-red-03 mb-1">{{ caseItem.title }}</h5>
-					<p class="line-clamp-4">
-						{{ caseItem.desc }}
+					<p>
+						{{ truncateText(caseItem.desc, 104) }}
 					</p>
 				</div>
 
