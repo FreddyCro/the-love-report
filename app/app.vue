@@ -4,9 +4,9 @@ import AppFooter from './components/AppFooter.vue';
 import LSectionA from './components/LSectionA.vue';
 import LSectionB from './components/LSectionB.vue';
 import LSectionC from './components/LSectionC.vue';
-import LSectionD from './components/LSectionD.vue';
-import LSectionE from './components/LSectionE.vue';
-import LSectionF from './components/LSectionF.vue';
+// import LSectionD from "./components/LSectionD.vue";
+// import LSectionE from "./components/LSectionE.vue";
+// import LSectionF from "./components/LSectionF.vue";
 import TestAllImg from './components/TestAllImg.vue';
 import meta from './locales/meta.json';
 
@@ -30,11 +30,11 @@ useJsonld({
     <LSectionB />
     <div class="yumi">
       <LSectionC />
-      <LSectionD />
+      <!-- <LSectionD />
       <LSectionE />
-      <LSectionF />
-      <AppFooter />
+      <LSectionF /> -->
     </div>
+    <AppFooter />
     <TestAllImg />
   </NuxtLayout>
 </template>

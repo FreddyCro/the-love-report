@@ -15,6 +15,7 @@ defineProps<{
     <!-- img -->
     <LPic
       src="/img/intimate_relationships_p01_frame03_05"
+      :srcset="['pad', 'mob']"
       ext="jpg"
       :use2x="false"
       :webp="true"

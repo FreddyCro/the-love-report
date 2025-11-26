@@ -15,6 +15,7 @@ defineProps<{
     <!-- img 1 -->
     <LPic
       src="/img/intimate_relationships_p01_frame04_06"
+      :srcset="['pad', 'mob']"
       ext="jpg"
       :use2x="false"
       :webp="true"
@@ -30,6 +31,7 @@ defineProps<{
     <!-- img 2 -->
     <LPic
       src="/img/intimate_relationships_p01_frame04_07"
+      :srcset="['pad', 'mob']"
       ext="jpg"
       :use2x="false"
       :webp="true"
@@ -45,6 +47,7 @@ defineProps<{
     <!-- img 3 -->
     <LPic
       src="/img/intimate_relationships_p01_frame04_08"
+      :srcset="['pad', 'mob']"
       ext="jpg"
       :use2x="false"
       :webp="true"
