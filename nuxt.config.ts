@@ -64,7 +64,16 @@ export default defineNuxtConfig({
     outputDir: "public/_fonts",
     stylePath: "css/fonts.css",
     fontsDir: "_fonts",
-    fontsPath: "/_fonts",
+    fontsPath: (() => {
+      const nuxtUrl = process.env.NUXT_URL;
+      if (!nuxtUrl) return "/_fonts";
+      try {
+        const baseURL = new URL(nuxtUrl).pathname;
+        return `${baseURL}_fonts`.replace("//", "/");
+      } catch {
+        return "/_fonts";
+      }
+    })(),
   },
 
   // Pre-bundle CJS-only dependency in dev to avoid ESM default export issues
