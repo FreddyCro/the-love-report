@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import LChatBubble from './LChatBubble.vue';
 import str from '../locales/section-a.json';
 
 defineProps<{
@@ -14,7 +13,7 @@ defineProps<{
       active: active,
     }"
   >
-    <div class="l-seca-f1__content">
+    <div class="w-full max-w-7xl aspect-1280/720 mx-auto">
       <!-- img back -->
       <div class="l-seca-f1__img1-wrap">
         <LPic
@@ -64,17 +63,11 @@ defineProps<{
 <style lang="scss">
 .l-seca-f1 {
   position: relative;
+  width: 100%;
 
-  &.active {
-    .l-seca-f1__img1-wrap {
-      animation: crop 1s ease forwards;
-    }
-  }
-
-  &__content {
-    width: 100%;
-    aspect-ratio: 1280 / 720;
-    margin: 0 auto;
+  &__img1-wrap {
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 1s ease;
   }
 
   &__img2-wrap {
@@ -82,6 +75,8 @@ defineProps<{
     right: 0;
     top: 0;
     display: inline-block;
+    transform: translateX(100%);
+    transition: transform 1s 0.5s ease;
   }
 
   &__text-wrap {
@@ -91,16 +86,22 @@ defineProps<{
     display: inline-block;
     color: #fff;
     font-size: 1.6rem;
-  }
-}
-
-@keyframes crop {
-  from {
-    clip-path: inset(0 0 0 0);
+    transform: translateX(-100%);
+    transition: transform 1s 1s ease;
   }
 
-  to {
-    clip-path: inset(0 20% 0 20%);
+  &.active {
+    .l-seca-f1__img1-wrap {
+      clip-path: inset(0 20% 0 20%);
+    }
+
+    .l-seca-f1__img2-wrap {
+      transform: translateX(0);
+    }
+
+    .l-seca-f1__text-wrap {
+      transform: translateX(0);
+    }
   }
 }
 </style>
