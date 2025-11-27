@@ -25,13 +25,12 @@ const cases = sectionCData.cases as CaseItem[];
 // 截斷文字到指定字數
 const truncateText = (text: string, limit: number = 104): string => {
 	if (text.length <= limit) return text;
-	return text.slice(0, limit) + '...';
+	return text.slice(0, limit) + "...";
 };
-
 </script>
 
 <template>
-	<section class="section-c bg-love-blue-01 rounded-t-[120px] overflow-x-hidden">
+	<section class="section-c bg-love-blue-01 overflow-x-hidden">
 		<!-- Title -->
 		<div class="text-center mb-6">
 			<div class="section-c__dialogbox">
@@ -40,7 +39,7 @@ const truncateText = (text: string, limit: number = 104): string => {
 		</div>
 		<!-- Intro Text -->
 		<div class="l-container space-y-9">
-			<p v-for="(paragraph, index) in content.intro" :key="index">
+			<p v-for="(paragraph, index) in content.intro" :key="index" class="text">
 				{{ paragraph }}
 			</p>
 		</div>
@@ -131,7 +130,7 @@ const truncateText = (text: string, limit: number = 104): string => {
 
 				<div class="pt-7 border-t border-black">
 					<h5 class="text-love-red-03 mb-1">{{ caseItem.title }}</h5>
-					<p>
+					<p class="text">
 						{{ truncateText(caseItem.desc, 104) }}
 					</p>
 				</div>
@@ -158,12 +157,14 @@ const truncateText = (text: string, limit: number = 104): string => {
 <style scoped lang="scss">
 .section-c {
 	min-height: 100vh;
-	padding: 80px 0 120px;
+	padding: 80px 0 140px;
+	position: relative;
+	margin-top: -120px;
 
 	&__dialogbox {
 		width: 240px;
 		height: 90px;
-		background-image: url("/img/intimate_relationships_p0201_dialogbox_pad.svg");
+		background-image: url("/img/intimate_relationships_p0301_dialogbox_pc.svg");
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: center;

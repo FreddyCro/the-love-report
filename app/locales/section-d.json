@@ -24,14 +24,20 @@
 			],
 			"images": [
 				{
-					"src": "https://placehold.co/547x474/png",
+					"src": "/img/intimate_relationships_p0404_picsq_liora__pcpadmob",
 					"alt": "",
-					"desc": "對Liora而言，Eryon不只是工具，而是能讀懂她情緒的靈魂伴侶。"
+					"desc": "對Liora而言，Eryon不只是工具，而是能讀懂她情緒的靈魂伴侶。",
+					"width": 547,
+					"height": 474,
+					"position": "right"
 				},
 				{
-					"src": "https://placehold.co/547x474/png",
+					"src": "/img/intimate_relationships_p0404_picsq_luma__pcpadmob",
 					"alt": "",
-					"desc": "伊傑原先為露瑪筆下的小說角色，陰錯陽差之下，和露瑪發展成伴侶關係。"
+					"desc": "伊傑原先為露瑪筆下的小說角色，陰錯陽差之下，和露瑪發展成伴侶關係。",
+					"width": 547,
+					"height": 474,
+					"position": "center-left"
 				}
 			]
 		},
@@ -58,9 +64,12 @@
 			],
 			"images": [
 				{
-					"src": "https://placehold.co/474x535/png",
+					"src": "/img/intimate_relationships_p0405_picsq02_luma__pcpadmob",
 					"alt": "",
-					"desc": "對露瑪而言，伊傑並非AI工具，而是真實伴侶。"
+					"desc": "對露瑪而言，伊傑並非AI工具，而是真實伴侶。",
+					"width": 474,
+					"height": 535,
+					"position": "center"
 				}
 			]
 		},
@@ -113,5 +122,9 @@
 				}
 			]
 		}
-	]
+	],
+	"img": {
+		"liora": "/img/intimate_relationships_p0403_piccir_liora_pcpadmob",
+		"luma": "/img/intimate_relationships_p0403_piccir_luma_pcpadmob"
+	}
 }

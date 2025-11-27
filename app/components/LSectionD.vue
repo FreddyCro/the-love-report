@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import sectionDData from "~/locales/section-d.json";
+import LPic from "./LPic.vue";
 
 interface Story {
 	position: string;
@@ -11,6 +12,9 @@ interface ImageItem {
 	src: string;
 	alt: string;
 	desc: string;
+	width: number;
+	height: number;
+	position?: "left" | "right" | "center" | "center-left" | "center-right";
 }
 
 interface CaseItem {
@@ -24,71 +28,123 @@ interface CaseItem {
 const content = {
 	title: sectionDData.title,
 	intro: sectionDData.intro as string[],
+	img: sectionDData.img as { liora: string; luma: string },
 };
 
 const cases = sectionDData.cases as CaseItem[];
+
+const getAvatarImage = (name: string) => {
+	if (name === "露瑪") {
+		return content.img.luma;
+	} else if (name === "Liora") {
+		return content.img.liora;
+	}
+	return "";
+};
 </script>
 
 <template>
-	<section class="section-d bg-love-red-01 rounded-t-[120px]">
-		<div class="l-container">
-			<!-- Title -->
-			<div class="section-d__header">
-				<h2 class="section-d__title">{{ content.title }}</h2>
+	<section class="section-d bg-love-red-01">
+		<!-- Title -->
+		<div class="text-center mb-6">
+			<div class="section-d__dialogbox">
+				<h2 class="text-love-red-03">{{ content.title }}</h2>
 			</div>
+		</div>
 
-			<!-- Intro Text -->
-			<div class="section-d__intro">
-				<p v-for="(paragraph, index) in content.intro" :key="index">
-					{{ paragraph }}
-				</p>
-			</div>
+		<!-- Intro Text -->
+		<div class="l-container space-y-9">
+			<p v-for="(paragraph, index) in content.intro" :key="index" class="text">
+				{{ paragraph }}
+			</p>
+		</div>
 
-			<!-- Cases -->
-			<div v-for="caseItem in cases" :key="caseItem.index" class="case-section">
-				<!-- Step Indicator -->
+		<!-- Cases -->
+		<div v-for="caseItem in cases" :key="caseItem.index" class="mb-5">
+			<!-- Step Indicator -->
+			<div class="py-12 l-container">
 				<div class="section-d__step">
-					<div class="step-number">{{ caseItem.index }}</div>
+					<p class="text-love-red-03">{{ caseItem.index }}</p>
 				</div>
+				<h3 class="mt-1 pb-3 text-center border-b border-black">
+					{{ caseItem.title }}
+				</h3>
+				<h5 class="pt-3">{{ caseItem.desc }}</h5>
+			</div>
 
-				<h3 class="case-section__title">{{ caseItem.title }}</h3>
-				<p class="case-section__desc">{{ caseItem.desc }}</p>
-
-				<!-- Stories -->
-				<div class="stories">
-					<div
-						v-for="(story, index) in caseItem.stories"
-						:key="index"
-						class="story-card"
-						:class="`story-card--${story.position}`"
-					>
-						<div class="story-card__avatar">
-							<div class="avatar-circle">
-								<span class="avatar-icon">👤</span>
-							</div>
-						</div>
-						<div class="story-card__content">
-							<h4 class="story-card__name">{{ story.name }}</h4>
-							<p class="story-card__text">{{ story.content }}</p>
-						</div>
-					</div>
-				</div>
-
-				<!-- Images -->
-				<div v-if="caseItem.images" class="case-images">
-					<div
-						v-for="(image, index) in caseItem.images"
-						:key="index"
-						class="image-item"
-					>
-						<NuxtImg
-							:src="image.src"
-							:alt="image.alt"
-							class="image-item__img"
-							format="webp"
+			<!-- Stories -->
+			<div class="flex flex-col gap-9 max-w-[944px] m-auto mb-9">
+				<div
+					v-for="(story, index) in caseItem.stories"
+					:key="index"
+					class="flex gap-6 items-start"
+					:class="story.position === 'left' ? 'flex-row' : 'flex-row-reverse'"
+				>
+					<!-- Avatar -->
+					<div class="shrink-0 w-[138px] h-[138px]">
+						<LPic
+							:src="getAvatarImage(story.name)"
+							ext="png"
+							:use-prefix="false"
+							:use2x="false"
+							:webp="true"
+							:width="138"
+							:height="138"
 						/>
-						<p class="image-item__desc">{{ image.desc }}</p>
 					</div>
+
+					<!-- Dialog Box -->
+					<div
+						class="flex-1 flex flex-col"
+						:class="story.position === 'left' ? 'items-start' : 'items-end'"
+					>
+						<h4 class="mb-1">
+							{{ story.name }}
+						</h4>
+						<!-- Content -->
+						<p
+							class="bg-white px-5 py-4 max-w-[547px] text"
+							:class="
+								story.position === 'left'
+									? 'rounded-tr-[10px] rounded-b-[10px]'
+									: 'rounded-tl-[10px] rounded-b-[10px]'
+							"
+						>
+							{{ story.content }}
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Images -->
+			<div
+				v-if="caseItem.images"
+				class="flex flex-wrap gap-6 max-w-[944px] m-auto mb-9"
+			>
+				<div
+					v-for="(image, index) in caseItem.images"
+					:key="index"
+					class="flex flex-col"
+					:class="{
+						'mx-auto': image.position === 'center',
+						'mr-auto': image.position === 'left',
+						'ml-auto': image.position === 'right',
+						'ml-[162px]': image.position === 'center-left',
+						'mr-[162px]': image.position === 'center-right',
+					}"
+					:style="`width: ${image.width}px;`"
+				>
+					<LPic
+						:src="image.src"
+						ext="jpg"
+						:use-prefix="false"
+						:use2x="false"
+						:use-webp="true"
+						:width="image.width"
+						:height="image.height"
+						classname="w-full h-auto"
+					/>
+					<p class="mt-4 pic-info">{{ image.desc }}</p>
 				</div>
 			</div>
 		</div>
@@ -98,221 +154,35 @@ const cases = sectionDData.cases as CaseItem[];
 <style scoped lang="scss">
 .section-d {
 	min-height: 100vh;
-	padding: 80px 0 120px;
+	padding: 80px 0 140px;
 
-	&__header {
-		text-align: center;
-		margin-bottom: 60px;
-	}
-
-	&__title {
-		display: inline-block;
-		font-size: 32px;
-		font-weight: 700;
-		color: #404040;
-		padding: 12px 40px;
-		border: 3px solid #fe7152;
-		border-radius: 60px;
-		background: transparent;
-	}
-
-	&__intro {
-		max-width: 620px;
-		margin: 0 auto 80px;
-		font-size: 18px;
-		line-height: 36px;
-		color: #404040;
-
-		p {
-			margin-bottom: 24px;
-
-			&:last-child {
-				margin-bottom: 0;
-			}
-		}
+	&__dialogbox {
+		width: 240px;
+		height: 90px;
+		background-image: url("/img/intimate_relationships_p0401_dialogbox_pc.svg");
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+		display: flex;
+		justify-content: center;
+		margin: 0 auto;
+		padding-top: 6px;
 	}
 
 	&__step {
-		text-align: center;
-		margin-bottom: 60px;
-	}
-}
-
-.step-number {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 70px;
-	height: 70px;
-	border-radius: 50%;
-	background: #fff;
-	border: 3px solid #fe7152;
-	font-size: 32px;
-	font-weight: 700;
-	color: #fe7152;
-}
-
-.case-section {
-	max-width: 620px;
-	margin: 0 auto 80px;
-
-	&__title {
-		font-size: 28px;
-		font-weight: 700;
-		color: #404040;
-		margin-bottom: 16px;
-		text-align: center;
-	}
-
-	&__desc {
-		font-size: 18px;
-		line-height: 32px;
-		color: #404040;
-		margin-bottom: 40px;
-		text-align: center;
-	}
-}
-
-.stories {
-	display: flex;
-	flex-direction: column;
-	gap: 40px;
-	margin-bottom: 60px;
-}
-
-.story-card {
-	display: flex;
-	gap: 24px;
-	align-items: flex-start;
-
-	&--left {
-		flex-direction: row;
-	}
-
-	&--right {
-		flex-direction: row-reverse;
-	}
-
-	&__avatar {
-		flex-shrink: 0;
-	}
-
-	&__content {
-		flex: 1;
-	}
-
-	&__name {
-		font-size: 20px;
-		font-weight: 700;
-		color: #404040;
-		margin-bottom: 12px;
-	}
-
-	&__text {
-		font-size: 18px;
-		line-height: 32px;
-		color: #404040;
-	}
-}
-
-.avatar-circle {
-	width: 80px;
-	height: 80px;
-	border-radius: 50%;
-	background: linear-gradient(135deg, #ffa59b 0%, #ffeded 100%);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border: 2px solid #ffa59b;
-
-	.avatar-icon {
-		font-size: 40px;
-		opacity: 0.6;
-	}
-}
-
-.case-images {
-	display: grid;
-	grid-template-columns: 1fr;
-	gap: 40px;
-}
-
-.image-item {
-	&__img {
-		width: 100%;
-		height: auto;
-		border-radius: 20px;
-		margin-bottom: 16px;
-	}
-
-	&__desc {
-		font-size: 16px;
-		line-height: 28px;
-		color: #404040;
-		text-align: center;
-	}
-}
-
-@media (max-width: 768px) {
-	.section-d {
-		padding: 60px 20px 100px;
-
-		&__title {
-			font-size: 24px;
-			padding: 10px 30px;
-		}
-
-		&__intro {
-			font-size: 16px;
-			line-height: 32px;
-			margin-bottom: 60px;
-		}
-	}
-
-	.step-number {
-		width: 60px;
+		width: 70px;
 		height: 60px;
-		font-size: 28px;
-	}
-
-	.case-section {
-		&__title {
-			font-size: 24px;
-		}
-
-		&__desc {
-			font-size: 16px;
-			line-height: 28px;
-		}
-	}
-
-	.story-card {
-		flex-direction: column !important;
-		gap: 16px;
-
-		&__name {
-			font-size: 18px;
-		}
-
-		&__text {
-			font-size: 16px;
-			line-height: 28px;
-		}
-	}
-
-	.avatar-circle {
-		width: 60px;
-		height: 60px;
-
-		.avatar-icon {
-			font-size: 32px;
-		}
-	}
-
-	.image-item {
-		&__desc {
-			font-size: 14px;
-			line-height: 24px;
+		background-image: url("/img/intimate_relationships_p0402_heartsign_pcpadmob.svg");
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+		margin: 0 auto;
+		display: flex;
+		justify-content: center;
+		padding-top: 7px;
+		p {
+			font-size: 30px;
+			line-height: 40px;
 		}
 	}
 }
