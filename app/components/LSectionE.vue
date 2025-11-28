@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import sectionEData from "~/locales/section-e.json";
+import LPic from "./LPic.vue";
 
 interface ContentBlock {
 	type: string;
@@ -9,6 +10,17 @@ interface ContentBlock {
 	text?: string;
 	src?: string;
 	note?: string;
+	width?: number;
+	height?: number;
+	ext?: string;
+	usePrefix?: boolean;
+	use2x?: boolean;
+	webp?: boolean;
+	style?: {
+		color?: string;
+		position?: string;
+	};
+	classname?: string;
 }
 
 interface CaseItem {
@@ -29,39 +41,35 @@ const cases = sectionEData.cases as CaseItem[];
 	<section class="section-e bg-white rounded-t-[120px]">
 		<div class="l-container">
 			<!-- Title -->
-			<div class="section-e__header">
-				<h2 class="section-e__title">{{ content.title }}</h2>
+			<div class="text-center mb-6">
+				<div class="section-e__dialogbox">
+					<h2 class="text-black">{{ content.title }}</h2>
+				</div>
 			</div>
 
 			<!-- Intro Text -->
-			<div class="section-e__intro">
-				<p v-for="(paragraph, index) in content.intro" :key="index">
+			<div class="space-y-9">
+				<p
+					v-for="(paragraph, index) in content.intro"
+					:key="index"
+					class="text"
+				>
 					{{ paragraph }}
 				</p>
 			</div>
 
 			<!-- Cases -->
-			<div v-for="caseItem in cases" :key="caseItem.index" class="case-section">
+			<div v-for="caseItem in cases" :key="caseItem.index" class="mt-[68px]">
 				<!-- Step Indicator -->
-				<div class="section-e__step">
-					<div class="step-number">{{ caseItem.index }}</div>
-				</div>
-
-				<h3 class="case-section__title">{{ caseItem.title }}</h3>
+				<h3 class="pb-2 mb-2 border-b border-black">{{ caseItem.title }}</h3>
 
 				<!-- Content Blocks -->
-				<div
-					v-for="(block, blockIndex) in caseItem.content"
-					:key="blockIndex"
-					class="content-block"
-				>
+				<div v-for="(block, blockIndex) in caseItem.content" :key="blockIndex">
 					<!-- Title Block -->
-					<div v-if="block.type === 'title'" class="block-title">
-						<h4>{{ block.desc }}</h4>
-					</div>
+					<h5 v-if="block.type === 'title'" class="mb-5">{{ block.desc }}</h5>
 
 					<!-- Text Block -->
-					<div v-else-if="block.type === 'text'" class="block-text">
+					<div v-else-if="block.type === 'text'" class="space-y-9 mb-9 text">
 						<p
 							v-for="(paragraph, pIndex) in (block.desc as string[])"
 							:key="pIndex"
@@ -71,37 +79,67 @@ const cases = sectionEData.cases as CaseItem[];
 					</div>
 
 					<!-- Comment Block -->
-					<div v-else-if="block.type === 'comment'" class="block-comment">
-						<div class="comment-box">
-							<p>{{ block.desc }}</p>
-						</div>
+					<div
+						v-else-if="block.type === 'comment'"
+						class="px-6 py-2.5 border-2 max-w-[469px] mb-9 mx-auto"
+						:class="[
+							block.style?.color === 'red'
+								? 'border-love-red-03'
+								: 'border-love-blue-03',
+							block.style?.position === 'left-bottom'
+								? 'rounded-tl-[20px] rounded-tr-[20px] rounded-br-[20px]'
+								: block.style?.position === 'right-bottom'
+								? 'rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px]'
+								: 'rounded-[20px]',
+						]"
+					>
+						<h5>{{ block.desc }}</h5>
 					</div>
 
 					<!-- Data Block -->
-					<div v-else-if="block.type === 'data'" class="block-data">
-						<h5 v-if="block.title" class="data-title">{{ block.title }}</h5>
-						<div class="data-items">
+					<div v-else-if="block.type === 'data'" class="my-9">
+						<h5 v-if="block.title" class="mob-h5 text-black">
+							{{ block.title }}
+						</h5>
+						<div class="mx-[45px] mt-5 relative" :class="block.classname">
 							<div
 								v-for="(item, itemIndex) in (block.desc as any[])"
 								:key="itemIndex"
-								class="data-item"
+								class="flex gap-2 items-end px-6 py-[13px] w-fit absolute"
+								:class="[
+									`${block.classname}__${itemIndex}`,
+									item.style?.color === 'red'
+										? 'bg-love-red-02'
+										: 'bg-love-blue-02',
+									item.style?.position === 'left-bottom'
+										? 'rounded-tl-[20px] rounded-tr-[20px] rounded-br-[20px]'
+										: item.style?.position === 'right-bottom'
+										? 'rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px]'
+										: 'rounded-[20px]',
+								]"
 							>
-								<div class="data-prefix">{{ item.prefix }}</div>
-								<div class="data-text">{{ item.text }}</div>
+								<p class="text-[40px] font-bold text-black">
+									{{ item.prefix }}
+								</p>
+								<h5 class="text-black">{{ item.text }}</h5>
 							</div>
 						</div>
-						<p v-if="block.note" class="data-note">{{ block.note }}</p>
+						<p v-if="block.note" class="pic-info pt-5">{{ block.note }}</p>
 					</div>
 
 					<!-- Image Block -->
-					<div v-else-if="block.type === 'image'" class="block-image">
-						<NuxtImg
+					<div v-else-if="block.type === 'image'">
+						<LPic
+							v-if="block.src"
 							:src="block.src"
-							alt=""
-							class="block-image__img"
-							format="webp"
+							:ext="block.ext || 'jpg'"
+							:use-prefix="block.usePrefix ?? false"
+							:use2x="block.use2x ?? false"
+							:webp="block.webp ?? true"
+							:width="block.width"
+							:height="block.height"
 						/>
-						<p v-if="block.note" class="block-image__note">{{ block.note }}</p>
+						<p v-if="block.note" class="mt-2 pic-info">{{ block.note }}</p>
 					</div>
 				</div>
 			</div>
@@ -114,270 +152,71 @@ const cases = sectionEData.cases as CaseItem[];
 	min-height: 100vh;
 	padding: 80px 0 120px;
 
-	&__header {
-		text-align: center;
-		margin-bottom: 60px;
-	}
-
-	&__title {
-		display: inline-block;
-		font-size: 32px;
-		font-weight: 700;
-		color: #404040;
-		padding: 12px 40px;
-		border: 3px solid #404040;
-		border-radius: 60px;
-		background: transparent;
-	}
-
-	&__intro {
-		max-width: 620px;
-		margin: 0 auto 80px;
-		font-size: 18px;
-		line-height: 36px;
-		color: #404040;
-
-		p {
-			margin-bottom: 24px;
-
-			&:last-child {
-				margin-bottom: 0;
-			}
-		}
-	}
-
-	&__step {
-		text-align: center;
-		margin-bottom: 40px;
-	}
-}
-
-.step-number {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 70px;
-	height: 70px;
-	border-radius: 50%;
-	background: #fff;
-	border: 3px solid #404040;
-	font-size: 32px;
-	font-weight: 700;
-	color: #404040;
-}
-
-.case-section {
-	max-width: 620px;
-	margin: 0 auto 80px;
-
-	&__title {
-		font-size: 28px;
-		font-weight: 700;
-		color: #404040;
-		margin-bottom: 40px;
-		text-align: center;
-	}
-}
-
-.content-block {
-	margin-bottom: 32px;
-}
-
-.block-title {
-	h4 {
-		font-size: 20px;
-		font-weight: 700;
-		color: #404040;
-		line-height: 32px;
-		margin-bottom: 16px;
-	}
-}
-
-.block-text {
-	p {
-		font-size: 18px;
-		line-height: 36px;
-		color: #404040;
-		margin-bottom: 16px;
-
-		&:last-child {
-			margin-bottom: 0;
-		}
-	}
-}
-
-.block-comment {
-	margin: 32px 0;
-
-	.comment-box {
-		background: #f5f5f5;
-		border-left: 4px solid #0095cc;
-		padding: 20px 24px;
-		border-radius: 8px;
-
-		p {
-			font-size: 18px;
-			line-height: 32px;
-			color: #404040;
-			margin: 0;
-		}
-	}
-}
-
-.block-data {
-	margin: 40px 0;
-	padding: 32px;
-	background: #f9f9f9;
-	border-radius: 20px;
-
-	.data-title {
-		font-size: 18px;
-		font-weight: 700;
-		color: #404040;
-		margin-bottom: 24px;
-		text-align: center;
-	}
-
-	.data-items {
+	&__dialogbox {
+		width: 240px;
+		height: 90px;
+		background-image: url("/img/intimate_relationships_p0501_dialogbox_pc.svg");
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
 		display: flex;
-		flex-direction: column;
-		gap: 16px;
+		justify-content: center;
+		margin: 0 auto;
+		padding-top: 6px;
 	}
 
-	.data-item {
-		display: flex;
-		align-items: center;
-		gap: 16px;
-	}
-
-	.data-prefix {
-		font-size: 24px;
-		font-weight: 700;
-		color: #0095cc;
-		min-width: 80px;
-		text-align: center;
-		padding: 8px 16px;
-		background: #d6f2fa;
-		border-radius: 999px;
-	}
-
-	.data-text {
-		font-size: 18px;
-		line-height: 32px;
-		color: #404040;
-		flex: 1;
-	}
-
-	.data-note {
-		font-size: 14px;
-		line-height: 24px;
-		color: #666;
-		margin-top: 16px;
-		text-align: center;
-	}
-}
-
-.block-image {
-	margin: 40px 0;
-
-	&__img {
-		width: 100%;
-		height: auto;
-		border-radius: 20px;
-		margin-bottom: 16px;
-	}
-
-	&__note {
-		font-size: 14px;
-		line-height: 24px;
-		color: #666;
-		text-align: center;
-	}
-}
-
-@media (max-width: 768px) {
-	.section-e {
-		padding: 60px 20px 100px;
-
-		&__title {
-			font-size: 24px;
-			padding: 10px 30px;
+	.tinder-data {
+		width: 530px;
+		height: 470px;
+		&__0 {
+			left: 7px;
+			top: 19px;
+			transform: rotate(10deg);
 		}
-
-		&__intro {
-			font-size: 16px;
-			line-height: 32px;
-			margin-bottom: 60px;
+		&__1 {
+			left: 114px;
+			top: 122px;
+			transform: rotate(-5deg);
+		}
+		&__2 {
+			right: 5px;
+			top: 215px;
+			transform: rotate(3deg);
+		}
+		&__3 {
+			left: 63px;
+			top: 294px;
+			transform: rotate(5deg);
+		}
+		&__4 {
+			right: 44px;
+			bottom: 20px;
+			transform: rotate(-10deg);
 		}
 	}
 
-	.step-number {
-		width: 60px;
-		height: 60px;
-		font-size: 28px;
-	}
-
-	.case-section {
-		&__title {
-			font-size: 24px;
+	.housework-data {
+		width: 530px;
+		height: 525px;
+		&__0 {
+			left: 7px;
+			top: 39px;
+			transform: rotate(-10deg);
 		}
-	}
-
-	.block-title {
-		h4 {
-			font-size: 18px;
+		&__1 {
+			right: 9.5px;
+			top: 162px;
+			transform: rotate(5deg);
 		}
-	}
-
-	.block-text {
-		p {
-			font-size: 16px;
-			line-height: 28px;
+		&__2 {
+			left: 9px;
+			top: 280px;
+			transform: rotate(-5deg);
 		}
-	}
-
-	.block-comment {
-		.comment-box {
-			padding: 16px 20px;
-
-			p {
-				font-size: 16px;
-				line-height: 28px;
-			}
-		}
-	}
-
-	.block-data {
-		padding: 24px 16px;
-
-		.data-title {
-			font-size: 16px;
-		}
-
-		.data-item {
-			flex-direction: column;
-			align-items: flex-start;
-			gap: 8px;
-		}
-
-		.data-prefix {
-			font-size: 20px;
-			min-width: auto;
-		}
-
-		.data-text {
-			font-size: 16px;
-			line-height: 28px;
-		}
-
-		.data-note {
-			font-size: 12px;
-		}
-	}
-
-	.block-image {
-		&__note {
-			font-size: 12px;
+		&__3 {
+			right: 36px;
+			bottom: 33px;
+			transform: rotate(5deg);
 		}
 	}
 }

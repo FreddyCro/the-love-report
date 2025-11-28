@@ -6,7 +6,7 @@ import LSectionA from "./components/LSectionA.vue";
 import LSectionB from "./components/LSectionB.vue";
 import LSectionC from "./components/LSectionC.vue";
 import LSectionD from "./components/LSectionD.vue";
-// import LSectionE from "./components/LSectionE.vue";
+import LSectionE from "./components/LSectionE.vue";
 // import LSectionF from "./components/LSectionF.vue";
 import TestAllImg from "./components/TestAllImg.vue";
 import meta from "./locales/meta.json";
@@ -50,12 +50,10 @@ onMounted(() => {
 		<main class="main-content" :class="{ 'is-ready': isReady }">
 			<LSectionA />
 			<LSectionB />
-			<div class="yumi">
-				<LSectionC />
-				<LSectionD />
-				<!-- <LSectionE /> -->
-				<!-- <LSectionF /> -->
-			</div>
+			<LSectionC />
+			<LSectionD />
+			<LSectionE />
+			<!-- <LSectionF /> -->
 		</main>
 		<AppFooter />
 		<TestAllImg />
