@@ -118,6 +118,16 @@ function createHandler(frameIndex: number) {
     const frame = frames[frameIndex];
     if (!frame) return;
 
+    console.log(`Frame ${frameIndex + 1} - ${state.STATE}`, {
+      currentEnter: frame.isEnter.value,
+      prevFrameEnter:
+        frameIndex > 0 ? frames[frameIndex - 1].isEnter.value : 'N/A',
+      prevFrameAnimComplete:
+        frameIndex > 0
+          ? frames[frameIndex - 1].isAnimationComplete.value
+          : 'N/A',
+    });
+
     if (state.STATE === 'ENTER_DOWN') {
       // Frame 1 (index 0) has no previous frame, activate immediately
       if (frameIndex === 0) {
@@ -130,21 +140,33 @@ function createHandler(frameIndex: number) {
 
       // Check if previous frame has left (not entered) - activate immediately
       if (!prevFrame.isEnter.value) {
+        console.log(`Frame ${frameIndex + 1} - Activating (prev frame left)`);
         frame.isEnter.value = true;
         return;
       }
 
       // Check if previous frame is entered AND animation complete - activate immediately
       if (prevFrame.isEnter.value && prevFrame.isAnimationComplete.value) {
+        console.log(
+          `Frame ${frameIndex + 1} - Activating (prev frame complete)`
+        );
         frame.isEnter.value = true;
         return;
       }
 
       // Previous frame is entered but animation not complete - wait using watchEffect
       if (prevFrame.isEnter.value && !prevFrame.isAnimationComplete.value) {
+        console.log(
+          `Frame ${frameIndex + 1} - Waiting for prev frame animation`
+        );
         const stopWatch = watchEffect(() => {
           // Condition 1: Previous frame has left, activate immediately
           if (!prevFrame.isEnter.value) {
+            console.log(
+              `Frame ${
+                frameIndex + 1
+              } - Activating (prev frame left while waiting)`
+            );
             frame.isEnter.value = true;
             stopWatch();
             return;
@@ -152,6 +174,11 @@ function createHandler(frameIndex: number) {
 
           // Condition 2: Previous frame animation complete, activate
           if (prevFrame.isEnter.value && prevFrame.isAnimationComplete.value) {
+            console.log(
+              `Frame ${
+                frameIndex + 1
+              } - Activating (prev frame animation completed)`
+            );
             frame.isEnter.value = true;
             stopWatch();
           }
