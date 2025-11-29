@@ -56,7 +56,7 @@ defineProps<{
       Step 3 (1.5s-2.5s): img3 fly in from right to left
       Step 3 (2s-3s): text fly in from left to right
     -->
-    <div class="relative w-full max-w-7xl aspect-1280/720 mx-auto">
+    <div class="relative w-full flex justify-center">
       <!-- img back wrapper (for crop effect) -->
       <div class="l-seca-f1__img-back-wrap">
         <!-- img back 1 -->
@@ -100,22 +100,36 @@ defineProps<{
         </LChatBubble>
       </div>
     </div>
+
+    <!-- <div class="h-2.5 w-(--seca-f1-img-width) mx-auto bg-black" /> -->
   </div>
 </template>
 
 <style lang="scss">
 .l-seca-f1 {
+  /* --seca-f1-img-width: 100%; */
+  --seca-f1-img-width: 672px;
+  --seca-f1-img-height: 700px;
+
   width: 100%;
 
   &__img-back-wrap {
     position: relative;
     width: 100%;
-    height: 100%;
+    height: var(--seca-f1-img-height);
     clip-path: inset(0 0 0 0);
-    transition: clip-path 1s ease;
+    transition: clip-path 1s ease, width 1s ease;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 
   &__img1-wrap {
+    width: 100%;
+    height: 100%;
     opacity: 1;
     transition: opacity 0.5s 1s ease;
   }
@@ -153,7 +167,11 @@ defineProps<{
 
   &.active {
     .l-seca-f1__img-back-wrap {
-      clip-path: inset(0 20% 0 20%);
+      /* width: var(--seca-f1-img-width); */
+      clip-path: inset(
+        0 calc((1920px - var(--seca-f1-img-width)) / 2) 0
+          calc((1920px - var(--seca-f1-img-width)) / 2)
+      );
     }
 
     .l-seca-f1__img1-wrap {
