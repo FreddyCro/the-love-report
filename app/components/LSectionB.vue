@@ -57,7 +57,9 @@ const data: CartType[] = [
 // JS-prefixed selector class names (used by script to query DOM)
 // Simplified keys + values for concise usage
 const JS_CLASSES = {
-  SECTION: 'js-sec-b', // section wrapper
+  SECTION: 'js-sec-b', // section wrapper (pin target)
+  INTRO_CONTAINER: 'js-intro-container', // intro container
+  INTRO: 'js-intro', // intro content
   GROUP: 'js-scg', // state-card-group
   CARD: 'js-sc', // state-card
   WRAPPER: 'js-scw', // state-card-wrapper
@@ -129,10 +131,13 @@ async function handleAnimation(
   ScrollTrigger: any,
   _lenis: any
 ): Promise<void> {
-  const section =
-    document.querySelector(`.${JS_CLASSES.SECTION}`) ||
-    document.querySelector('.sec-b');
-  if (!section) return;
+  const section = document.querySelector(`.${JS_CLASSES.SECTION}`);
+  const intro = document.querySelector(`.${JS_CLASSES.INTRO}`);
+
+  if (!section) {
+    console.warn('Section not found');
+    return;
+  }
 
   // Prefer JS-prefixed selector for script queries; fall back to regular class if missing
   let cards = section.querySelectorAll(`.${JS_CLASSES.CARD}`);
@@ -148,7 +153,7 @@ async function handleAnimation(
       start: 'top top',
 
       // Extend the scroll distance for smoother animation
-      end: '+=300%',
+      end: '+=400%',
 
       // Pin (freeze) the section
       pin: true,
@@ -159,23 +164,18 @@ async function handleAnimation(
       invalidateOnRefresh: true,
       onRefresh: () => {
         // Reset cards position when scrolltrigger refreshes
-        gsap.set(cards, {
-          y: '100vh',
-        });
+        gsap.set(cards, { y: '100vh', opacity: 0 });
       },
     },
   });
 
-  // Set initial state at the beginning of timeline (position 0)
-  tl.set(
-    cards,
-    {
-      y: '100vh',
-    },
-    0
-  );
+  // Intro is already visible (no animation needed for intro)
+  // It will be pinned naturally when section is pinned
 
-  // Add each card to timeline with stacking effect
+  // Set initial state: cards are below viewport
+  tl.set(cards, { y: '100vh', opacity: 0 }, 0);
+
+  // Cards stack on top of intro after a delay (to give time for sticky effect)
   cards.forEach((card, index) => {
     const yOffset = index * 0; // Each card slightly offset from previous
     const rotation = (index - 2.5) * 2; // Slight rotation for visual interest
@@ -189,7 +189,7 @@ async function handleAnimation(
         duration: 1,
         ease: 'power2.out',
       },
-      index * 0.7 // Stagger each card animation
+      0.5 + index * 0.5 // Small delay then stagger each card
     );
   });
 
@@ -227,89 +227,92 @@ function handleIsEntered(shouldEnter: boolean) {
       'text-white': isEntered,
     }"
   >
-    <div class="l-container">
+    <!-- Pin container: intro + cards -->
+    <div :class="JS_CLASSES.SECTION" class="sec-b__pin-container">
       <!-- intro -->
-      <div class="intro">
-        <!-- title -->
-        <div class="intro-title flex justify-center mb-[38px] lg:mb-10">
-          <LSectionBIntro :is-entered="isEntered" />
+      <div :class="JS_CLASSES.INTRO_CONTAINER" class="sec-b__intro-container">
+        <div :class="JS_CLASSES.INTRO" class="intro l-container">
+          <!-- title -->
+          <div class="intro-title flex justify-center mb-[38px] lg:mb-10">
+            <LSectionBIntro :is-entered="isEntered" />
 
-          <h2 class="visually-hidden">
-            {{ str.sectionTitle1 }} {{ str.sectionTitle2 }}
-            {{ str.sectionTitle3 }}
-          </h2>
+            <h2 class="visually-hidden">
+              {{ str.sectionTitle1 }} {{ str.sectionTitle2 }}
+              {{ str.sectionTitle3 }}
+            </h2>
+          </div>
+          <p class="l-p sec-b-transition">{{ str.introText1 }}</p>
+          <p class="l-p sec-b-transition">{{ str.introText2 }}</p>
         </div>
-        <p class="l-p sec-b-transition">{{ str.introText1 }}</p>
-        <p class="l-p sec-b-transition">{{ str.introText2 }}</p>
       </div>
-    </div>
 
-    <!-- cards -->
-    <div :class="JS_CLASSES.SECTION">
-      <div
-        :class="[
-          'state-card-group',
-          JS_CLASSES.GROUP,
-          { 'is-ready': isAnimationReady },
-        ]"
-      >
+      <!-- cards -->
+      <div class="sec-b__cards-container">
         <div
-          v-for="(item, index) in data"
-          :key="index"
-          :class="['state-card-wrapper', JS_CLASSES.WRAPPER]"
+          :class="[
+            'state-card-group',
+            JS_CLASSES.GROUP,
+            { 'is-ready': isAnimationReady },
+          ]"
         >
-          <LSectionBCard
-            :class="['state-card', JS_CLASSES.CARD]"
-            :title="item.title"
-            :description="item.description"
-            :note="item.note"
+          <div
+            v-for="(item, index) in data"
+            :key="index"
+            :class="['state-card-wrapper', JS_CLASSES.WRAPPER]"
           >
-            <!-- Render different placeholder content based on item.chart (A..F) -->
-            <div v-if="item.chart === 'chartA'" class="contents">
-              <div class="chart-a-placeholder" />
-            </div>
+            <LSectionBCard
+              :class="['state-card', JS_CLASSES.CARD]"
+              :title="item.title"
+              :description="item.description"
+              :note="item.note"
+            >
+              <!-- Render different placeholder content based on item.chart (A..F) -->
+              <div v-if="item.chart === 'chartA'" class="contents">
+                <div class="chart-a-placeholder" />
+              </div>
 
-            <div v-else-if="item.chart === 'chartB'" class="contents">
-              <div class="chart-a-placeholder" />
-            </div>
+              <div v-else-if="item.chart === 'chartB'" class="contents">
+                <div class="chart-a-placeholder" />
+              </div>
 
-            <div v-else-if="item.chart === 'chartC'">
-              <LPic
-                src="/img/intimate_relationships_p0202_card03_info"
-                ext="svg"
-                :use2x="false"
-                :webp="false"
-              />
-            </div>
+              <div v-else-if="item.chart === 'chartC'">
+                <LPic
+                  src="/img/intimate_relationships_p0202_card03_info"
+                  ext="svg"
+                  :use2x="false"
+                  :webp="false"
+                />
+              </div>
 
-            <div v-else-if="item.chart === 'chartD'">
-              <LPic
-                src="/img/intimate_relationships_p0202_card04_info01"
-                ext="svg"
-                :use2x="false"
-                :webp="false"
-              />
-            </div>
+              <div v-else-if="item.chart === 'chartD'">
+                <LPic
+                  src="/img/intimate_relationships_p0202_card04_info01"
+                  ext="svg"
+                  :use2x="false"
+                  :webp="false"
+                />
+              </div>
 
-            <div v-else-if="item.chart === 'chartE'">
-              <LPic
-                src="/img/intimate_relationships_p0202_card05_info"
-                :srcset="['pad', 'mob']"
-                ext="svg"
-                :use2x="false"
-                :webp="false"
-              />
-            </div>
+              <div v-else-if="item.chart === 'chartE'">
+                <LPic
+                  src="/img/intimate_relationships_p0202_card05_info"
+                  :srcset="['pad', 'mob']"
+                  ext="svg"
+                  :use2x="false"
+                  :webp="false"
+                />
+              </div>
 
-            <div v-else-if="item.chart === 'chartF'">
-              <LPic
-                src="/img/intimate_relationships_p0202_card06_info"
-                ext="svg"
-                :use2x="false"
-                :webp="false"
-              />
-            </div>
-          </LSectionBCard>
+              <div v-else-if="item.chart === 'chartF'">
+                <LPic
+                  src="/img/intimate_relationships_p0202_card06_info"
+                  ext="svg"
+                  :use2x="false"
+                  :webp="false"
+                />
+              </div>
+            </LSectionBCard>
+          </div>
         </div>
       </div>
     </div>
@@ -322,6 +325,41 @@ function handleIsEntered(shouldEnter: boolean) {
 .sec-b {
   min-height: 100vh;
   padding: 4rem 0;
+
+  &__pin-container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  &__intro-container {
+    position: relative; // Changed from absolute to allow normal document flow
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1; // Below cards
+    min-height: 100vh; // Ensure it takes full height
+  }
+
+  &__cards-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    z-index: 2; // Above intro
+    pointer-events: none; // Allow interaction with intro before cards appear
+
+    // Re-enable pointer events for cards themselves
+    .state-card {
+      pointer-events: auto;
+    }
+  }
 }
 
 .sec-b-transition {
