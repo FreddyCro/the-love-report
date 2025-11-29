@@ -3,6 +3,7 @@ import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
 import LSectionBCard from './LSectionBCard.vue';
 import LSectionBIntro from './LSectionBIntro.vue';
 import LPic from './LPic.vue';
+import { useIntersectionObserver } from '@vueuse/core';
 import str from '../locales/section-b.json';
 
 type CartType = {
@@ -53,9 +54,6 @@ const data: CartType[] = [
   },
 ];
 
-const isEntered = ref(false);
-const isAnimationReady = ref(false);
-
 // JS-prefixed selector class names (used by script to query DOM)
 // Simplified keys + values for concise usage
 const JS_CLASSES = {
@@ -65,12 +63,37 @@ const JS_CLASSES = {
   WRAPPER: 'js-scw', // state-card-wrapper
 };
 
+const isEntered = ref(false);
+const isAnimationReady = ref(false);
+const sectionRef = ref<HTMLElement | null>(null);
 const scrollTriggerInstances: any[] = [];
 
-defineExpose({
-  isEntered,
+// Setup intersection observer for viewport tracking
+onMounted(() => {
+  // Wait for next tick to ensure DOM is ready
+  nextTick(() => {
+    if (!sectionRef.value) {
+      return;
+    }
+
+    useIntersectionObserver(
+      sectionRef,
+      ([entry]: IntersectionObserverEntry[]) => {
+        if (!entry) return;
+
+        // Simple behavior: true when entering viewport, false when leaving
+        handleIsEntered(entry.isIntersecting);
+      },
+      {
+        threshold: [0, 0.3, 1],
+        root: null,
+        rootMargin: '0px',
+      }
+    );
+  });
 });
 
+// Setup GSAP animation
 onMounted(async () => {
   // Use the composable to get GSAP, ScrollTrigger, and Lenis
   const { gsap, ScrollTrigger, lenis } = await useScrollAnimation();
@@ -89,7 +112,6 @@ onMounted(async () => {
 
   // Mark as ready - triggers fade-in via CSS transition
   isAnimationReady.value = true;
-  handleIsEntered();
 });
 
 // Register lifecycle hook BEFORE any async operations
@@ -189,38 +211,36 @@ async function handleAnimation(
   });
 }
 
-function handleIsEntered() {
-  isEntered.value = true;
+function handleIsEntered(shouldEnter: boolean) {
+  // Set isEntered based on scroll direction and intersection
+  isEntered.value = shouldEnter;
 }
 </script>
 
 <template>
-  <section class="sec-b l-article bg-black-6">
+  <section
+    ref="sectionRef"
+    class="sec-b l-article bg-black-6 sec-b-transition"
+    :class="{
+      'is-entered': isEntered,
+      'bg-love-dark': isEntered,
+      'text-white': isEntered,
+    }"
+  >
     <div class="l-container">
       <!-- intro -->
       <div class="intro">
         <!-- title -->
         <div class="intro-title flex justify-center mb-[38px] lg:mb-10">
-          <LSectionBIntro />
+          <LSectionBIntro :is-entered="isEntered" />
 
           <h2 class="visually-hidden">
             {{ str.sectionTitle1 }} {{ str.sectionTitle2 }}
             {{ str.sectionTitle3 }}
           </h2>
-
-          <!-- 先用圖片試試 -->
-          <!-- <h2 class="intro-title__h2 flex items-center gap-2">
-            <span>{{ str.sectionTitle1 }}</span>
-            <LRedLove />
-            <span>{{ str.sectionTitle2 }}</span>
-            <span>{{ str.sectionTitle3 }}</span>
-          </h2>
-          <div>
-            <p>{{ str.sectionTitleSub }}</p>
-          </div> -->
         </div>
-        <p class="l-p">{{ str.introText1 }}</p>
-        <p class="l-p">{{ str.introText2 }}</p>
+        <p class="l-p sec-b-transition">{{ str.introText1 }}</p>
+        <p class="l-p sec-b-transition">{{ str.introText2 }}</p>
       </div>
     </div>
 
@@ -302,6 +322,16 @@ function handleIsEntered() {
 .sec-b {
   min-height: 100vh;
   padding: 4rem 0;
+}
+
+.sec-b-transition {
+  transition: all 1s;
+
+  /* LSectionBIntro.vue */
+  path,
+  rect {
+    transition: all 1s;
+  }
 }
 
 .state-card-group {

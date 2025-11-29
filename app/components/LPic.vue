@@ -23,10 +23,10 @@
  * - WebP：{src}_pc.webp, {src}_pc@2x.webp, {src}_pad.webp, {src}_pad@2x.webp, {src}_mob.webp, {src}_mob@2x.webp
  * - usePrefix=false：{src}.jpg, {src}@2x.jpg
  */
-import { computed } from "vue";
-import { PC_BREAKPOINTS, TABLET_BREAKPOINTS } from "@/utils/constants";
+import { computed } from 'vue';
+import { PC_BREAKPOINTS, TABLET_BREAKPOINTS } from '@/utils/constants';
 
-type SrcsetType = Array<"mob" | "pad" | "pc">;
+type SrcsetType = Array<'mob' | 'pad' | 'pc'>;
 
 interface LeoPicProps {
   /** 圖片的 ID 屬性 */
@@ -42,16 +42,16 @@ interface LeoPicProps {
   srcset?: SrcsetType;
 
   /** 預設圖片類型（作為 fallback），預設：'pc' */
-  default?: "mob" | "pad" | "pc";
+  default?: 'mob' | 'pad' | 'pc';
 
   /** 圖片副檔名，預設：'jpg' */
   ext?: string;
 
   /** 圖片寬度（用於 CLS 優化） */
-  width?: number;
+  width?: number | string;
 
   /** 圖片高度（用於 CLS 優化） */
-  height?: number;
+  height?: number | string;
 
   /** 圖片替代文字 */
   alt?: string;
@@ -60,7 +60,7 @@ interface LeoPicProps {
   altby?: string;
 
   /** 圖片載入策略，預設：'lazy' */
-  loading?: "eager" | "lazy";
+  loading?: 'eager' | 'lazy';
 
   /** 是否使用 2x 高解析度圖片，預設：true */
   use2x?: boolean;
@@ -79,14 +79,14 @@ const props = withDefaults(defineProps<LeoPicProps>(), {
   use2x: true,
   usePrefix: true,
   webp: true,
-  loading: "lazy",
+  loading: 'lazy',
 });
 
 // 使用 Nuxt 的 runtimeConfig 取得環境變數
 const config = useRuntimeConfig();
 const ASSETS_PATH = config.public.APP_ASSETS_PATH;
-const DEFAULT_SRCSET: SrcsetType = ["pc", "pad", "mob"];
-const DEFAULT_EXT = "jpg";
+const DEFAULT_SRCSET: SrcsetType = ['pc', 'pad', 'mob'];
+const DEFAULT_EXT = 'jpg';
 
 const srcsetValue = computed(() => props.srcset ?? DEFAULT_SRCSET);
 const extValue = computed(() => props.ext ?? DEFAULT_EXT);
@@ -96,7 +96,7 @@ const usePrefixValue = computed(() => props.usePrefix ?? true);
 const mediaQueries = {
   pc: `(min-width: ${props.pcBreakpoint || PC_BREAKPOINTS}px)`,
   pad: `(min-width: ${TABLET_BREAKPOINTS}px)`,
-  mob: "",
+  mob: '',
 };
 
 const parsedMedia = computed(() =>
@@ -104,12 +104,12 @@ const parsedMedia = computed(() =>
 );
 
 function buildSrcset(
-  type: "mob" | "pad" | "pc",
+  type: 'mob' | 'pad' | 'pc',
   ext: string,
   use2x: boolean,
   usePrefix: boolean
 ) {
-  const prefix = usePrefix ? `_${type}` : "";
+  const prefix = usePrefix ? `_${type}` : '';
   const base = `${ASSETS_PATH}${props.src}${prefix}.${ext} 1x`;
   if (!use2x) return base;
   const retina = `${ASSETS_PATH}${props.src}${prefix}@2x.${ext} 2x`;
@@ -125,14 +125,14 @@ const parsedSrcset = computed(() =>
 const parsedWebpSrcset = computed(() =>
   props.webp
     ? srcsetValue.value.map((type) =>
-        buildSrcset(type, "webp", use2xValue.value, usePrefixValue.value)
+        buildSrcset(type, 'webp', use2xValue.value, usePrefixValue.value)
       )
     : undefined
 );
 
 const parsedDefault = computed(() => {
-  const type = props.default ?? "pc";
-  const prefix = usePrefixValue.value ? `_${type}` : "";
+  const type = props.default ?? 'pc';
+  const prefix = usePrefixValue.value ? `_${type}` : '';
   return `${ASSETS_PATH}${props.src}${prefix}.${extValue.value}`;
 });
 </script>

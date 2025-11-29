@@ -8,7 +8,7 @@ defineProps<{
 
 <template>
   <div
-    class="state-card bg-white px-6 py-7 md:px-8 lg:py-8 lg:px-10 rounded-[20px] border border-love-red-03"
+    class="state-card px-6 py-7 md:px-8 lg:py-8 lg:px-10 rounded-[20px] border border-love-red-03 bg-white text-text"
   >
     <h3 class="l-h3 font-bold mb-2 sm:mb-1">{{ title }}</h3>
     <p class="l-p">{{ description }}</p>
