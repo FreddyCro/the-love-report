@@ -9,6 +9,47 @@ import LSectionAFrame4 from './LSectionAFrame4.vue';
 import LSectionAFrame5 from './LSectionAFrame5.vue';
 import LSectionAFrame6 from './LSectionAFrame6.vue';
 
+/*
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│ Frame Activation & Deactivation Conditions                                      │
+├──────────┬──────────────────────────────────┬────────────────────────────────────┤
+│ Frame    │ ACTIVE Conditions                │ INACTIVE Conditions                │
+├──────────┼──────────────────────────────────┼────────────────────────────────────┤
+│ Frame 1  │ • ENTER (any direction)          │ • LEAVE (any direction)            │
+│          │   → Always activate immediately  │   → Always deactivate immediately  │
+├──────────┼──────────────────────────────────┼────────────────────────────────────┤
+│ Frame 2  │ • ENTER_DOWN + Previous frame    │ • LEAVE_UP                         │
+│          │   conditions:                    │   → Deactivate immediately         │
+│          │   1. Frame 1 left viewport       │                                    │
+│          │      → Activate immediately      │                                    │
+│          │   2. Frame 1 in viewport +       │                                    │
+│          │      animation complete          │                                    │
+│          │      → Activate immediately      │                                    │
+│          │   3. Frame 1 in viewport +       │                                    │
+│          │      animation NOT complete      │                                    │
+│          │      → Wait with watchEffect     │                                    │
+├──────────┼──────────────────────────────────┼────────────────────────────────────┤
+│ Frame 3  │ • Same logic as Frame 2          │ • LEAVE_UP                         │
+│          │   (depends on Frame 2)           │   → Deactivate immediately         │
+├──────────┼──────────────────────────────────┼────────────────────────────────────┤
+│ Frame 4  │ • Same logic as Frame 2          │ • LEAVE_UP                         │
+│          │   (depends on Frame 3)           │   → Deactivate immediately         │
+├──────────┼──────────────────────────────────┼────────────────────────────────────┤
+│ Frame 5  │ • Same logic as Frame 2          │ • LEAVE_UP                         │
+│          │   (depends on Frame 4)           │   → Deactivate immediately         │
+├──────────┼──────────────────────────────────┼────────────────────────────────────┤
+│ Frame 6  │ • Same logic as Frame 2          │ • LEAVE_UP                         │
+│          │   (depends on Frame 5)           │   → Deactivate immediately         │
+└──────────┴──────────────────────────────────┴────────────────────────────────────┘
+
+Key Notes:
+- Frame 1: Uses createStrictHandler() - immediate response to any ENTER/LEAVE
+- Frame 2-6: Use createHandler() - sequential activation with animation waiting
+- ENTER_DOWN: User scrolling down, frame entering viewport
+- LEAVE_UP: User scrolling up, frame leaving viewport
+- watchEffect: Auto-cleanup watcher that activates frame when previous frame completes
+*/
+
 // Type definition for frame data
 type FrameData = {
   id: number;
