@@ -16,7 +16,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       APP_MODE: "",
-      APP_URL: "",
       APP_ASSETS_PATH: "",
     },
   },

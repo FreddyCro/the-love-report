@@ -8,7 +8,7 @@ import LSectionC from './components/LSectionC.vue';
 import LSectionD from './components/LSectionD.vue';
 import LSectionE from './components/LSectionE.vue';
 // import LSectionF from "./components/LSectionF.vue";
-import TestAllImg from './components/TestAllImg.vue';
+// import TestAllImg from './components/TestAllImg.vue';
 import meta from './locales/meta.json';
 
 const config = useRuntimeConfig();
@@ -24,6 +24,28 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
   keywords: meta.metaKeywords,
   robots: APP_MODE === 'production' ? 'index, follow' : 'noindex, nofollow',
+});
+
+useHead({
+  link: [
+    {
+      rel: 'stylesheet',
+      href: 'https://newmedia.udn.com.tw/cms_assets/icons_v4/icons.css',
+      tagPosition: 'bodyOpen',
+    },
+    {
+      rel: 'stylesheet',
+      href: './nmd-loading.css',
+      tagPosition: 'bodyOpen',
+    },
+  ],
+  script: [
+    {
+      type: 'text/javascript',
+      src: './nmd-loading.min.js',
+      tagPosition: 'bodyOpen',
+    },
+  ],
 });
 
 useJsonld({
@@ -62,7 +84,7 @@ onMounted(() => {
       <!-- <LSectionF /> -->
     </main>
     <AppFooter />
-    <TestAllImg />
+    <!-- <TestAllImg /> -->
   </NuxtLayout>
 </template>
 

@@ -195,7 +195,7 @@ function handleIsEntered() {
 </script>
 
 <template>
-  <section class="sec-b l-article">
+  <section class="sec-b l-article bg-black-6">
     <div class="l-container">
       <!-- intro -->
       <div class="intro">
@@ -302,7 +302,6 @@ function handleIsEntered() {
 .sec-b {
   min-height: 100vh;
   padding: 4rem 0;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
 .state-card-group {

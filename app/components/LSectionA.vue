@@ -117,7 +117,7 @@ function createHandler(frameIndex: number) {
   return (state: FrameState) => {
     const frame = frames[frameIndex];
     if (!frame) return;
-    
+
     if (state.STATE === 'ENTER_DOWN') {
       // Frame 1 (index 0) has no previous frame, activate immediately
       if (frameIndex === 0) {
@@ -127,7 +127,7 @@ function createHandler(frameIndex: number) {
 
       const prevFrame = frames[frameIndex - 1];
       if (!prevFrame) return; // Safety check
-      
+
       // Check if previous frame has left (not entered) - activate immediately
       if (!prevFrame.isEnter.value) {
         frame.isEnter.value = true;
@@ -222,7 +222,7 @@ function watchFrameIntersection(
 </script>
 
 <template>
-  <section class="sec-a l-article">
+  <section class="sec-a l-article bg-black-6">
     <!-- visually hidden for seo -->
     <h1 class="visually-hidden">
       {{ str.title }}
@@ -287,7 +287,6 @@ function watchFrameIntersection(
 <style lang="scss">
 .sec-a-part {
   /* min-height: 100vh; */
-  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
