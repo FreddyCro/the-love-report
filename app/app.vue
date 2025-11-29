@@ -19,6 +19,7 @@ useSeoMeta({
   description: meta.metaDesc,
   'og:title': meta.metaTitle,
   'og:description': meta.metaXDesc,
+  'og:image': meta.metaImage,
   'twitter:title': meta.metaTitle,
   'twitter:description': meta.metaXDesc,
   twitterCard: 'summary_large_image',

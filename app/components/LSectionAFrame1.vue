@@ -17,7 +17,7 @@ defineProps<{
       <!-- img back -->
       <div class="l-seca-f1__img1-wrap">
         <LPic
-          src="/img/intimate_relationships_p01_frame01_00_pcpad"
+          src="/img/intimate_relationships_p01_frame01_00_1920plus_pc"
           ext="jpg"
           :use-prefix="false"
           :use2x="false"

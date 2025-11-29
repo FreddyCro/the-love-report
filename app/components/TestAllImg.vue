@@ -75,7 +75,14 @@ const testImages = ref([
     webp: false,
   },
   {
-    src: '/img/intimate_relationships_p01_frame01_00_pcpad',
+    src: '/img/intimate_relationships_p01_frame01_00_1920plus_pc',
+    ext: 'jpg',
+    usePrefix: false,
+    use2x: false,
+    webp: true,
+  },
+  {
+    src: '/img/intimate_relationships_p01_frame01_00_pc',
     ext: 'jpg',
     usePrefix: false,
     use2x: false,
