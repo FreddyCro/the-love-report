@@ -164,7 +164,8 @@ async function handleAnimation(
       invalidateOnRefresh: true,
       onRefresh: () => {
         // Reset cards position when scrolltrigger refreshes
-        gsap.set(cards, { y: '100vh', opacity: 0 });
+        // gsap.set(cards, { y: '100vh', opacity: 0 });
+        // gsap.set(cards, { y: '100vh', opacity: 1 });
       },
     },
   });
@@ -173,7 +174,8 @@ async function handleAnimation(
   // It will be pinned naturally when section is pinned
 
   // Set initial state: cards are below viewport
-  tl.set(cards, { y: '100vh', opacity: 0 }, 0);
+  // tl.set(cards, { y: '100vh', opacity: 0 }, 0);
+  tl.set(cards, { y: '100vh', opacity: 1 }, 0);
 
   // Cards stack on top of intro after a delay (to give time for sticky effect)
   cards.forEach((card, index) => {
