@@ -1,6 +1,50 @@
 import { ref, watch, watchEffect, onMounted, type Ref } from 'vue';
 import { useScroll, useIntersectionObserver } from '@vueuse/core';
 
+/*
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│ Frame Activation & Deactivation Conditions                                      │
+├──────────┬──────────────────────────────────┬────────────────────────────────────┤
+│ Frame    │ ACTIVE Conditions                │ INACTIVE Conditions                │
+├──────────┼──────────────────────────────────┼────────────────────────────────────┤
+│ Frame 1  │ • ENTER (any direction)          │ • No automatic deactivation        │
+│          │   → Activate immediately         │ • Only resets on scroll to top     │
+│          │                                  │                                    │
+├──────────┼──────────────────────────────────┼────────────────────────────────────┤
+│ Frame 2  │ • ENTER (any direction)          │ • LEAVE_UP only                    │
+│          │   + Previous frame conditions:   │   → Deactivate immediately         │
+│          │                                  │   → Cleanup any waiting watcher    │
+│          │   Path 1: Frame 1 NOT active     │                                    │
+│          │   → Activate immediately         │                                    │
+│          │                                  │                                    │
+│          │   Path 2: Frame 1 active +       │                                    │
+│          │            animation complete    │                                    │
+│          │   → Activate immediately         │                                    │
+│          │                                  │                                    │
+│          │   Path 3: Frame 1 active +       │                                    │
+│          │            animation NOT complete│                                    │
+│          │   → Wait with watchEffect        │                                    │
+│          │   → Auto-activate when:          │                                    │
+│          │      - Frame 1 leaves viewport   │                                    │
+│          │      - Frame 1 animation done    │                                    │
+├──────────┼──────────────────────────────────┼────────────────────────────────────┤
+│ Frame 3-6│ • Same logic as Frame 2          │ • LEAVE_UP only                    │
+│          │   (depends on previous frame)    │   → Deactivate immediately         │
+│          │                                  │   → Cleanup any waiting watcher    │
+└──────────┴──────────────────────────────────┴────────────────────────────────────┘
+
+⚠️ Global Reset Condition:
+- When scroll position < 10px (page top): Reset ALL frames (1-6) and re-check viewport
+
+Key Implementation Notes:
+- Frame 1: Uses createStrictHandler() - only responds to ENTER (no LEAVE)
+- Frame 2-6: Use createSequentialHandler() - sequential activation with waiting
+- ENTER_DOWN: User scrolling down, frame entering viewport (threshold: 0)
+- IntersectionObserver threshold: 0 (triggers as soon as any part is visible)
+- Initial viewport check: Runs 100ms after mount to handle pre-loaded frames
+- Watcher cleanup: Always cleanup before creating new watcher or on LEAVE
+*/
+
 // Type definitions
 type Action = 'ENTER' | 'LEAVE';
 type Direction = 'UP' | 'DOWN';
@@ -78,7 +122,7 @@ export function useSequentialFrames(frameConfigs: FrameConfig[]) {
 
   /**
    * Create handler for Frame 1 (strict mode)
-   * Activates immediately on any ENTER, deactivates on any LEAVE
+   * Activates immediately on any ENTER, never deactivates (except on scroll-to-top reset)
    */
   function createStrictHandler(frameIndex: number) {
     return (state: FrameState) => {
@@ -91,90 +135,110 @@ export function useSequentialFrames(frameConfigs: FrameConfig[]) {
         return;
       }
 
+      // Track viewport state but don't deactivate on LEAVE
       if (state.action === 'LEAVE') {
         framesInViewport.set(frameIndex, false);
-        frame.isEnter.value = false;
       }
     };
   }
 
   /**
+   * Cleanup watcher for a specific frame
+   */
+  function cleanupWatcher(frameIndex: number) {
+    const watcher = frameWatchers.get(frameIndex);
+    if (watcher) {
+      watcher();
+      frameWatchers.delete(frameIndex);
+    }
+  }
+
+  /**
+   * Activate frame immediately
+   */
+  function activateFrame(frameIndex: number) {
+    const frame = frames[frameIndex];
+    if (frame) {
+      frame.isEnter.value = true;
+      cleanupWatcher(frameIndex);
+    }
+  }
+
+  /**
+   * Deactivate frame immediately
+   */
+  function deactivateFrame(frameIndex: number) {
+    const frame = frames[frameIndex];
+    if (frame) {
+      frame.isEnter.value = false;
+      cleanupWatcher(frameIndex);
+    }
+  }
+
+  /**
+   * Check if previous frame allows current frame to activate
+   */
+  function canActivateByPreviousFrame(frameIndex: number): boolean {
+    if (frameIndex === 0) return true;
+
+    const prevFrame = frames[frameIndex - 1];
+    if (!prevFrame) return false;
+
+    // Previous frame left viewport
+    if (!prevFrame.isEnter.value) return true;
+
+    // Previous frame animation complete
+    return prevFrame.isEnter.value && prevFrame.isAnimationComplete.value;
+  }
+
+  /**
+   * Wait for previous frame to complete using watchEffect
+   */
+  function waitForPreviousFrame(frameIndex: number) {
+    cleanupWatcher(frameIndex);
+
+    const prevFrame = frames[frameIndex - 1];
+    if (!prevFrame) return;
+
+    const stopWatch = watchEffect(() => {
+      if (!prevFrame.isEnter.value || prevFrame.isAnimationComplete.value) {
+        activateFrame(frameIndex);
+        stopWatch();
+      }
+    });
+
+    frameWatchers.set(frameIndex, stopWatch);
+  }
+  /**
    * Create handler for Frame 2-6 (sequential mode)
-   * Only activates on ENTER_DOWN, waits for previous frame to complete
+   * Activates on ENTER (any direction), only deactivates on LEAVE_UP
    */
   function createSequentialHandler(frameIndex: number) {
     return (state: FrameState) => {
       const frame = frames[frameIndex];
       if (!frame) return;
 
-      // LEAVE: Reset immediately and cleanup any active watcher
-      if (state.action === 'LEAVE') {
+      // LEAVE_UP: Reset and cleanup (only when scrolling up and leaving)
+      if (state.STATE === 'LEAVE_UP') {
         framesInViewport.set(frameIndex, false);
-
-        const existingWatcher = frameWatchers.get(frameIndex);
-        if (existingWatcher) {
-          existingWatcher();
-          frameWatchers.delete(frameIndex);
-        }
-
-        frame.isEnter.value = false;
+        deactivateFrame(frameIndex);
         return;
       }
 
-      // ENTER_DOWN: Activate with previous frame logic
-      if (state.STATE === 'ENTER_DOWN') {
+      // Ignore LEAVE_DOWN (scrolling down and leaving viewport)
+      if (state.STATE === 'LEAVE_DOWN') {
+        framesInViewport.set(frameIndex, false);
+        return;
+      }
+
+      // Handle ENTER (any direction)
+      if (state.action === 'ENTER') {
         framesInViewport.set(frameIndex, true);
 
-        // Frame 1 has no previous frame, activate immediately
-        if (frameIndex === 0) {
-          frame.isEnter.value = true;
-          return;
-        }
-
-        const prevFrame = frames[frameIndex - 1];
-        if (!prevFrame) return;
-
-        // Previous frame left viewport: activate immediately
-        if (!prevFrame.isEnter.value) {
-          frame.isEnter.value = true;
-          return;
-        }
-
-        // Previous frame animation complete: activate immediately
-        if (prevFrame.isEnter.value && prevFrame.isAnimationComplete.value) {
-          frame.isEnter.value = true;
-          return;
-        }
-
-        // Previous frame animation not complete: wait using watchEffect
-        if (prevFrame.isEnter.value && !prevFrame.isAnimationComplete.value) {
-          // Cleanup any existing watcher first
-          const existingWatcher = frameWatchers.get(frameIndex);
-          if (existingWatcher) {
-            existingWatcher();
-          }
-
-          const stopWatch = watchEffect(() => {
-            // Condition 1: Previous frame left viewport
-            if (!prevFrame.isEnter.value) {
-              frame.isEnter.value = true;
-              stopWatch();
-              frameWatchers.delete(frameIndex);
-              return;
-            }
-
-            // Condition 2: Previous frame animation complete
-            if (
-              prevFrame.isEnter.value &&
-              prevFrame.isAnimationComplete.value
-            ) {
-              frame.isEnter.value = true;
-              stopWatch();
-              frameWatchers.delete(frameIndex);
-            }
-          });
-
-          frameWatchers.set(frameIndex, stopWatch);
+        if (canActivateByPreviousFrame(frameIndex)) {
+          activateFrame(frameIndex);
+        } else {
+          waitForPreviousFrame(frameIndex);
         }
       }
     };
@@ -184,54 +248,28 @@ export function useSequentialFrames(frameConfigs: FrameConfig[]) {
    * Check and activate frames that are initially in viewport on page load
    */
   function checkInitialFramesInViewport() {
+    console.log('=== Checking initial frames in viewport ===');
+
     frames.forEach((frame, index) => {
       const isInViewport = framesInViewport.get(index);
+      console.log(
+        `Frame ${index + 1}: inViewport=${isInViewport}, active=${
+          frame.isEnter.value
+        }`
+      );
 
       // Skip if not in viewport or already activated
-      if (!isInViewport || frame.isEnter.value) {
-        return;
-      }
+      if (!isInViewport || frame.isEnter.value) return;
 
-      // Frame 1: activate immediately if in viewport
-      if (index === 0) {
-        frame.isEnter.value = true;
-        return;
-      }
+      console.log(`Frame ${index + 1}: Processing initial activation`);
 
-      // Frame 2-6: check previous frame condition
-      const prevFrame = frames[index - 1];
-      if (!prevFrame) return;
-
-      // Previous frame not active: activate immediately
-      if (!prevFrame.isEnter.value) {
-        frame.isEnter.value = true;
-        return;
-      }
-
-      // Previous frame animation complete: activate immediately
-      if (prevFrame.isEnter.value && prevFrame.isAnimationComplete.value) {
-        frame.isEnter.value = true;
-        return;
-      }
-
-      // Previous frame animation not complete: wait
-      if (prevFrame.isEnter.value && !prevFrame.isAnimationComplete.value) {
-        const stopWatch = watchEffect(() => {
-          if (!prevFrame.isEnter.value) {
-            frame.isEnter.value = true;
-            stopWatch();
-            frameWatchers.delete(index);
-            return;
-          }
-
-          if (prevFrame.isEnter.value && prevFrame.isAnimationComplete.value) {
-            frame.isEnter.value = true;
-            stopWatch();
-            frameWatchers.delete(index);
-          }
-        });
-
-        frameWatchers.set(index, stopWatch);
+      // Check if can activate based on previous frame
+      if (canActivateByPreviousFrame(index)) {
+        console.log(`Frame ${index + 1}: Activating (initial - can activate)`);
+        activateFrame(index);
+      } else {
+        console.log(`Frame ${index + 1}: Waiting for previous (initial)`);
+        waitForPreviousFrame(index);
       }
     });
   }
@@ -260,7 +298,8 @@ export function useSequentialFrames(frameConfigs: FrameConfig[]) {
         });
       },
       {
-        threshold: 0.3,
+        // threshold: 0.3,
+        threshold: 0,
         root: null,
         rootMargin: '0px',
       }
@@ -285,6 +324,23 @@ export function useSequentialFrames(frameConfigs: FrameConfig[]) {
       setTimeout(() => {
         checkInitialFramesInViewport();
       }, 100);
+
+      // Watch scroll position: reset all frames when scrolled to top
+      watch(y, (scrollY) => {
+        if (scrollY < 10) {
+          // Reset all frames (including Frame 1)
+          frames.forEach((frame, index) => {
+            if (frame.isEnter.value) {
+              deactivateFrame(index);
+            }
+          });
+
+          // Re-check frames in viewport after reset
+          setTimeout(() => {
+            checkInitialFramesInViewport();
+          }, 100);
+        }
+      });
     });
   }
 
