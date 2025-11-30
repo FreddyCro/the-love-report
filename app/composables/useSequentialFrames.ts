@@ -282,23 +282,23 @@ export function useSequentialFrames(
    * Setup scroll-to-top reset watcher
    * Resets all frames when user scrolls to page top
    */
-  function setupScrollToTopReset() {
-    watch(y, (scrollY) => {
-      if (scrollY < 10) {
-        // Reset all frames (including Frame 1)
-        frames.forEach((frame, index) => {
-          if (frame.isEnter.value) {
-            deactivateFrame(index);
-          }
-        });
+  // function setupScrollToTopReset() {
+  //   watch(y, (scrollY) => {
+  //     if (scrollY < 10) {
+  //       // Reset all frames (including Frame 1)
+  //       frames.forEach((frame, index) => {
+  //         if (frame.isEnter.value) {
+  //           deactivateFrame(index);
+  //         }
+  //       });
 
-        // Re-check frames in viewport after reset
-        setTimeout(() => {
-          checkInitialFramesInViewport();
-        }, initialCheckDelay);
-      }
-    });
-  }
+  //       // Re-check frames in viewport after reset
+  //       setTimeout(() => {
+  //         checkInitialFramesInViewport();
+  //       }, initialCheckDelay);
+  //     }
+  //   });
+  // }
 
   /**
    * Watch frame intersection and call callback with state
@@ -352,7 +352,7 @@ export function useSequentialFrames(
       }, initialCheckDelay);
 
       // Setup scroll-to-top reset watcher
-      setupScrollToTopReset();
+      // setupScrollToTopReset();
     });
   }
 

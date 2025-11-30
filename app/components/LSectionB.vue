@@ -132,7 +132,7 @@ async function handleAnimation(
   _lenis: any
 ): Promise<void> {
   const section = document.querySelector(`.${JS_CLASSES.SECTION}`);
-  const intro = document.querySelector(`.${JS_CLASSES.INTRO}`);
+  // const intro = document.querySelector(`.${JS_CLASSES.INTRO}`);
 
   if (!section) {
     console.warn('Section not found');
