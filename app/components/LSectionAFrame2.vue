@@ -41,7 +41,6 @@ defineProps<{
 
   &__img-wrap {
     opacity: 0;
-    transition: opacity 1s ease;
   }
 
   &__text-wrap {
@@ -50,18 +49,18 @@ defineProps<{
     right: 0;
     opacity: 0;
     transform: translate(100%, -50%);
-    transition: transform 1s 1s ease;
   }
 
   &.active {
     .l-seca-f2__img-wrap {
       opacity: 1;
+      transition: opacity 1s ease;
     }
 
     .l-seca-f2__text-wrap {
       opacity: 1;
       transform: translate(0, -50%);
-      
+      transition: transform 1s 1s ease;
     }
   }
 }
