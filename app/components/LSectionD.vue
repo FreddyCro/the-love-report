@@ -44,17 +44,17 @@ const getAvatarImage = (name: string) => {
 </script>
 
 <template>
-	<section class="section-d bg-love-red-01">
+	<section class="section-d l-article bg-love-red-01">
 		<!-- Title -->
 		<div class="text-center mb-6">
 			<div class="section-d__dialogbox">
-				<h2 class="text-love-red-03">{{ content.title }}</h2>
+				<h2 class="text-love-red-03 l-h2 font-bold">{{ content.title }}</h2>
 			</div>
 		</div>
 
 		<!-- Intro Text -->
 		<div class="l-container space-y-9">
-			<p v-for="(paragraph, index) in content.intro" :key="index" class="text">
+			<p v-for="(paragraph, index) in content.intro" :key="index" class="l-p">
 				{{ paragraph }}
 			</p>
 		</div>
@@ -66,10 +66,10 @@ const getAvatarImage = (name: string) => {
 				<div class="section-d__step">
 					<p class="text-love-red-03">{{ caseItem.index }}</p>
 				</div>
-				<h3 class="mt-1 pb-3 text-center border-b border-black">
+				<h3 class="mt-1 pb-3 text-center border-b border-black l-h3 font-bold">
 					{{ caseItem.title }}
 				</h3>
-				<h5 class="pt-3">{{ caseItem.desc }}</h5>
+				<h5 class="pt-3 l-h5 font-bold">{{ caseItem.desc }}</h5>
 			</div>
 
 			<!-- Stories -->
@@ -98,12 +98,12 @@ const getAvatarImage = (name: string) => {
 						class="flex-1 flex flex-col"
 						:class="story.position === 'left' ? 'items-start' : 'items-end'"
 					>
-						<h4 class="mb-1">
+						<h4 class="mb-1 l-h4 font-bold">
 							{{ story.name }}
 						</h4>
 						<!-- Content -->
 						<p
-							class="bg-white px-5 py-4 max-w-[547px] text"
+							class="bg-white px-5 py-4 max-w-[547px] l-p"
 							:class="
 								story.position === 'left'
 									? 'rounded-tr-[10px] rounded-b-[10px]'

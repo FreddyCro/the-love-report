@@ -118,54 +118,9 @@
 			line-height: var(--pc-h5-line-height);
 		}
 	}
-}
-.section-b,
-.section-c,
-.section-d,
-.section-e,
-.section-f {
-	h1,
-	h2,
-	h3,
-	h4,
-	h5 {
-		font-weight: 700;
-		line-height: 1.2;
-	}
-
-	.text {
-		font-size: 18px;
-		line-height: 36px;
-	}
-
-	h1 {
-		font-size: 40px;
-	}
-
-	h2 {
-		font-size: 42px;
-		line-height: 56px;
-	}
-
-	h3 {
-		font-size: 32px;
-		line-height: 48px;
-	}
-
-	h4 {
-		font-size: 28px;
-		line-height: 46px;
-	}
-
-	h5 {
-		font-size: 20px;
-		line-height: 32px;
-	}
-
-	.mob-h5 {
-		font-size: 18px;
-		line-height: 30px;
-		font-weight: 700;
+	.l-mob-h5 {
+		font-size: var(--mob-h5-font-size);
+		line-height: var(--mob-h5-line-height);
 	}
 }
 

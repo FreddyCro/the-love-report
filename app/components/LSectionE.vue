@@ -38,22 +38,18 @@ const cases = sectionEData.cases as CaseItem[];
 </script>
 
 <template>
-	<section class="section-e bg-white rounded-t-[120px]">
+	<section class="section-e l-article bg-white rounded-t-[120px]">
 		<div class="l-container">
 			<!-- Title -->
 			<div class="text-center mb-6">
 				<div class="section-e__dialogbox">
-					<h2 class="text-black">{{ content.title }}</h2>
+					<h2 class="text-black l-h2 font-bold">{{ content.title }}</h2>
 				</div>
 			</div>
 
 			<!-- Intro Text -->
 			<div class="space-y-9">
-				<p
-					v-for="(paragraph, index) in content.intro"
-					:key="index"
-					class="text"
-				>
+				<p v-for="(paragraph, index) in content.intro" :key="index" class="l-p">
 					{{ paragraph }}
 				</p>
 			</div>
@@ -61,15 +57,19 @@ const cases = sectionEData.cases as CaseItem[];
 			<!-- Cases -->
 			<div v-for="caseItem in cases" :key="caseItem.index" class="mt-[68px]">
 				<!-- Step Indicator -->
-				<h3 class="pb-2 mb-2 border-b border-black">{{ caseItem.title }}</h3>
+				<h3 class="pb-2 mb-2 border-b border-black l-h3 font-bold">
+					{{ caseItem.title }}
+				</h3>
 
 				<!-- Content Blocks -->
 				<div v-for="(block, blockIndex) in caseItem.content" :key="blockIndex">
 					<!-- Title Block -->
-					<h5 v-if="block.type === 'title'" class="mb-5">{{ block.desc }}</h5>
+					<h5 v-if="block.type === 'title'" class="mb-5 l-h5 font-bold">
+						{{ block.desc }}
+					</h5>
 
 					<!-- Text Block -->
-					<div v-else-if="block.type === 'text'" class="space-y-9 mb-9 text">
+					<div v-else-if="block.type === 'text'" class="space-y-9 mb-9 l-p">
 						<p
 							v-for="(paragraph, pIndex) in (block.desc as string[])"
 							:key="pIndex"
@@ -93,12 +93,12 @@ const cases = sectionEData.cases as CaseItem[];
 								: 'rounded-[20px]',
 						]"
 					>
-						<h5>{{ block.desc }}</h5>
+						<h5 class="l-h5 font-bold">{{ block.desc }}</h5>
 					</div>
 
 					<!-- Data Block -->
 					<div v-else-if="block.type === 'data'" class="my-9">
-						<h5 v-if="block.title" class="mob-h5 text-black">
+						<h5 v-if="block.title" class="l-mob-h5 text-black font-bold">
 							{{ block.title }}
 						</h5>
 						<div class="mx-[45px] mt-5 relative" :class="block.classname">
@@ -121,7 +121,7 @@ const cases = sectionEData.cases as CaseItem[];
 								<p class="text-[40px] font-bold text-black">
 									{{ item.prefix }}
 								</p>
-								<h5 class="text-black">{{ item.text }}</h5>
+								<h5 class="text-black l-h5 font-bold">{{ item.text }}</h5>
 							</div>
 						</div>
 						<p v-if="block.note" class="pic-info pt-5">{{ block.note }}</p>

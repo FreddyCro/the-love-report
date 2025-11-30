@@ -35,23 +35,25 @@ const isFlipped = (index: number) => {
 </script>
 
 <template>
-	<section class="section-f">
+	<section class="section-f l-article">
 		<!-- Title -->
 		<div class="text-center mb-6">
 			<div class="section-f__dialogbox">
-				<h2 class="text-black">{{ content.title }}</h2>
+				<h2 class="text-black l-h2 font-bold">{{ content.title }}</h2>
 			</div>
 		</div>
 
 		<!-- Intro Text -->
-		<div class="text l-container">
+		<div class="l-p l-container">
 			<p v-for="(paragraph, index) in content.intro" :key="index">
 				{{ paragraph }}
 			</p>
 		</div>
 
 		<!-- Download Button -->
-		<h5 class="flex items-center gap-2.5 justify-center mt-9 mb-24">
+		<h5
+			class="flex items-center gap-2.5 justify-center mt-9 mb-24 l-h5 font-bold"
+		>
 			<button>點擊卡牌看建議</button>
 			<div class="w-10 h-10 text-love-dark">
 				<LPic
@@ -88,8 +90,10 @@ const isFlipped = (index: number) => {
 					<div
 						class="absolute w-full h-full backface-hidden rounded-[20px] p-[30px] border-2 border-love-red-02 overflow-hidden bg-white"
 					>
-						<h4 class="mb-3 text-black">{{ caseItem.title }}</h4>
-						<h5 class="mb-5 text-black">{{ caseItem.content.question }}</h5>
+						<h4 class="mb-3 text-black l-h4 font-bold">{{ caseItem.title }}</h4>
+						<h5 class="mb-5 text-black l-h5 font-bold">
+							{{ caseItem.content.question }}
+						</h5>
 						<div class="mb-5">
 							<LPic
 								:src="caseItem.content.image"
@@ -123,8 +127,8 @@ const isFlipped = (index: number) => {
 					<div
 						class="absolute w-full h-full backface-hidden rounded-[20px] p-5 border-2 border-love-red-02 overflow-hidden rotate-y-180 bg-love-red-02"
 					>
-						<h3 class="mb-5 text-black">專家解答</h3>
-						<p class="text text-black">{{ caseItem.content.answer }}</p>
+						<h3 class="mb-5 text-black l-h3 font-bold">專家解答</h3>
+						<p class="l-p text-black">{{ caseItem.content.answer }}</p>
 						<div
 							class="absolute bottom-0 right-0 w-[100px] h-[100px] bg-white rounded-tl-[100px] overflow-hidden hover:w-[125px] hover:h-[125px] hover:rounded-tl-[125px] transition-all duration-300"
 						>

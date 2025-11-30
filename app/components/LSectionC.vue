@@ -30,16 +30,16 @@ const truncateText = (text: string, limit: number = 104): string => {
 </script>
 
 <template>
-	<section class="section-c bg-love-blue-01 overflow-x-hidden">
+	<section class="section-c l-article bg-love-blue-01 overflow-x-hidden">
 		<!-- Title -->
 		<div class="text-center mb-6">
 			<div class="section-c__dialogbox">
-				<h2 class="text-love-blue-03">{{ content.title }}</h2>
+				<h2 class="text-love-blue-03 l-h2 font-bold">{{ content.title }}</h2>
 			</div>
 		</div>
 		<!-- Intro Text -->
 		<div class="l-container space-y-9">
-			<p v-for="(paragraph, index) in content.intro" :key="index" class="text">
+			<p v-for="(paragraph, index) in content.intro" :key="index" class="l-p">
 				{{ paragraph }}
 			</p>
 		</div>
@@ -114,23 +114,25 @@ const truncateText = (text: string, limit: number = 104): string => {
 						/>
 					</div>
 					<div class="flex-1 text-black">
-						<h4 class="mb-2">
+						<h4 class="mb-2 l-h4 font-bold">
 							{{ caseItem.name }}
 							<span class="text-card-regular"
 								>{{ caseItem.age }}{{ caseItem.occupation ? " | " : ""
 								}}{{ caseItem.occupation }}</span
 							>
 						</h4>
-						<p v-if="caseItem.tag" class="text-card-bold mb-2">
+						<div v-if="caseItem.tag" class="text-card-bold mb-2">
 							{{ caseItem.tag }}
-						</p>
+						</div>
 						<p class="text-card-regular">{{ caseItem.story }}</p>
 					</div>
 				</div>
 
 				<div class="pt-7 border-t border-black">
-					<h5 class="text-love-red-03 mb-1">{{ caseItem.title }}</h5>
-					<p class="text">
+					<h5 class="text-love-red-03 mb-1 l-h5 font-bold">
+						{{ caseItem.title }}
+					</h5>
+					<p class="l-p">
 						{{ truncateText(caseItem.desc, 104) }}
 					</p>
 				</div>
