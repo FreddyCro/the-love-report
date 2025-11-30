@@ -100,7 +100,6 @@ defineProps<{
 
   &__img1-wrap {
     opacity: 0;
-    transition: opacity 1s ease;
   }
 
   &__text1-wrap {
@@ -108,12 +107,10 @@ defineProps<{
     top: 0;
     left: 0;
     opacity: 0;
-    transition: opacity 1s ease;
   }
 
   &__img2-wrap {
     opacity: 0;
-    transition: opacity 1s 0.75s ease;
   }
 
   &__text2-wrap {
@@ -121,12 +118,10 @@ defineProps<{
     top: 0;
     left: 0;
     opacity: 0;
-    transition: opacity 1s 0.75s ease;
   }
 
   &__img3-wrap {
     opacity: 0;
-    transition: opacity 1s 1.5s ease;
   }
 
   &__text3-wrap {
@@ -134,41 +129,46 @@ defineProps<{
     top: 0;
     left: 0;
     opacity: 0;
-    transition: opacity 1s 1.5s ease;
   }
 
   &__text4-wrap {
     opacity: 0;
-    transition: opacity 1s 1.5s ease;
   }
 
   &.active {
     .l-seca-f4__img1-wrap {
       opacity: 1;
+      transition: opacity 1s ease;
     }
 
     .l-seca-f4__text1-wrap {
       opacity: 1;
+      transition: opacity 1s ease;
     }
 
     .l-seca-f4__img2-wrap {
       opacity: 1;
+      transition: opacity 1s 0.75s ease;
     }
 
     .l-seca-f4__text2-wrap {
       opacity: 1;
+      transition: opacity 1s 0.75s ease;
     }
 
     .l-seca-f4__img3-wrap {
       opacity: 1;
+      transition: opacity 1s 1.5s ease;
     }
 
     .l-seca-f4__text3-wrap {
       opacity: 1;
+      transition: opacity 1s 1.5s ease;
     }
 
     .l-seca-f4__text4-wrap {
       opacity: 1;
+      transition: opacity 1s 1.5s ease;
     }
   }
 }

@@ -42,7 +42,6 @@ defineProps<{
 
   &__img-wrap {
     opacity: 0;
-    transition: opacity 1s ease;
   }
 
   &__text-wrap {
@@ -51,16 +50,17 @@ defineProps<{
     left: 50%;
     transform: translate(-50%, -50%);
     opacity: 0;
-    transition: opacity 1s ease;
   }
 
   &.active {
     .l-seca-f6__img-wrap {
       opacity: 1;
+      transition: opacity 1s ease;
     }
 
     .l-seca-f6__text-wrap {
       opacity: 1;
+      transition: opacity 1s ease;
     }
   }
 }

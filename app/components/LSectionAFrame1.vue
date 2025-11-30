@@ -101,22 +101,24 @@ defineProps<{
       </div>
     </div>
 
-    <!-- <div class="h-2.5 w-(--seca-f1-img-width) mx-auto bg-black" /> -->
+    <!-- ruler -->
+    <div class="h-2.5 w-(--seca-f1-img-max-w) mx-auto bg-black" />
   </div>
 </template>
 
 <style lang="scss">
+@use '@/assets/styles/mixins' as *;
+
 .l-seca-f1 {
-  /* --seca-f1-img-width: 100%; */
-  --seca-f1-img-width: 672px;
-  --seca-f1-img-height: 700px;
+  --seca-f1-img-max-w: 672px;
+  --seca-f1-img-h: 700px;
 
   width: 100%;
 
   &__img-back-wrap {
     position: relative;
     width: 100%;
-    height: var(--seca-f1-img-height);
+    height: var(--seca-f1-img-h);
     clip-path: inset(0 0 0 0);
     transition: clip-path 1s ease, width 1s ease;
 
@@ -167,11 +169,18 @@ defineProps<{
 
   &.active {
     .l-seca-f1__img-back-wrap {
-      /* width: var(--seca-f1-img-width); */
+      /* width: var(--seca-f1-img-max-w); */
       clip-path: inset(
-        0 calc((1920px - var(--seca-f1-img-width)) / 2) 0
-          calc((1920px - var(--seca-f1-img-width)) / 2)
+        0 calc((100% - var(--seca-f1-img-max-w)) / 2) 0
+          calc((100% - var(--seca-f1-img-max-w)) / 2)
       );
+
+      @include rwd-min(2xl) {
+        clip-path: inset(
+          0 calc((1920px - var(--seca-f1-img-max-w)) / 2) 0
+            calc((1920px - var(--seca-f1-img-max-w)) / 2)
+        );
+      }
     }
 
     .l-seca-f1__img1-wrap {
