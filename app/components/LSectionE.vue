@@ -101,7 +101,7 @@ const cases = sectionEData.cases as CaseItem[];
 						<h5 v-if="block.title" class="l-mob-h5 text-black font-bold">
 							{{ block.title }}
 						</h5>
-						<div class="mx-[45px] mt-5 relative" :class="block.classname">
+						<div class="mt-5 relative mx-auto" :class="block.classname">
 							<div
 								v-for="(item, itemIndex) in (block.desc as any[])"
 								:key="itemIndex"
@@ -148,6 +148,8 @@ const cases = sectionEData.cases as CaseItem[];
 </template>
 
 <style scoped lang="scss">
+@use "@/assets/styles/mixins" as *;
+
 .section-e {
 	padding: 80px 0 120px;
 
@@ -165,38 +167,76 @@ const cases = sectionEData.cases as CaseItem[];
 	}
 
 	.tinder-data {
-		width: 530px;
-		height: 470px;
+		width: 366px;
+		height: 541px;
+
+		@include rwd-min(sm) {
+			width: 530px;
+			height: 470px;
+		}
+
 		&__0 {
-			left: 7px;
-			top: 19px;
-			transform: rotate(10deg);
+			left: 6px;
+			top: 15px;
+
+			@include rwd-min(sm) {
+				left: 7px;
+				top: 19px;
+				transform: rotate(10deg);
+			}
 		}
 		&__1 {
-			left: 114px;
-			top: 122px;
-			transform: rotate(-5deg);
+			left: 110px;
+			top: 110px;
+			transform: rotate(-10deg);
+
+			@include rwd-min(sm) {
+				left: 114px;
+				top: 122px;
+				transform: rotate(-5deg);
+			}
 		}
 		&__2 {
-			right: 5px;
-			top: 215px;
-			transform: rotate(3deg);
+			right: 102px;
+			top: 230px;
+			transform: rotate(10deg);
+
+			@include rwd-min(sm) {
+				right: 5px;
+				top: 215px;
+				transform: rotate(3deg);
+			}
 		}
 		&__3 {
-			left: 63px;
-			top: 294px;
+			left: 111px;
+			top: 340px;
 			transform: rotate(5deg);
+
+			@include rwd-min(sm) {
+				left: 63px;
+				top: 294px;
+			}
 		}
 		&__4 {
-			right: 44px;
-			bottom: 20px;
-			transform: rotate(-10deg);
+			right: 146px;
+			bottom: 15px;
+			transform: rotate(5deg);
+
+			@include rwd-min(sm) {
+				right: 44px;
+				bottom: 20px;
+				transform: rotate(-10deg);
+			}
 		}
 	}
 
 	.housework-data {
-		width: 530px;
-		height: 525px;
+		display: none;
+		@include rwd-min(sm) {
+			display: block;
+			width: 530px;
+			height: 525px;
+		}
 		&__0 {
 			left: 7px;
 			top: 39px;
