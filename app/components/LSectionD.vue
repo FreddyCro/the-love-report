@@ -60,7 +60,11 @@ const getAvatarImage = (name: string) => {
 		</div>
 
 		<!-- Cases -->
-		<div v-for="caseItem in cases" :key="caseItem.index" class="mb-5">
+		<div
+			v-for="caseItem in cases"
+			:key="caseItem.index"
+			class="mb-5 px-6 pc:px-0"
+		>
 			<!-- Step Indicator -->
 			<div class="py-12 l-container">
 				<div class="section-d__step">
@@ -77,20 +81,35 @@ const getAvatarImage = (name: string) => {
 				<div
 					v-for="(story, index) in caseItem.stories"
 					:key="index"
-					class="flex gap-6 items-start"
-					:class="story.position === 'left' ? 'flex-row' : 'flex-row-reverse'"
+					class="flex flex-col gap-3 xs:gap-6"
+					:class="{
+						'xs:flex-row': story.position === 'left',
+						'xs:flex-row-reverse': story.position === 'right',
+						'items-start xs:items-start': story.position === 'left',
+						'items-end xs:items-start': story.position === 'right',
+					}"
 				>
-					<!-- Avatar -->
-					<div class="shrink-0 w-[138px] h-[138px]">
-						<LPic
-							:src="getAvatarImage(story.name)"
-							ext="png"
-							:use-prefix="false"
-							:use2x="false"
-							:webp="true"
-							:width="138"
-							:height="138"
-						/>
+					<!-- Avatar & Name (Mobile) -->
+					<div
+						class="flex gap-4 items-center xs:block xs:shrink-0 xs:w-[138px]"
+						:class="
+							story.position === 'right' ? 'flex-row-reverse' : 'flex-row'
+						"
+					>
+						<div class="shrink-0 w-[100px] h-[100px] xs:w-[138px] xs:h-[138px]">
+							<LPic
+								:src="getAvatarImage(story.name)"
+								ext="png"
+								:use-prefix="false"
+								:use2x="false"
+								:webp="true"
+								:width="138"
+								:height="138"
+							/>
+						</div>
+						<h4 class="mb-0 xs:hidden l-h4 font-bold">
+							{{ story.name }}
+						</h4>
 					</div>
 
 					<!-- Dialog Box -->
@@ -98,7 +117,7 @@ const getAvatarImage = (name: string) => {
 						class="flex-1 flex flex-col"
 						:class="story.position === 'left' ? 'items-start' : 'items-end'"
 					>
-						<h4 class="mb-1 l-h4 font-bold">
+						<h4 class="mb-1 l-h4 font-bold hidden xs:block">
 							{{ story.name }}
 						</h4>
 						<!-- Content -->
@@ -126,11 +145,13 @@ const getAvatarImage = (name: string) => {
 					:key="index"
 					class="flex flex-col"
 					:class="{
-						'mx-auto': image.position === 'center',
-						'mr-auto': image.position === 'left',
-						'ml-auto': image.position === 'right',
-						'ml-[162px]': image.position === 'center-left',
-						'mr-[162px]': image.position === 'center-right',
+						'xs:mx-auto': image.position === 'center',
+						'xs:mr-auto':
+							image.position === 'left' || image.position === 'center-left',
+						'xs:ml-auto':
+							image.position === 'right' || image.position === 'center-right',
+						'md:mr-auto md:ml-[162px]': image.position === 'center-left',
+						'md:ml-auto md:mr-[162px]': image.position === 'center-right',
 					}"
 					:style="`width: ${image.width}px;`"
 				>
