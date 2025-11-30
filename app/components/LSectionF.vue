@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import sectionFData from "~/locales/section-f.json";
+import LPic from "./LPic.vue";
 
 interface CaseContent {
 	question: string;
 	answer: string;
+	image: string;
 }
 
 interface CaseItem {
@@ -33,57 +35,109 @@ const isFlipped = (index: number) => {
 </script>
 
 <template>
-	<section class="section-f bg-love-red-01 rounded-t-[120px]">
-		<div class="l-container">
-			<!-- Title -->
-			<div class="section-f__header">
-				<h2 class="section-f__title">{{ content.title }}</h2>
+	<section class="section-f">
+		<!-- Title -->
+		<div class="text-center mb-6">
+			<div class="section-f__dialogbox">
+				<h2 class="text-black">{{ content.title }}</h2>
 			</div>
+		</div>
 
-			<!-- Intro Text -->
-			<div class="section-f__intro">
-				<p v-for="(paragraph, index) in content.intro" :key="index">
-					{{ paragraph }}
-				</p>
+		<!-- Intro Text -->
+		<div class="text l-container">
+			<p v-for="(paragraph, index) in content.intro" :key="index">
+				{{ paragraph }}
+			</p>
+		</div>
+
+		<!-- Download Button -->
+		<h5 class="flex items-center gap-2.5 justify-center mt-9 mb-24">
+			<button>點擊卡牌看建議</button>
+			<div class="w-10 h-10 text-love-dark">
+				<LPic
+					src="/img/button_click_down_below"
+					ext="svg"
+					:use-prefix="false"
+					:use2x="false"
+					:webp="false"
+					:width="40"
+					:height="40"
+				/>
 			</div>
+		</h5>
 
-			<!-- Download Button -->
-			<div class="section-f__download">
-				<button class="download-btn">
-					<span class="download-icon">⬇</span>
-					點擊卡牌看建議
-				</button>
-			</div>
-
-			<!-- Cards Grid -->
-			<div class="cards-grid">
+		<!-- Cards Grid -->
+		<div
+			class="grid grid-cols-3 gap-x-12 gap-y-[68px] mt-[60px] max-w-[1056px] mx-auto"
+		>
+			<div
+				v-for="caseItem in cases"
+				:key="caseItem.index"
+				class="perspective-[1000px] cursor-pointer h-[500px]"
+				:class="{
+					'relative bottom-[60px]':
+						caseItem.index === 2 || caseItem.index === 5,
+				}"
+				@click="toggleCard(caseItem.index)"
+			>
 				<div
-					v-for="caseItem in cases"
-					:key="caseItem.index"
-					class="card-wrapper"
-					:class="{ flipped: isFlipped(caseItem.index) }"
-					@click="toggleCard(caseItem.index)"
+					class="relative w-full h-full transition-transform duration-600 transform-3d"
+					:class="{ 'transform-[rotateY(180deg)]': isFlipped(caseItem.index) }"
 				>
-					<div class="card">
-						<!-- Front Side (Question) -->
-						<div class="card-front">
-							<div class="card-content">
-								<h3 class="card-title">{{ caseItem.title }}</h3>
-								<p class="card-question">{{ caseItem.content.question }}</p>
-							</div>
-							<div class="card-corner">
-								<span class="corner-icon">↘</span>
+					<!-- Front Side (Question) -->
+					<div
+						class="absolute w-full h-full backface-hidden rounded-[20px] p-[30px] border-2 border-love-red-02 overflow-hidden bg-white"
+					>
+						<h4 class="mb-3 text-black">{{ caseItem.title }}</h4>
+						<h5 class="mb-5 text-black">{{ caseItem.content.question }}</h5>
+						<div class="mb-5">
+							<LPic
+								:src="caseItem.content.image"
+								ext="jpg"
+								default="pad"
+								:srcset="['pad', 'mob']"
+								:use2x="false"
+								:webp="true"
+								:width="280"
+								:height="211"
+							/>
+						</div>
+						<div
+							class="absolute bottom-0 right-0 w-[100px] h-[100px] bg-love-red-02 rounded-tl-[100px] overflow-hidden hover:w-[125px] hover:h-[125px] hover:rounded-tl-[125px] transition-all duration-300"
+						>
+							<div class="absolute bottom-6 right-6 w-[30px] h-[30px]">
+								<LPic
+									src="/img/button_card_flip"
+									ext="svg"
+									:use-prefix="false"
+									:use2x="false"
+									:webp="false"
+									:width="30"
+									:height="30"
+								/>
 							</div>
 						</div>
+					</div>
 
-						<!-- Back Side (Answer) -->
-						<div class="card-back">
-							<div class="card-content">
-								<h3 class="card-title-back">專家解答</h3>
-								<p class="card-answer">{{ caseItem.content.answer }}</p>
-							</div>
-							<div class="card-corner card-corner--back">
-								<span class="corner-icon">✕</span>
+					<!-- Back Side (Answer) -->
+					<div
+						class="absolute w-full h-full backface-hidden rounded-[20px] p-5 border-2 border-love-red-02 overflow-hidden rotate-y-180 bg-love-red-02"
+					>
+						<h3 class="mb-5 text-black">專家解答</h3>
+						<p class="text text-black">{{ caseItem.content.answer }}</p>
+						<div
+							class="absolute bottom-0 right-0 w-[100px] h-[100px] bg-white rounded-tl-[100px] overflow-hidden hover:w-[125px] hover:h-[125px] hover:rounded-tl-[125px] transition-all duration-300"
+						>
+							<div class="absolute bottom-6 right-5 w-[30px] h-[30px]">
+								<LPic
+									src="/img/button_card_change_back"
+									ext="svg"
+									:use-prefix="false"
+									:use2x="false"
+									:webp="false"
+									:width="30"
+									:height="30"
+								/>
 							</div>
 						</div>
 					</div>
@@ -96,257 +150,19 @@ const isFlipped = (index: number) => {
 <style scoped lang="scss">
 .section-f {
 	min-height: 100vh;
-	padding: 80px 0 120px;
+	padding: 0 0 80px;
 
-	&__header {
-		text-align: center;
-		margin-bottom: 40px;
-	}
-
-	&__title {
-		display: inline-block;
-		font-size: 32px;
-		font-weight: 700;
-		color: #404040;
-		padding: 12px 40px;
-		border: 3px solid #fe7152;
-		border-radius: 60px;
-		background: transparent;
-	}
-
-	&__intro {
-		max-width: 620px;
-		margin: 0 auto 40px;
-		font-size: 18px;
-		line-height: 36px;
-		color: #404040;
-
-		p {
-			margin-bottom: 24px;
-
-			&:last-child {
-				margin-bottom: 0;
-			}
-		}
-	}
-
-	&__download {
-		text-align: center;
-		margin-bottom: 60px;
-	}
-}
-
-.download-btn {
-	display: inline-flex;
-	align-items: center;
-	gap: 12px;
-	padding: 16px 32px;
-	background: #404040;
-	color: #fff;
-	border: none;
-	border-radius: 999px;
-	font-size: 18px;
-	font-weight: 700;
-	cursor: pointer;
-	transition: all 0.3s ease;
-
-	&:hover {
-		background: #2a2a2a;
-		transform: translateY(-2px);
-	}
-
-	.download-icon {
-		font-size: 24px;
-	}
-}
-
-.cards-grid {
-	max-width: 1200px;
-	margin: 0 auto;
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 32px;
-	padding: 0 20px;
-}
-
-.card-wrapper {
-	perspective: 1000px;
-	cursor: pointer;
-	aspect-ratio: 3 / 4;
-
-	&.flipped {
-		.card {
-			transform: rotateY(180deg);
-		}
-	}
-}
-
-.card {
-	position: relative;
-	width: 100%;
-	height: 100%;
-	transform-style: preserve-3d;
-	transition: transform 0.6s;
-}
-
-.card-front,
-.card-back {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	backface-visibility: hidden;
-	border-radius: 20px;
-	padding: 32px;
-	display: flex;
-	flex-direction: column;
-}
-
-.card-front {
-	background: #fff;
-	border: 2px solid #ffa59b;
-}
-
-.card-back {
-	background: #ffa59b;
-	transform: rotateY(180deg);
-}
-
-.card-content {
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-}
-
-.card-title {
-	font-size: 20px;
-	font-weight: 700;
-	color: #404040;
-	margin-bottom: 16px;
-}
-
-.card-title-back {
-	font-size: 24px;
-	font-weight: 700;
-	color: #fff;
-	margin-bottom: 20px;
-	text-align: center;
-}
-
-.card-question {
-	font-size: 18px;
-	line-height: 32px;
-	color: #404040;
-	font-weight: 700;
-	margin-bottom: 24px;
-}
-
-.card-answer {
-	font-size: 18px;
-	line-height: 32px;
-	color: #fff;
-	flex: 1;
-}
-
-.card-image {
-	flex: 1;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin-top: 16px;
-}
-
-.image-placeholder {
-	width: 100%;
-	height: 100%;
-	background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-	border-radius: 12px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: #666;
-	font-size: 16px;
-}
-
-.card-corner {
-	position: absolute;
-	bottom: 16px;
-	right: 16px;
-	width: 48px;
-	height: 48px;
-	background: #ffa59b;
-	border-radius: 50% 0 20px 0;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: all 0.3s ease;
-
-	&--back {
-		background: #fff;
-	}
-
-	.corner-icon {
-		font-size: 24px;
-		color: #fff;
-	}
-
-	&--back .corner-icon {
-		color: #ffa59b;
-	}
-}
-
-.card-wrapper:hover .card-corner {
-	transform: scale(1.1);
-}
-
-@media (max-width: 1024px) {
-	.cards-grid {
-		grid-template-columns: repeat(2, 1fr);
-	}
-}
-
-@media (max-width: 768px) {
-	.section-f {
-		padding: 60px 20px 100px;
-
-		&__title {
-			font-size: 24px;
-			padding: 10px 30px;
-		}
-
-		&__intro {
-			font-size: 16px;
-			line-height: 32px;
-			margin-bottom: 40px;
-		}
-	}
-
-	.download-btn {
-		font-size: 16px;
-		padding: 14px 28px;
-	}
-
-	.cards-grid {
-		grid-template-columns: 1fr;
-		gap: 24px;
-	}
-
-	.card-front,
-	.card-back {
-		padding: 24px;
-	}
-
-	.card-title {
-		font-size: 18px;
-	}
-
-	.card-title-back {
-		font-size: 20px;
-	}
-
-	.card-question,
-	.card-answer {
-		font-size: 16px;
-		line-height: 28px;
+	&__dialogbox {
+		width: 240px;
+		height: 90px;
+		background-image: url("/img/intimate_relationships_p0601_dialogbox_pc.svg");
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+		display: flex;
+		justify-content: center;
+		margin: 0 auto;
+		padding-top: 6px;
 	}
 }
 </style>
