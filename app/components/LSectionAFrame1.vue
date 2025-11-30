@@ -120,7 +120,6 @@ defineProps<{
     width: 100%;
     height: var(--seca-f1-img-h);
     clip-path: inset(0 0 0 0);
-    transition: clip-path 1s ease, width 1s ease;
 
     img {
       width: 100%;
@@ -133,7 +132,6 @@ defineProps<{
     width: 100%;
     height: 100%;
     opacity: 1;
-    transition: opacity 0.5s 1s ease;
   }
 
   &__img2-wrap {
@@ -143,7 +141,6 @@ defineProps<{
     width: 100%;
     height: 100%;
     opacity: 0;
-    transition: opacity 0.5s 1s ease;
   }
 
   &__img3-wrap {
@@ -153,7 +150,6 @@ defineProps<{
     max-width: 300px;
     display: inline-block;
     transform: translateX(100%);
-    transition: transform 1s 1.5s ease;
   }
 
   &__text-wrap {
@@ -164,7 +160,6 @@ defineProps<{
     color: #fff;
     font-size: 1.6rem;
     transform: translateX(-100%);
-    transition: transform 1s 2s ease;
   }
 
   &.active {
@@ -174,6 +169,7 @@ defineProps<{
         0 calc((100% - var(--seca-f1-img-max-w)) / 2) 0
           calc((100% - var(--seca-f1-img-max-w)) / 2)
       );
+      transition: clip-path 1s ease, width 1s ease;
 
       @include rwd-min(2xl) {
         clip-path: inset(
@@ -185,18 +181,22 @@ defineProps<{
 
     .l-seca-f1__img1-wrap {
       opacity: 0;
+      transition: opacity 0.5s 1s ease;
     }
 
     .l-seca-f1__img2-wrap {
       opacity: 1;
+      transition: opacity 0.5s 1s ease;
     }
 
     .l-seca-f1__img3-wrap {
       transform: translateX(0);
+      transition: transform 1s 1.5s ease;
     }
 
     .l-seca-f1__text-wrap {
       transform: translateX(0);
+      transition: transform 1s 2s ease;
     }
   }
 }

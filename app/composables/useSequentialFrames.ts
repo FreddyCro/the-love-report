@@ -78,9 +78,13 @@ export type FrameConfig = {
  * - Auto-cleanup: Properly manages watchEffect cleanup on frame leave
  *
  * @param frameConfigs - Array of frame configurations with id and animationDuration
+ * @param initialCheckDelay - Delay in ms before checking initial frames in viewport (default: 100)
  * @returns Object with frames array and setup function
  */
-export function useSequentialFrames(frameConfigs: FrameConfig[]) {
+export function useSequentialFrames(
+  frameConfigs: FrameConfig[],
+  initialCheckDelay: number = 100
+) {
   // Initialize frame data
   const frames: FrameData[] = frameConfigs.map((config) => ({
     id: config.id,
@@ -275,6 +279,28 @@ export function useSequentialFrames(frameConfigs: FrameConfig[]) {
   }
 
   /**
+   * Setup scroll-to-top reset watcher
+   * Resets all frames when user scrolls to page top
+   */
+  function setupScrollToTopReset() {
+    watch(y, (scrollY) => {
+      if (scrollY < 10) {
+        // Reset all frames (including Frame 1)
+        frames.forEach((frame, index) => {
+          if (frame.isEnter.value) {
+            deactivateFrame(index);
+          }
+        });
+
+        // Re-check frames in viewport after reset
+        setTimeout(() => {
+          checkInitialFramesInViewport();
+        }, initialCheckDelay);
+      }
+    });
+  }
+
+  /**
    * Watch frame intersection and call callback with state
    */
   function watchFrameIntersection(
@@ -323,24 +349,10 @@ export function useSequentialFrames(frameConfigs: FrameConfig[]) {
       // Check for frames initially in viewport after IntersectionObserver setup
       setTimeout(() => {
         checkInitialFramesInViewport();
-      }, 100);
+      }, initialCheckDelay);
 
-      // Watch scroll position: reset all frames when scrolled to top
-      watch(y, (scrollY) => {
-        if (scrollY < 10) {
-          // Reset all frames (including Frame 1)
-          frames.forEach((frame, index) => {
-            if (frame.isEnter.value) {
-              deactivateFrame(index);
-            }
-          });
-
-          // Re-check frames in viewport after reset
-          setTimeout(() => {
-            checkInitialFramesInViewport();
-          }, 100);
-        }
-      });
+      // Setup scroll-to-top reset watcher
+      setupScrollToTopReset();
     });
   }
 
