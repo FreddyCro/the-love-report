@@ -44,7 +44,7 @@ const getAvatarImage = (name: string) => {
 </script>
 
 <template>
-	<section class="section-d l-article bg-love-red-01">
+	<section class="section-d min-h-screen l-article bg-love-red-01">
 		<!-- Title -->
 		<div class="text-center mb-6">
 			<div class="section-d__dialogbox">
@@ -153,7 +153,6 @@ const getAvatarImage = (name: string) => {
 
 <style scoped lang="scss">
 .section-d {
-	min-height: 100vh;
 	padding: 80px 0 140px;
 
 	&__dialogbox {

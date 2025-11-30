@@ -38,7 +38,7 @@ const cases = sectionEData.cases as CaseItem[];
 </script>
 
 <template>
-	<section class="section-e l-article bg-white rounded-t-[120px]">
+	<section class="section-e min-h-screen l-article bg-white rounded-t-[120px]">
 		<div class="l-container">
 			<!-- Title -->
 			<div class="text-center mb-6">
@@ -149,7 +149,6 @@ const cases = sectionEData.cases as CaseItem[];
 
 <style scoped lang="scss">
 .section-e {
-	min-height: 100vh;
 	padding: 80px 0 120px;
 
 	&__dialogbox {

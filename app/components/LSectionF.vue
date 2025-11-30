@@ -35,7 +35,7 @@ const isFlipped = (index: number) => {
 </script>
 
 <template>
-	<section class="section-f l-article">
+	<section class="section-f min-h-screen l-article pb-15 sm:pb-30 md:pb-20">
 		<!-- Title -->
 		<div class="text-center mb-6">
 			<div class="section-f__dialogbox">
@@ -70,15 +70,19 @@ const isFlipped = (index: number) => {
 
 		<!-- Cards Grid -->
 		<div
-			class="grid grid-cols-3 gap-x-12 gap-y-[68px] mt-[60px] max-w-[1056px] mx-auto"
+			class="px-4 xs:px-6 sm:px-12 md:px-0 grid grid-cols-1 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-12 md:grid-cols-3 gap-x-12 gap-y-[60px] mt-[60px] max-w-[1056px] mx-auto"
 		>
 			<div
 				v-for="caseItem in cases"
 				:key="caseItem.index"
-				class="perspective-[1000px] cursor-pointer h-[500px]"
+				class="perspective-[1000px] cursor-pointer h-[430px] sm:h-[500px]"
 				:class="{
-					'relative bottom-[60px]':
-						caseItem.index === 2 || caseItem.index === 5,
+					'sm:relative sm:bottom-15':
+						caseItem.index === 1 ||
+						caseItem.index === 3 ||
+						caseItem.index === 5,
+					'md:bottom-0': caseItem.index === 4 || caseItem.index === 6,
+					'md:bottom-15': caseItem.index === 2 || caseItem.index === 5,
 				}"
 				@click="toggleCard(caseItem.index)"
 			>
@@ -153,9 +157,6 @@ const isFlipped = (index: number) => {
 
 <style scoped lang="scss">
 .section-f {
-	min-height: 100vh;
-	padding: 0 0 80px;
-
 	&__dialogbox {
 		width: 240px;
 		height: 90px;

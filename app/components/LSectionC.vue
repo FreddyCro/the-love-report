@@ -30,7 +30,9 @@ const truncateText = (text: string, limit: number = 104): string => {
 </script>
 
 <template>
-	<section class="section-c l-article bg-love-blue-01 overflow-x-hidden">
+	<section
+		class="section-c min-h-screen l-article bg-love-blue-01 overflow-x-hidden"
+	>
 		<!-- Title -->
 		<div class="text-center mb-6">
 			<div class="section-c__dialogbox">
@@ -158,7 +160,6 @@ const truncateText = (text: string, limit: number = 104): string => {
 
 <style scoped lang="scss">
 .section-c {
-	min-height: 100vh;
 	padding: 80px 0 140px;
 	position: relative;
 	margin-top: -120px;
