@@ -1,9 +1,17 @@
 <script lang="ts" setup>
 import str from '../locales/section-a.json';
+import { SECTION_A_FRAME_TIMINGS, toCssTime } from '../utils/animationTimings';
 
 defineProps<{
   active: boolean;
 }>();
+
+// Get timing constants for this frame and convert to CSS format
+const timings = SECTION_A_FRAME_TIMINGS.FRAME_6;
+const cssTimings = {
+  imgDuration: toCssTime(timings.IMG_DURATION),
+  textDuration: toCssTime(timings.TEXT_DURATION),
+};
 </script>
 
 <template>
@@ -37,6 +45,10 @@ defineProps<{
 
 <style lang="scss">
 .l-seca-f6 {
+  /* Animation timing variables - synced from animationTimings.ts */
+  --seca-f6-img-duration: v-bind('cssTimings.imgDuration');
+  --seca-f6-text-duration: v-bind('cssTimings.textDuration');
+
   position: relative;
   width: 100%;
 
@@ -55,12 +67,12 @@ defineProps<{
   &.active {
     .l-seca-f6__img-wrap {
       opacity: 1;
-      transition: opacity 1s ease;
+      transition: opacity var(--seca-f6-img-duration) ease;
     }
 
     .l-seca-f6__text-wrap {
       opacity: 1;
-      transition: opacity 1s ease;
+      transition: opacity var(--seca-f6-text-duration) ease;
     }
   }
 }

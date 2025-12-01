@@ -244,13 +244,14 @@ const getTransformX = (index: number) => {
 		</div>
 
 		<!-- Dialog -->
-		<Teleport to="body">
-			<Transition name="fade">
-				<div
-					v-if="isDialogOpen"
-					class="section-c__overlay fixed inset-0 z-50 flex items-center justify-center  l-article"
-					@click.self="closeDialog"
-				>
+		<ClientOnly>
+			<Teleport to="body">
+				<Transition name="fade">
+					<div
+						v-if="isDialogOpen"
+						class="section-c__overlay fixed inset-0 z-50 flex items-center justify-center  l-article"
+						@click.self="closeDialog"
+					>
 					<div
 						class="section-c__dialog bg-white rounded-[30px] border-2 border-love-blue-02 p-10 relative max-w-[944px] max-h-150 overflow-y-auto mx-4"
 					>
@@ -293,9 +294,10 @@ const getTransformX = (index: number) => {
 							</div>
 						</div>
 					</div>
-				</div>
-			</Transition>
-		</Teleport>
+					</div>
+				</Transition>
+			</Teleport>
+		</ClientOnly>
 	</section>
 </template>
 

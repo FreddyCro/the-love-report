@@ -1,9 +1,22 @@
 <script lang="ts" setup>
 import str from '../locales/section-a.json';
+import { SECTION_A_FRAME_TIMINGS, toCssTime } from '../utils/animationTimings';
 
 defineProps<{
   active: boolean;
 }>();
+
+// Get timing constants for this frame and convert to CSS format
+const timings = SECTION_A_FRAME_TIMINGS.FRAME_1;
+const cssTimings = {
+  cropDuration: toCssTime(timings.CROP_DURATION),
+  crossfadeDuration: toCssTime(timings.CROSSFADE_DURATION),
+  crossfadeDelay: toCssTime(timings.CROSSFADE_DELAY),
+  img3Duration: toCssTime(timings.IMG3_DURATION),
+  img3Delay: toCssTime(timings.IMG3_DELAY),
+  textDuration: toCssTime(timings.TEXT_DURATION),
+  textDelay: toCssTime(timings.TEXT_DELAY),
+};
 </script>
 
 <template>
@@ -113,6 +126,15 @@ defineProps<{
   --seca-f1-img-max-w: 672px;
   --seca-f1-img-h: 700px;
 
+  /* Animation timing variables - synced from animationTimings.ts */
+  --seca-f1-crop-duration: v-bind('cssTimings.cropDuration');
+  --seca-f1-crossfade-duration: v-bind('cssTimings.crossfadeDuration');
+  --seca-f1-crossfade-delay: v-bind('cssTimings.crossfadeDelay');
+  --seca-f1-img3-duration: v-bind('cssTimings.img3Duration');
+  --seca-f1-img3-delay: v-bind('cssTimings.img3Delay');
+  --seca-f1-text-duration: v-bind('cssTimings.textDuration');
+  --seca-f1-text-delay: v-bind('cssTimings.textDelay');
+
   width: 100%;
 
   &__img-back-wrap {
@@ -169,7 +191,8 @@ defineProps<{
         0 calc((100% - var(--seca-f1-img-max-w)) / 2) 0
           calc((100% - var(--seca-f1-img-max-w)) / 2)
       );
-      transition: clip-path 1s ease, width 1s ease;
+      transition: clip-path var(--seca-f1-crop-duration) ease,
+        width var(--seca-f1-crop-duration) ease;
 
       @include rwd-min(2xl) {
         clip-path: inset(
@@ -181,22 +204,26 @@ defineProps<{
 
     .l-seca-f1__img1-wrap {
       opacity: 0;
-      transition: opacity 0.5s 1s ease;
+      transition: opacity var(--seca-f1-crossfade-duration)
+        var(--seca-f1-crossfade-delay) ease;
     }
 
     .l-seca-f1__img2-wrap {
       opacity: 1;
-      transition: opacity 0.5s 1s ease;
+      transition: opacity var(--seca-f1-crossfade-duration)
+        var(--seca-f1-crossfade-delay) ease;
     }
 
     .l-seca-f1__img3-wrap {
       transform: translateX(0);
-      transition: transform 1s 1.5s ease;
+      transition: transform var(--seca-f1-img3-duration)
+        var(--seca-f1-img3-delay) ease;
     }
 
     .l-seca-f1__text-wrap {
       transform: translateX(0);
-      transition: transform 1s 2s ease;
+      transition: transform var(--seca-f1-text-duration)
+        var(--seca-f1-text-delay) ease;
     }
   }
 }

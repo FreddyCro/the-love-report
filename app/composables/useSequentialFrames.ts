@@ -192,27 +192,88 @@ export function useSequentialFrames(
   }
 
   /**
-   * Deactivate frame immediately
+   * Deactivate frame with different transition modes
+   *
+   * This function handles three different deactivation scenarios:
+   *
+   * 1. **Fade-out mode** (withFadeOut = true):
+   *    - Applies `.frame-fade-out` CSS class (opacity: 0, 200ms transition)
+   *    - Does NOT change `isEnter` state immediately
+   *    - Used in `resetAllFrames()` to create smooth visual fade before reset
+   *    - State change happens in the calling function after fade completes
+   *
+   * 2. **No-transition mode** (withoutTransition = true):
+   *    - Applies `.no-transition` class to disable ALL CSS transitions
+   *    - Immediately sets `isEnter = false`
+   *    - Uses double rAF to ensure class takes effect before removal
+   *    - Used when we need instant state change without visual animation
+   *
+   * 3. **Normal mode** (both false):
+   *    - Simply sets `isEnter = false`
+   *    - Triggers normal CSS transition defined in component
+   *    - Used by `createSequentialHandler()` on LEAVE_UP
+   *
+   * @param frameIndex - Index of the frame to deactivate (0-based)
+   * @param withoutTransition - If true, disable all transitions for instant change
+   * @param withFadeOut - If true, apply fade-out animation (state change deferred)
+   *
+   * @example
+   * // Normal deactivation with CSS transition
+   * deactivateFrame(2);
+   *
+   * // Instant deactivation without animation
+   * deactivateFrame(2, true);
+   *
+   * // Fade-out animation (for reset sequence)
+   * deactivateFrame(2, false, true);
    */
-  function deactivateFrame(frameIndex: number, withoutTransition = false) {
+  function deactivateFrame(
+    frameIndex: number,
+    withoutTransition = false,
+    withFadeOut = false
+  ) {
     const frame = frames[frameIndex];
-    if (frame) {
-      if (withoutTransition && frame.ref) {
-        // Add no-transition class temporarily
-        frame.ref.classList.add('no-transition');
-        frame.isEnter.value = false;
+    if (!frame) return;
 
-        // Remove after style recalculation (double rAF)
+    if (withFadeOut && frame.ref) {
+      // Mode 1: Fade-out animation
+      // Add CSS class that triggers opacity transition to 0
+      frame.ref.classList.add('frame-fade-out');
+      // Note: isEnter state is NOT changed here
+      // The calling function (resetAllFrames) will handle state change after fade completes
+    } else if (withoutTransition && frame.ref) {
+      // Mode 2: Instant deactivation without transition
+      // Temporarily disable all CSS transitions
+      frame.ref.classList.add('no-transition');
+      frame.isEnter.value = false;
+
+      // Remove no-transition class after style recalculation (double rAF)
+      // Why double requestAnimationFrame?
+      //
+      // Browser rendering pipeline: JS → Style → Layout → Paint → Composite
+      //
+      // 1st rAF: Schedules callback for next paint frame
+      //          Browser queues the style change (no-transition applied)
+      //
+      // 2nd rAF: Ensures browser has completed style recalculation
+      //          Browser has processed the no-transition class and applied styles
+      //          Now safe to remove the class without triggering unwanted transitions
+      //
+      // Without double rAF: Class might be removed before browser processes it,
+      // causing the original transition to execute (defeating the purpose)
+      requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            frame.ref?.classList.remove('no-transition');
-          });
+          frame.ref?.classList.remove('no-transition');
         });
-      } else {
-        frame.isEnter.value = false;
-      }
-      cleanupWatcher(frameIndex);
+      });
+    } else {
+      // Mode 3: Normal deactivation with CSS transition
+      // Simply change state, CSS transitions defined in component will execute
+      frame.isEnter.value = false;
     }
+
+    // Always cleanup any pending watchers (watchEffect from waitForPreviousFrame)
+    cleanupWatcher(frameIndex);
   }
 
   /**
@@ -292,68 +353,80 @@ export function useSequentialFrames(
     if (resetInProgress) return;
     resetInProgress = true;
 
-    console.log('=== Resetting all frames ===');
-
-    // 1. Cleanup all watchers
-    frameWatchers.forEach((cleanup) => cleanup());
-    frameWatchers.clear();
-
-    // 2. Clear all animation timers
-    animationTimers.forEach((timerId) => clearTimeout(timerId));
-    animationTimers.clear();
-
-    // 3. Reset all frame states (without transition to prevent glitch)
+    // 1. First, apply fade-out to all active frames
     frames.forEach((frame, index) => {
-      if (frame.isEnter.value) {
-        deactivateFrame(index, true);
+      if (frame.isEnter.value && frame.ref) {
+        deactivateFrame(index, false, true);
       }
-      frame.isAnimationComplete.value = false;
     });
 
-    // 4. Don't clear viewport tracking - keep current intersection state
-    // framesInViewport.clear();
-
-    // 5. Re-check viewport after brief delay
+    // 2. Wait for fade-out animation (200ms) + pause (800ms), then reset
     setTimeout(() => {
-      // Manually check each frame's intersection and update viewport state
+      // 3. Cleanup all watchers
+      frameWatchers.forEach((cleanup) => cleanup());
+      frameWatchers.clear();
+
+      // 4. Clear all animation timers
+      animationTimers.forEach((timerId) => clearTimeout(timerId));
+      animationTimers.clear();
+
+      // 5. Reset all frame states (without transition to prevent glitch)
       frames.forEach((frame, index) => {
         if (frame.ref) {
-          const rect = frame.ref.getBoundingClientRect();
-          const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-          framesInViewport.set(index, isInViewport);
+          // Remove fade-out class and add no-transition
+          frame.ref.classList.remove('frame-fade-out');
+          frame.ref.classList.add('no-transition');
+        }
+        frame.isEnter.value = false;
+        frame.isAnimationComplete.value = false;
+
+        // Remove no-transition after style recalc
+        // Why double rAF? (same reason as deactivateFrame)
+        // Ensures browser fully processes the no-transition class before removing it
+        if (frame.ref) {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              frame.ref?.classList.remove('no-transition');
+            });
+          });
         }
       });
-      
-      checkInitialFramesInViewport();
-      resetInProgress = false;
-    }, 100);
+
+      // 6. Don't clear viewport tracking - keep current intersection state
+      // framesInViewport.clear();
+
+      // 7. Re-check viewport after brief delay
+      setTimeout(() => {
+        // Manually check each frame's intersection and update viewport state
+        frames.forEach((frame, index) => {
+          if (frame.ref) {
+            const rect = frame.ref.getBoundingClientRect();
+            const isInViewport =
+              rect.top < window.innerHeight && rect.bottom > 0;
+            framesInViewport.set(index, isInViewport);
+          }
+        });
+
+        checkInitialFramesInViewport();
+        resetInProgress = false;
+      }, 100);
+    }, 1000); // Fade-out duration (200ms) + pause (800ms)
   }
 
   /**
    * Check and activate frames that are initially in viewport on page load
    */
   function checkInitialFramesInViewport() {
-    console.log('=== Checking initial frames in viewport ===');
-
     frames.forEach((frame, index) => {
       const isInViewport = framesInViewport.get(index);
-      console.log(
-        `Frame ${index + 1}: inViewport=${isInViewport}, active=${
-          frame.isEnter.value
-        }`
-      );
 
       // Skip if not in viewport or already activated
       if (!isInViewport || frame.isEnter.value) return;
 
-      console.log(`Frame ${index + 1}: Processing initial activation`);
-
       // Check if can activate based on previous frame
       if (canActivateByPreviousFrame(index)) {
-        console.log(`Frame ${index + 1}: Activating (initial - can activate)`);
         activateFrame(index);
       } else {
-        console.log(`Frame ${index + 1}: Waiting for previous (initial)`);
         waitForPreviousFrame(index);
       }
     });
@@ -374,7 +447,6 @@ export function useSequentialFrames(
 
       // Reset only when scrolling back to top after scrolling down
       if (scrollY === 0 && hasScrolledDown) {
-        console.log('=== Scroll to top detected, resetting frames ===');
         hasScrolledDown = false;
         resetAllFrames();
       }

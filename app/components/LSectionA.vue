@@ -7,15 +7,17 @@ import LSectionAFrame4 from './LSectionAFrame4.vue';
 import LSectionAFrame5 from './LSectionAFrame5.vue';
 import LSectionAFrame6 from './LSectionAFrame6.vue';
 import { useSequentialFrames } from '../composables/useSequentialFrames';
+import { SECTION_A_DURATIONS } from '../utils/animationTimings';
 
 // Initialize sequential frames with animation durations
+// Durations are automatically synced from animationTimings.ts
 const { frames, setup } = useSequentialFrames([
-  { id: 1, animationDuration: 2500 },
-  { id: 2, animationDuration: 1500 },
-  { id: 3, animationDuration: 1500 },
-  { id: 4, animationDuration: 2500 },
-  { id: 5, animationDuration: 2000 },
-  { id: 6, animationDuration: 1500 },
+  { id: 1, animationDuration: SECTION_A_DURATIONS.FRAME_1 },
+  { id: 2, animationDuration: SECTION_A_DURATIONS.FRAME_2 },
+  { id: 3, animationDuration: SECTION_A_DURATIONS.FRAME_3 },
+  { id: 4, animationDuration: SECTION_A_DURATIONS.FRAME_4 },
+  { id: 5, animationDuration: SECTION_A_DURATIONS.FRAME_5 },
+  { id: 6, animationDuration: SECTION_A_DURATIONS.FRAME_6 },
 ]);
 
 // Setup frame watchers and intersection observers
