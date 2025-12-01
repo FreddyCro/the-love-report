@@ -1,6 +1,13 @@
 <script lang="ts" setup>
+import { ref } from "vue";
 import sectionCData from "~/locales/section-c.json";
 import LPic from "./LPic.vue";
+
+interface Section {
+	title: string;
+	desc: string[];
+}
+
 interface CaseItem {
 	id: string;
 	name: string;
@@ -8,9 +15,7 @@ interface CaseItem {
 	occupation: string;
 	tag?: string;
 	story: string;
-	title: string;
-	desc: string;
-	avatar?: string;
+	sections: Section[];
 	imgCircle: string;
 	imgSquare: string;
 }
@@ -22,10 +27,72 @@ const content = {
 
 const cases = sectionCData.cases as CaseItem[];
 
+// 控制目前 active 的頭像
+const activeAvatarIndex = ref(0);
+
+// Dialog 控制
+const isDialogOpen = ref(false);
+const dialogCase = ref<CaseItem | null>(null);
+
+const openDialog = (caseItem: CaseItem) => {
+	dialogCase.value = caseItem;
+	isDialogOpen.value = true;
+	document.body.style.overflow = 'hidden';
+};
+
+const closeDialog = () => {
+	isDialogOpen.value = false;
+	dialogCase.value = null;
+	document.body.style.overflow = '';
+};
+
+// 切換到上一個
+const goToPrevious = () => {
+	activeAvatarIndex.value =
+		activeAvatarIndex.value === 0
+			? cases.length - 1
+			: activeAvatarIndex.value - 1;
+};
+
+// 切換到下一個
+const goToNext = () => {
+	activeAvatarIndex.value =
+		activeAvatarIndex.value === cases.length - 1
+			? 0
+			: activeAvatarIndex.value + 1;
+};
+
+// 設定 active 頭像
+const setActiveAvatar = (index: number) => {
+	activeAvatarIndex.value = index;
+};
+
 // 截斷文字到指定字數
 const truncateText = (text: string, limit: number = 104): string => {
 	if (text.length <= limit) return text;
 	return text.slice(0, limit) + "...";
+};
+
+// 常數定義
+const CARD_WIDTH = 561;
+const CARD_GAP = 24;
+const SIDE_PADDING = 330;
+const VIEWPORT_WIDTH = 1280;
+// 計算滑動距離
+const getTransformX = (index: number) => {
+	const cardWithGap = CARD_WIDTH + CARD_GAP;
+	const isLastCard = index === cases.length - 1;
+
+	if (!isLastCard) {
+		return `-${index * cardWithGap}px`;
+	}
+
+
+	// 最後一張：計算讓右邊保持 padding 的位移
+	const totalWidth = cases.length * CARD_WIDTH + (cases.length - 1) * CARD_GAP;
+	const paddingRatio = (SIDE_PADDING * 2) / VIEWPORT_WIDTH;
+
+	return `calc(-${totalWidth}px + 100vw - 100vw * ${paddingRatio})`;
 };
 </script>
 
@@ -48,11 +115,13 @@ const truncateText = (text: string, limit: number = 104): string => {
 
 		<!-- Avatar Selection -->
 		<div
-			class="my-6 flex justify-between items-center gap-4 max-w-[712px] mx-auto"
+			class="my-6 flex justify-between items-center gap-4 max-w-[712px] mx-auto h-[100px]"
 		>
 			<button
 				class="w-[50px] h-[50px] shrink-0 cursor-pointer"
+				:class="activeAvatarIndex === 0 ? 'opacity-0' : ''"
 				aria-label="上一個"
+				@click="goToPrevious"
 			>
 				<LPic
 					src="/img/button_card_click_left"
@@ -66,9 +135,15 @@ const truncateText = (text: string, limit: number = 104): string => {
 				/>
 			</button>
 			<button
-				v-for="caseItem in cases"
+				v-for="(caseItem, index) in cases"
 				:key="caseItem.id"
-				class="w-20 h-20 shrink-0 cursor-pointer"
+				:class="
+					activeAvatarIndex === index
+						? 'w-[70px] h-[70px] xs:w-[100px] xs:h-[100px] opacity-100'
+						: 'w-[50px] h-[50px] xs:w-20 xs:h-20 opacity-30'
+				"
+				class="shrink-0 cursor-pointer transition-all duration-300"
+				@click="setActiveAvatar(index)"
 			>
 				<LPic
 					:src="caseItem.imgCircle"
@@ -80,7 +155,9 @@ const truncateText = (text: string, limit: number = 104): string => {
 			</button>
 			<button
 				class="w-[50px] h-[50px] shrink-0 cursor-pointer"
+				:class="activeAvatarIndex === 5 ? 'opacity-0' : ''"
 				aria-label="下一個"
+				@click="goToNext"
 			>
 				<LPic
 					src="/img/button_card_click_right"
@@ -96,7 +173,10 @@ const truncateText = (text: string, limit: number = 104): string => {
 		</div>
 
 		<!-- Case Cards -->
-		<div class="section-c__cards l-container flex gap-6 overflow-visible">
+		<div
+			class="flex transition-transform duration-500 ease-in-out gap-6 ml-[calc(100vw*330/1280)]"
+			:style="{ transform: `translateX(${getTransformX(activeAvatarIndex)})` }"
+		>
 			<div
 				v-for="caseItem in cases"
 				:key="caseItem.id"
@@ -132,16 +212,23 @@ const truncateText = (text: string, limit: number = 104): string => {
 
 				<div class="pt-7 border-t border-black">
 					<h5 class="text-love-red-03 mb-1 l-h5 font-bold">
-						{{ caseItem.title }}
+						{{ caseItem.sections?.[0]?.title }}
 					</h5>
 					<p class="l-p">
-						{{ truncateText(caseItem.desc, 104) }}
+						{{ truncateText(caseItem.sections?.[0]?.desc?.[0] ?? '', 104) }}
+					</p>
+					<p
+						v-if="(caseItem.sections?.[0]?.desc?.[0]?.length ?? 0) < 104"
+						class="l-p mt-4"
+					>
+						{{ truncateText(caseItem.sections?.[0]?.desc?.[1] ?? '', 20) }}
 					</p>
 				</div>
 
 				<button
 					class="section-c__corner-button absolute right-4 bottom-5 w-5 h-5 cursor-pointer"
 					aria-label="查看更多"
+					@click="openDialog(caseItem)"
 				>
 					<LPic
 						src="/img/button_card_plus_corner"
@@ -155,19 +242,81 @@ const truncateText = (text: string, limit: number = 104): string => {
 				</button>
 			</div>
 		</div>
+
+		<!-- Dialog -->
+		<Teleport to="body">
+			<Transition name="fade">
+				<div
+					v-if="isDialogOpen"
+					class="section-c__overlay fixed inset-0 z-50 flex items-center justify-center  l-article"
+					@click.self="closeDialog"
+				>
+					<div
+						class="section-c__dialog bg-white rounded-[30px] border-2 border-love-blue-02 p-10 relative max-w-[944px] max-h-150 overflow-y-auto mx-4"
+					>
+						<!-- Close Button -->
+						<button
+							class="absolute top-4 right-4 cursor-pointer w-10 h-10 rounded-full bg-love-blue-02 flex items-center justify-center"
+							aria-label="關閉"
+							@click="closeDialog"
+						>
+							<div class="w-5 h-5 rotate-45">
+								<LPic
+									src="/img/button_card_plus_corner"
+									ext="svg"
+									:use-prefix="false"
+									:use2x="false"
+									:webp="false"
+									:width="20"
+									:height="20"
+								/>
+							</div>
+						</button>
+
+						<!-- Dialog Content -->
+						<div v-if="dialogCase" class="space-y-6 pr-8">
+							<div
+								v-for="(section, sectionIndex) in dialogCase.sections"
+								:key="sectionIndex"
+							>
+								<h5 class="text-love-red-03 mb-2 l-h5 font-bold">
+									{{ section.title }}
+								</h5>
+								<p
+									v-for="(paragraph, pIndex) in section.desc"
+									:key="pIndex"
+									class="l-p"
+									:class="{ 'mt-4': pIndex > 0 }"
+								>
+									{{ paragraph }}
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</Transition>
+		</Teleport>
 	</section>
 </template>
 
 <style scoped lang="scss">
 .section-c {
-	padding: 80px 0 140px;
-	position: relative;
-	margin-top: -120px;
+	min-height: 100vh;
+	padding: 80px 0 120px;
+
+	&__overlay {
+		background-color: rgba(0, 0, 0, 0.3);
+		backdrop-filter: blur(8px);
+	}
+
+	&__dialog {
+		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+	}
 
 	&__dialogbox {
 		width: 240px;
 		height: 90px;
-		background-image: url("/img/intimate_relationships_p0301_dialogbox_pc.svg");
+		background-image: url("/img/intimate_relationships_p0201_dialogbox_pad.svg");
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: center;
@@ -200,5 +349,16 @@ const truncateText = (text: string, limit: number = 104): string => {
 			height: 200px;
 		}
 	}
+}
+
+// Dialog 過渡動畫
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
 }
 </style>
