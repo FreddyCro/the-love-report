@@ -67,3 +67,10 @@ img {
   height: auto;
   display: block;
 }
+
+/* Utility class to disable transitions during frame reset */
+.no-transition,
+.no-transition * {
+  transition: none !important;
+  animation: none !important;
+}

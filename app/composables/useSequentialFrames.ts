@@ -108,18 +108,41 @@ export function useSequentialFrames(
   // Track frames currently in viewport
   const framesInViewport = new Map<number, boolean>();
 
+  // Track active animation timers for cleanup
+  const animationTimers = new Map<number, number>();
+
+  // Prevent race conditions during reset
+  let resetInProgress = false;
+
   // Watch each frame's isEnter state and manage animation completion
-  frames.forEach((frame) => {
+  frames.forEach((frame, index) => {
     watch(frame.isEnter, (newValue, oldValue) => {
       if (newValue && !oldValue) {
         // Activation: start animation timer
         frame.isAnimationComplete.value = false;
-        setTimeout(() => {
+
+        // Clear existing timer if any
+        const existingTimer = animationTimers.get(index);
+        if (existingTimer) {
+          clearTimeout(existingTimer);
+        }
+
+        // Start new timer
+        const timerId = setTimeout(() => {
           frame.isAnimationComplete.value = true;
-        }, frame.animationDuration);
+          animationTimers.delete(index);
+        }, frame.animationDuration) as unknown as number;
+
+        animationTimers.set(index, timerId);
       } else if (!newValue && oldValue) {
-        // Deactivation: reset animation state
+        // Deactivation: reset animation state and clear timer
         frame.isAnimationComplete.value = false;
+
+        const existingTimer = animationTimers.get(index);
+        if (existingTimer) {
+          clearTimeout(existingTimer);
+          animationTimers.delete(index);
+        }
       }
     });
   });
@@ -171,10 +194,23 @@ export function useSequentialFrames(
   /**
    * Deactivate frame immediately
    */
-  function deactivateFrame(frameIndex: number) {
+  function deactivateFrame(frameIndex: number, withoutTransition = false) {
     const frame = frames[frameIndex];
     if (frame) {
-      frame.isEnter.value = false;
+      if (withoutTransition && frame.ref) {
+        // Add no-transition class temporarily
+        frame.ref.classList.add('no-transition');
+        frame.isEnter.value = false;
+
+        // Remove after style recalculation (double rAF)
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            frame.ref?.classList.remove('no-transition');
+          });
+        });
+      } else {
+        frame.isEnter.value = false;
+      }
       cleanupWatcher(frameIndex);
     }
   }
@@ -249,6 +285,51 @@ export function useSequentialFrames(
   }
 
   /**
+   * Reset all frames to initial state
+   * Cleans up watchers, timers, and resets all frame states
+   */
+  function resetAllFrames() {
+    if (resetInProgress) return;
+    resetInProgress = true;
+
+    console.log('=== Resetting all frames ===');
+
+    // 1. Cleanup all watchers
+    frameWatchers.forEach((cleanup) => cleanup());
+    frameWatchers.clear();
+
+    // 2. Clear all animation timers
+    animationTimers.forEach((timerId) => clearTimeout(timerId));
+    animationTimers.clear();
+
+    // 3. Reset all frame states (without transition to prevent glitch)
+    frames.forEach((frame, index) => {
+      if (frame.isEnter.value) {
+        deactivateFrame(index, true);
+      }
+      frame.isAnimationComplete.value = false;
+    });
+
+    // 4. Don't clear viewport tracking - keep current intersection state
+    // framesInViewport.clear();
+
+    // 5. Re-check viewport after brief delay
+    setTimeout(() => {
+      // Manually check each frame's intersection and update viewport state
+      frames.forEach((frame, index) => {
+        if (frame.ref) {
+          const rect = frame.ref.getBoundingClientRect();
+          const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+          framesInViewport.set(index, isInViewport);
+        }
+      });
+      
+      checkInitialFramesInViewport();
+      resetInProgress = false;
+    }, 100);
+  }
+
+  /**
    * Check and activate frames that are initially in viewport on page load
    */
   function checkInitialFramesInViewport() {
@@ -282,23 +363,23 @@ export function useSequentialFrames(
    * Setup scroll-to-top reset watcher
    * Resets all frames when user scrolls to page top
    */
-  // function setupScrollToTopReset() {
-  //   watch(y, (scrollY) => {
-  //     if (scrollY < 10) {
-  //       // Reset all frames (including Frame 1)
-  //       frames.forEach((frame, index) => {
-  //         if (frame.isEnter.value) {
-  //           deactivateFrame(index);
-  //         }
-  //       });
+  function setupScrollToTopReset() {
+    let hasScrolledDown = false;
 
-  //       // Re-check frames in viewport after reset
-  //       setTimeout(() => {
-  //         checkInitialFramesInViewport();
-  //       }, initialCheckDelay);
-  //     }
-  //   });
-  // }
+    watch(y, (scrollY) => {
+      // Track if user has scrolled down
+      if (scrollY > 100) {
+        hasScrolledDown = true;
+      }
+
+      // Reset only when scrolling back to top after scrolling down
+      if (scrollY === 0 && hasScrolledDown) {
+        console.log('=== Scroll to top detected, resetting frames ===');
+        hasScrolledDown = false;
+        resetAllFrames();
+      }
+    });
+  }
 
   /**
    * Watch frame intersection and call callback with state
@@ -352,12 +433,13 @@ export function useSequentialFrames(
       }, initialCheckDelay);
 
       // Setup scroll-to-top reset watcher
-      // setupScrollToTopReset();
+      setupScrollToTopReset();
     });
   }
 
   return {
     frames,
     setup,
+    resetAllFrames,
   };
 }
