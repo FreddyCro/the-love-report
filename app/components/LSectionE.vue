@@ -20,6 +20,12 @@ interface ContentBlock {
 		color?: string;
 		position?: string;
 	};
+	img?: {
+		src: string;
+		ext: string;
+		use2x?: boolean;
+		webp?: boolean;
+	};
 }
 
 interface CaseItem {
@@ -102,13 +108,11 @@ const cases = sectionEData.cases as CaseItem[];
 						</h5>
 						<div class="mt-5 mx-auto max-w-[530px]">
 							<LPic
-								v-if="block.src"
-								:src="block.src"
-								:ext="block.ext || 'png'"
-								:use2x="block.use2x ?? false"
-								:webp="block.webp ?? true"
-								:width="block.width"
-								:height="block.height"
+								v-if="block.img.src"
+								:src="block.img.src"
+								ext="png"
+								:use2x="block.img.use2x ?? false"
+								:webp="block.img.webp ?? true"
 							/>
 						</div>
 						<p v-if="block.note" class="pic-info pt-5">{{ block.note }}</p>
@@ -119,7 +123,8 @@ const cases = sectionEData.cases as CaseItem[];
 						<LPic
 							v-if="block.src"
 							:src="block.src"
-							:ext="block.ext || 'png'"
+							:ext="block.ext || 'jpg'"
+							:use-prefix="block.usePrefix ?? false"
 							:use2x="block.use2x ?? false"
 							:webp="block.webp ?? true"
 							:width="block.width"

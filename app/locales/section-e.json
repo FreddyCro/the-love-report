@@ -90,11 +90,8 @@
 					"img": {
 						"src": "/img/intimate_relationships_p0502_dialogboxes",
 						"ext": "png",
-						"alt": "",
 						"use2x": false,
-						"webp": true,
-						"width": 530,
-						"height": 470
+						"webp": true
 					}
 				},
 				{
@@ -141,11 +138,8 @@
 					"img": {
 						"src": "/img/intimate_relationships_p0502_dialogboxes_01",
 						"ext": "png",
-						"alt": "",
 						"use2x": false,
-						"webp": true,
-						"width": 530,
-						"height": 525
+						"webp": true
 					},
 					"note": "註：該調查以全台812萬位15至64歲女性為分析樣本。"
 				},
