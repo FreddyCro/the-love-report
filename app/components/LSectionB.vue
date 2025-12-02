@@ -345,7 +345,14 @@ function handleIsEntered(shouldEnter: boolean) {
 .sec-b {
   min-height: 100vh;
   padding: 4rem 0;
-	padding-bottom: calc(4rem + 100px);
+  padding-bottom: calc(4rem + 70px);
+  @include rwd-min(sm) {
+    padding-bottom: calc(4rem + 100px);
+  }
+
+  @include rwd-min(lg) {
+    padding-bottom: calc(4rem + 120px);
+  }
 
 	&__pin-container {
 		position: relative;
