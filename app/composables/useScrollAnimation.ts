@@ -58,6 +58,18 @@ export const useScrollAnimation = async (): Promise<ScrollAnimationReturn> => {
   // Register ScrollTrigger plugin
   gsapInstance.registerPlugin(ScrollTriggerInstance);
 
+  // Configure ScrollTrigger to reduce resize-triggered scroll jumps
+  // Option 1: Keep default auto-refresh on resize (current approach)
+  // This helps prevent scroll-to-top on window resize by controlling refresh behavior
+  ScrollTriggerInstance.config({
+    // Limit when ScrollTrigger automatically refreshes
+    // By default, it refreshes on: 'visibilitychange,DOMContentLoaded,load,resize'
+    // autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load,resize',
+
+    // Option 2: Disable auto-refresh on resize (more aggressive, uncomment if needed)
+    autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load',
+  });
+
   // Create Lenis instance (smooth scroller) - singleton
   if (!lenisObject) {
     lenisObject = new LenisInstance({ smooth: true, duration: 1.2 });

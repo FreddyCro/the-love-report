@@ -157,11 +157,15 @@ async function handleAnimation(
 
       // Pin (freeze) the section
       pin: true,
-      scrub: 1,
+      scrub: 0.5, // Reduced from 1 to 0.5 for faster response during quick scrolling
 
       // Smooth pin start
       anticipatePin: 1,
       invalidateOnRefresh: true,
+
+      // Control refresh behavior to prevent scroll jumps on resize
+      refreshPriority: 0, // Lower priority for refresh calculations
+      fastScrollEnd: true, // Only update after fast scroll ends
       onRefresh: () => {
         // Reset cards position when scrolltrigger refreshes
         // gsap.set(cards, { y: '100vh', opacity: 0 });
@@ -365,12 +369,14 @@ function handleIsEntered(shouldEnter: boolean) {
 }
 
 .sec-b-transition {
-  transition: all 1s;
+  // Only transition visual properties, not layout/transform properties
+  // This prevents conflicts with GSAP animations during fast scrolling
+  transition: background-color 1s, color 1s;
 
   /* LSectionBIntro.vue */
   path,
   rect {
-    transition: all 1s;
+    transition: fill 1s, stroke 1s;
   }
 }
 
