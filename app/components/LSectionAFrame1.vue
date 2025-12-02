@@ -112,6 +112,14 @@ const cssTimings = {
           {{ str.frame1_1 }}
         </LChatBubble>
       </div>
+
+      <!-- Read more -->
+      <div
+        class="absolute bottom-0 left-1/2 flex flex-col items-center transform -translate-x-1/2 text-white"
+      >
+        {{ str.readMore }}
+        <div class="h-[60px] w-0.5 mt-0.5 bg-white" role="presentation" />
+      </div>
     </div>
   </div>
 </template>
@@ -120,7 +128,6 @@ const cssTimings = {
 @use '@/assets/styles/mixins' as *;
 
 .l-seca-f1 {
-  --seca-f1-img-max-w: 672px;
   --seca-f1-img-h: 700px;
 
   /* Animation timing variables - synced from animationTimings.ts */
@@ -133,7 +140,6 @@ const cssTimings = {
   --seca-f1-text-delay: v-bind('cssTimings.textDelay');
 
   width: 100%;
-  margin-bottom: 20px;
   opacity: 0;
   transition: opacity 0.5s ease-out;
 
@@ -169,7 +175,7 @@ const cssTimings = {
     position: absolute;
     right: 0;
     top: calc(52 / 716 * 100%);
-    max-width: 300px;
+    max-width: 165px;
     display: inline-block;
     border-radius: 10px;
     box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
@@ -179,6 +185,11 @@ const cssTimings = {
     @include rwd-min(sm) {
       right: calc((100vw - 720px) / 2);
       top: calc(118 / 700 * 100%);
+      max-width: 340px;
+    }
+
+    @include rwd-min(2xl) {
+      right: calc((1920px - 720px) / 2);
     }
   }
 
@@ -196,16 +207,20 @@ const cssTimings = {
       left: calc((100vw - 720px) / 2);
       bottom: calc(38 / 700 * 100%);
     }
+
+    @include rwd-min(2xl) {
+      left: calc((1920px - 720px) / 2);
+    }
   }
 
   &.active {
     opacity: 1;
 
     .l-seca-f1__img-back-wrap {
-      width: calc(100% - 24px * 2);
+      width: calc(100% - var(--seca-px) * 2);
       clip-path: inset(
-        0 calc((100% - var(--seca-f1-img-max-w)) / 2) 0
-          calc((100% - var(--seca-f1-img-max-w)) / 2)
+        0 calc((100% - var(--seca-img-max-w)) / 2) 0
+          calc((100% - var(--seca-img-max-w)) / 2)
       );
       transition: clip-path var(--seca-f1-crop-duration) ease,
         width var(--seca-f1-crop-duration) ease;
@@ -213,8 +228,8 @@ const cssTimings = {
       @include rwd-min(2xl) {
         width: 100%;
         clip-path: inset(
-          0 calc((1920px - var(--seca-f1-img-max-w)) / 2) 0
-            calc((1920px - var(--seca-f1-img-max-w)) / 2)
+          0 calc((1920px - var(--seca-img-max-w)) / 2) 0
+            calc((1920px - var(--seca-img-max-w)) / 2)
         );
       }
     }

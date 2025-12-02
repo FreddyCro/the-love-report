@@ -62,21 +62,21 @@ const cssTimings = {
   width: 100%;
 
   &__img-wrap {
-    opacity: 0;
+    opacity: var(--seca-animation-opacity-start);
   }
 
   &__text1-wrap {
     position: absolute;
     top: 0;
     right: 0;
-    opacity: 0;
+    opacity: var(--seca-animation-opacity-start);
   }
 
   &__text2-wrap {
     position: absolute;
     bottom: 0;
     left: 0;
-    opacity: 0;
+    opacity: var(--seca-animation-opacity-start);
   }
 
   &.active {

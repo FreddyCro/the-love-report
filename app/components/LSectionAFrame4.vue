@@ -131,40 +131,40 @@ const cssTimings = {
   }
 
   &__img1-wrap {
-    opacity: 0;
+    opacity: var(--seca-animation-opacity-start);
   }
 
   &__text1-wrap {
     position: absolute;
     top: 0;
     left: 0;
-    opacity: 0;
+    opacity: var(--seca-animation-opacity-start);
   }
 
   &__img2-wrap {
-    opacity: 0;
+    opacity: var(--seca-animation-opacity-start);
   }
 
   &__text2-wrap {
     position: absolute;
     top: 0;
     left: 0;
-    opacity: 0;
+    opacity: var(--seca-animation-opacity-start);
   }
 
   &__img3-wrap {
-    opacity: 0;
+    opacity: var(--seca-animation-opacity-start);
   }
 
   &__text3-wrap {
     position: absolute;
     top: 0;
     left: 0;
-    opacity: 0;
+    opacity: var(--seca-animation-opacity-start);
   }
 
   &__text4-wrap {
-    opacity: 0;
+    opacity: var(--seca-animation-opacity-start);
   }
 
   &.active {

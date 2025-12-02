@@ -40,8 +40,8 @@ setup();
       </div>
     </div> -->
 
-    <!-- frame 1 -->
     <div class="max-w-[1920px] mx-auto">
+      <!-- frame 1 -->
       <div
         :ref="el => frames[0]!.ref = el as HTMLElement"
         class="sec-a-part"
@@ -49,54 +49,50 @@ setup();
       >
         <LSectionAFrame1 :active="frames[0]?.isEnter.value ?? false" />
       </div>
-    </div>
 
-    <div class="l-container l-container--full">
-      <div class="max-w-7xl mx-auto">
-        <!-- frame 2 -->
-        <div
-          :ref="el => frames[1]!.ref = el as HTMLElement"
-          class="sec-a-part"
-          :class="{ active: frames[1]?.isEnter.value }"
-        >
-          <LSectionAFrame2 :active="frames[1]?.isEnter.value ?? false" />
-        </div>
+      <!-- frame 2 -->
+      <div
+        :ref="el => frames[1]!.ref = el as HTMLElement"
+        class="sec-a-part"
+        :class="{ active: frames[1]?.isEnter.value }"
+      >
+        <LSectionAFrame2 :active="frames[1]?.isEnter.value ?? false" />
+      </div>
 
-        <!-- frame 3  -->
-        <div
-          :ref="el => frames[2]!.ref = el as HTMLElement"
-          class="sec-a-part"
-          :class="{ active: frames[2]?.isEnter.value }"
-        >
-          <LSectionAFrame3 :active="frames[2]?.isEnter.value ?? false" />
-        </div>
+      <!-- frame 3  -->
+      <div
+        :ref="el => frames[2]!.ref = el as HTMLElement"
+        class="sec-a-part"
+        :class="{ active: frames[2]?.isEnter.value }"
+      >
+        <LSectionAFrame3 :active="frames[2]?.isEnter.value ?? false" />
+      </div>
 
-        <!-- frame 4 -->
-        <div
-          :ref="el => frames[3]!.ref = el as HTMLElement"
-          class="sec-a-part"
-          :class="{ active: frames[3]?.isEnter.value }"
-        >
-          <LSectionAFrame4 :active="frames[3]?.isEnter.value ?? false" />
-        </div>
+      <!-- frame 4 -->
+      <div
+        :ref="el => frames[3]!.ref = el as HTMLElement"
+        class="sec-a-part"
+        :class="{ active: frames[3]?.isEnter.value }"
+      >
+        <LSectionAFrame4 :active="frames[3]?.isEnter.value ?? false" />
+      </div>
 
-        <!-- frame 5 -->
-        <div
-          :ref="el => frames[4]!.ref = el as HTMLElement"
-          class="sec-a-part"
-          :class="{ active: frames[4]?.isEnter.value }"
-        >
-          <LSectionAFrame5 :active="frames[4]?.isEnter.value ?? false" />
-        </div>
+      <!-- frame 5 -->
+      <div
+        :ref="el => frames[4]!.ref = el as HTMLElement"
+        class="sec-a-part"
+        :class="{ active: frames[4]?.isEnter.value }"
+      >
+        <LSectionAFrame5 :active="frames[4]?.isEnter.value ?? false" />
+      </div>
 
-        <!-- frame 6 -->
-        <div
-          :ref="el => frames[5]!.ref = el as HTMLElement"
-          class="sec-a-part"
-          :class="{ active: frames[5]?.isEnter.value }"
-        >
-          <LSectionAFrame6 :active="frames[5]?.isEnter.value ?? false" />
-        </div>
+      <!-- frame 6 -->
+      <div
+        :ref="el => frames[5]!.ref = el as HTMLElement"
+        class="sec-a-part"
+        :class="{ active: frames[5]?.isEnter.value }"
+      >
+        <LSectionAFrame6 :active="frames[5]?.isEnter.value ?? false" />
       </div>
     </div>
   </section>
@@ -104,10 +100,19 @@ setup();
 
 <style lang="scss">
 .sec-a-part {
+  --seca-img-max-w: 672px;
+  --seca-px: 24px;
+  --seca-animation-opacity-start: 0.3;
+
   /* min-height: 100vh; */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 </style>

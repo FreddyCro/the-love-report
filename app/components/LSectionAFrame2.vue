@@ -22,7 +22,7 @@ const cssTimings = {
       active: active,
     }"
   >
-    <div class="relative w-full max-w-7xl aspect-1280/720 mx-auto">
+    <div class="relative w-full mx-auto">
       <!-- img -->
       <div class="l-seca-f2__img-wrap">
         <LPic
@@ -45,6 +45,8 @@ const cssTimings = {
 </template>
 
 <style lang="scss">
+@use '@/assets/styles/mixins' as *;
+
 .l-seca-f2 {
   /* Animation timing variables - synced from animationTimings.ts */
   --seca-f2-img-duration: v-bind('cssTimings.imgDuration');
@@ -54,15 +56,29 @@ const cssTimings = {
   width: 100%;
 
   &__img-wrap {
-    opacity: 0;
+    width: calc(100% - var(--seca-px) * 2);
+    max-width: var(--seca-img-max-w);
+    margin: 0 auto;
+    opacity: var(--seca-animation-opacity-start);
   }
 
   &__text-wrap {
     position: absolute;
-    top: 50%;
+    top: calc(173 / 317 * 100%);
     right: 0;
-    opacity: 0;
-    transform: translate(100%, -50%);
+    max-width: 292px;
+    opacity: var(--seca-animation-opacity-start);
+    transform: translateX(100%);
+
+    @include rwd-min(sm) {
+      top: calc(70 / 316 * 100%);
+      right: calc((100vw - 720px) / 2);
+      max-width: 365px;
+    }
+
+    @include rwd-min(2xl) {
+      right: calc((1920px - 720px) / 2);
+    }
   }
 
   &.active {
@@ -73,8 +89,9 @@ const cssTimings = {
 
     .l-seca-f2__text-wrap {
       opacity: 1;
-      transform: translate(0, -50%);
-      transition: transform var(--seca-f2-text-duration) var(--seca-f2-text-delay) ease;
+      transform: translateX(0);
+      transition: all var(--seca-f2-text-duration) var(--seca-f2-text-delay)
+        ease;
     }
   }
 }

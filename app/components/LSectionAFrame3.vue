@@ -55,14 +55,14 @@ const cssTimings = {
   width: 100%;
 
   &__img-wrap {
-    opacity: 0;
+    opacity: var(--seca-animation-opacity-start);
   }
 
   &__text-wrap {
     position: absolute;
     top: 50%;
     left: 0;
-    opacity: 0;
+    opacity: var(--seca-animation-opacity-start);
     transform: translate(-100%, -50%);
   }
 
@@ -75,7 +75,8 @@ const cssTimings = {
     .l-seca-f3__text-wrap {
       opacity: 1;
       transform: translate(0, -50%);
-      transition: transform var(--seca-f3-text-duration) var(--seca-f3-text-delay) ease;
+      transition: transform var(--seca-f3-text-duration)
+        var(--seca-f3-text-delay) ease;
     }
   }
 }

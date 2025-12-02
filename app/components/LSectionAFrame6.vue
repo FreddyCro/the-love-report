@@ -53,7 +53,7 @@ const cssTimings = {
   width: 100%;
 
   &__img-wrap {
-    opacity: 0;
+    opacity: var(--seca-animation-opacity-start);
   }
 
   &__text-wrap {
@@ -61,7 +61,7 @@ const cssTimings = {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    opacity: 0;
+    opacity: var(--seca-animation-opacity-start);
   }
 
   &.active {
