@@ -52,7 +52,9 @@ const getAvatarImage = (name: string) => {
 </script>
 
 <template>
-	<section class="section-d min-h-screen l-article bg-love-red-01">
+	<section
+		class="section-d min-h-screen l-article relative bg-love-red-01 rounded-[70px] -mt-[70px] pt-12 pb-20 sm:rounded-[100px] sm:-mt-[100px] sm:pt-20 sm:pb-[100px] lg:rounded-[120px] lg:-mt-30 lg:pb-30"
+	>
 		<!-- Title -->
 		<div class="text-center mb-6">
 			<div class="section-d__dialogbox">
@@ -152,7 +154,9 @@ const getAvatarImage = (name: string) => {
 					v-for="(image, index) in caseItem.images"
 					:key="index"
 					class="flex flex-col"
-					:class="image.position ? imgPositionClasses[image.position] : 'mx-auto'"
+					:class="
+						image.position ? imgPositionClasses[image.position] : 'mx-auto'
+					"
 					:style="`width: ${image.width}px;`"
 				>
 					<LPic
@@ -174,8 +178,6 @@ const getAvatarImage = (name: string) => {
 
 <style scoped lang="scss">
 .section-d {
-	padding: 80px 0 140px;
-
 	&__dialogbox {
 		width: 240px;
 		height: 90px;
