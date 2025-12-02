@@ -3,7 +3,7 @@ import sectionDData from "~/locales/section-d.json";
 import LPic from "./LPic.vue";
 
 interface Story {
-	position: string;
+	position: "left" | "right" | "center" | "centerLeft" | "centerRight";
 	name: string;
 	content: string;
 }
@@ -14,7 +14,7 @@ interface ImageItem {
 	desc: string;
 	width: number;
 	height: number;
-	position?: "left" | "right" | "center" | "center-left" | "center-right";
+	position?: "left" | "right" | "center" | "centerLeft" | "centerRight";
 }
 
 interface CaseItem {
@@ -24,6 +24,14 @@ interface CaseItem {
 	stories: Story[];
 	images: ImageItem[];
 }
+
+const imgPositionClasses = {
+	left: "mx-auto sm:mr-auto sm:ml-0",
+	right: "mx-auto sm:ml-auto sm:mr-0",
+	center: "mx-auto",
+	centerLeft: "mx-auto sm:mr-auto sm:ml-0 lg:ml-[162px]",
+	centerRight: "mx-auto sm:ml-auto sm:mr-0 lg:mr-[162px]",
+};
 
 const content = {
 	title: sectionDData.title,
@@ -83,20 +91,20 @@ const getAvatarImage = (name: string) => {
 					:key="index"
 					class="flex flex-col gap-3 xs:gap-6"
 					:class="{
-						'xs:flex-row': story.position === 'left',
-						'xs:flex-row-reverse': story.position === 'right',
-						'items-start xs:items-start': story.position === 'left',
-						'items-end xs:items-start': story.position === 'right',
+						'sm:flex-row': story.position === 'left',
+						'sm:flex-row-reverse': story.position === 'right',
+						'items-start sm:items-start': story.position === 'left',
+						'items-end sm:items-start': story.position === 'right',
 					}"
 				>
 					<!-- Avatar & Name (Mobile) -->
 					<div
-						class="flex gap-4 items-center xs:block xs:shrink-0 xs:w-[138px]"
+						class="flex gap-4 items-center sm:block sm:shrink-0 sm:w-[138px]"
 						:class="
 							story.position === 'right' ? 'flex-row-reverse' : 'flex-row'
 						"
 					>
-						<div class="shrink-0 w-[100px] h-[100px] xs:w-[138px] xs:h-[138px]">
+						<div class="shrink-0 w-[100px] h-[100px] sm:w-[138px] sm:h-[138px]">
 							<LPic
 								:src="getAvatarImage(story.name)"
 								ext="png"
@@ -107,7 +115,7 @@ const getAvatarImage = (name: string) => {
 								:height="138"
 							/>
 						</div>
-						<h4 class="mb-0 xs:hidden l-h4 font-bold">
+						<h4 class="mb-0 sm:hidden l-h4 font-bold">
 							{{ story.name }}
 						</h4>
 					</div>
@@ -117,7 +125,7 @@ const getAvatarImage = (name: string) => {
 						class="flex-1 flex flex-col"
 						:class="story.position === 'left' ? 'items-start' : 'items-end'"
 					>
-						<h4 class="mb-1 l-h4 font-bold hidden xs:block">
+						<h4 class="mb-1 l-h4 font-bold hidden sm:block">
 							{{ story.name }}
 						</h4>
 						<!-- Content -->
@@ -144,15 +152,7 @@ const getAvatarImage = (name: string) => {
 					v-for="(image, index) in caseItem.images"
 					:key="index"
 					class="flex flex-col"
-					:class="{
-						'xs:mx-auto': image.position === 'center',
-						'xs:mr-auto':
-							image.position === 'left' || image.position === 'center-left',
-						'xs:ml-auto':
-							image.position === 'right' || image.position === 'center-right',
-						'md:mr-auto md:ml-[162px]': image.position === 'center-left',
-						'md:ml-auto md:mr-[162px]': image.position === 'center-right',
-					}"
+					:class="image.position ? imgPositionClasses[image.position] : 'mx-auto'"
 					:style="`width: ${image.width}px;`"
 				>
 					<LPic

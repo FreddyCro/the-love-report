@@ -20,7 +20,6 @@ interface ContentBlock {
 		color?: string;
 		position?: string;
 	};
-	classname?: string;
 }
 
 interface CaseItem {
@@ -101,28 +100,16 @@ const cases = sectionEData.cases as CaseItem[];
 						<h5 v-if="block.title" class="l-mob-h5 text-black font-bold">
 							{{ block.title }}
 						</h5>
-						<div class="mt-5 relative mx-auto" :class="block.classname">
-							<div
-								v-for="(item, itemIndex) in (block.desc as any[])"
-								:key="itemIndex"
-								class="flex gap-2 items-end px-6 py-[13px] w-fit absolute"
-								:class="[
-									`${block.classname}__${itemIndex}`,
-									item.style?.color === 'red'
-										? 'bg-love-red-02'
-										: 'bg-love-blue-02',
-									item.style?.position === 'left-bottom'
-										? 'rounded-tl-[20px] rounded-tr-[20px] rounded-br-[20px]'
-										: item.style?.position === 'right-bottom'
-										? 'rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px]'
-										: 'rounded-[20px]',
-								]"
-							>
-								<p class="text-[40px] font-bold text-black">
-									{{ item.prefix }}
-								</p>
-								<h5 class="text-black l-h5 font-bold">{{ item.text }}</h5>
-							</div>
+						<div class="mt-5 mx-auto max-w-[530px]">
+							<LPic
+								v-if="block.src"
+								:src="block.src"
+								:ext="block.ext || 'png'"
+								:use2x="block.use2x ?? false"
+								:webp="block.webp ?? true"
+								:width="block.width"
+								:height="block.height"
+							/>
 						</div>
 						<p v-if="block.note" class="pic-info pt-5">{{ block.note }}</p>
 					</div>
@@ -132,8 +119,7 @@ const cases = sectionEData.cases as CaseItem[];
 						<LPic
 							v-if="block.src"
 							:src="block.src"
-							:ext="block.ext || 'jpg'"
-							:use-prefix="block.usePrefix ?? false"
+							:ext="block.ext || 'png'"
 							:use2x="block.use2x ?? false"
 							:webp="block.webp ?? true"
 							:width="block.width"
@@ -164,99 +150,6 @@ const cases = sectionEData.cases as CaseItem[];
 		justify-content: center;
 		margin: 0 auto;
 		padding-top: 6px;
-	}
-
-	.tinder-data {
-		width: 366px;
-		height: 541px;
-
-		@include rwd-min(sm) {
-			width: 530px;
-			height: 470px;
-		}
-
-		&__0 {
-			left: 6px;
-			top: 15px;
-
-			@include rwd-min(sm) {
-				left: 7px;
-				top: 19px;
-				transform: rotate(10deg);
-			}
-		}
-		&__1 {
-			left: 110px;
-			top: 110px;
-			transform: rotate(-10deg);
-
-			@include rwd-min(sm) {
-				left: 114px;
-				top: 122px;
-				transform: rotate(-5deg);
-			}
-		}
-		&__2 {
-			right: 102px;
-			top: 230px;
-			transform: rotate(10deg);
-
-			@include rwd-min(sm) {
-				right: 5px;
-				top: 215px;
-				transform: rotate(3deg);
-			}
-		}
-		&__3 {
-			left: 111px;
-			top: 340px;
-			transform: rotate(5deg);
-
-			@include rwd-min(sm) {
-				left: 63px;
-				top: 294px;
-			}
-		}
-		&__4 {
-			right: 146px;
-			bottom: 15px;
-			transform: rotate(5deg);
-
-			@include rwd-min(sm) {
-				right: 44px;
-				bottom: 20px;
-				transform: rotate(-10deg);
-			}
-		}
-	}
-
-	.housework-data {
-		display: none;
-		@include rwd-min(sm) {
-			display: block;
-			width: 530px;
-			height: 525px;
-		}
-		&__0 {
-			left: 7px;
-			top: 39px;
-			transform: rotate(-10deg);
-		}
-		&__1 {
-			right: 9.5px;
-			top: 162px;
-			transform: rotate(5deg);
-		}
-		&__2 {
-			left: 9px;
-			top: 280px;
-			transform: rotate(-5deg);
-		}
-		&__3 {
-			right: 36px;
-			bottom: 33px;
-			transform: rotate(5deg);
-		}
 	}
 }
 </style>

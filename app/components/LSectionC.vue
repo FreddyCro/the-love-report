@@ -139,8 +139,8 @@ const getTransformX = (index: number) => {
 				:key="caseItem.id"
 				:class="
 					activeAvatarIndex === index
-						? 'w-[70px] h-[70px] xs:w-[100px] xs:h-[100px] opacity-100'
-						: 'w-[50px] h-[50px] xs:w-20 xs:h-20 opacity-30'
+						? 'w-[70px] h-[70px] sm:w-[100px] sm:h-[100px] opacity-100'
+						: 'w-[50px] h-[50px] sm:w-20 sm:h-20 opacity-30'
 				"
 				class="shrink-0 cursor-pointer transition-all duration-300"
 				@click="setActiveAvatar(index)"
@@ -252,12 +252,10 @@ const getTransformX = (index: number) => {
 						class="section-c__overlay fixed inset-0 z-50 flex items-center justify-center  l-article"
 						@click.self="closeDialog"
 					>
-					<div
-						class="section-c__dialog bg-white rounded-[30px] border-2 border-love-blue-02 p-10 relative max-w-[944px] max-h-150 overflow-y-auto mx-4"
-					>
+					<div class="relative mx-4 max-w-[944px]">
 						<!-- Close Button -->
 						<button
-							class="absolute top-4 right-4 cursor-pointer w-10 h-10 rounded-full bg-love-blue-02 flex items-center justify-center"
+							class="absolute top-3 right-3 z-10 cursor-pointer w-10 h-10 rounded-full bg-love-blue-02 flex items-center justify-center"
 							aria-label="關閉"
 							@click="closeDialog"
 						>
@@ -274,6 +272,9 @@ const getTransformX = (index: number) => {
 							</div>
 						</button>
 
+						<div
+							class="section-c__dialog bg-white rounded-[30px] border-2 border-love-blue-02 p-10 max-h-150 overflow-y-auto"
+						>
 						<!-- Dialog Content -->
 						<div v-if="dialogCase" class="space-y-6 pr-8">
 							<div
@@ -292,6 +293,7 @@ const getTransformX = (index: number) => {
 									{{ paragraph }}
 								</p>
 							</div>
+						</div>
 						</div>
 					</div>
 					</div>

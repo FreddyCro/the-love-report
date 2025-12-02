@@ -87,34 +87,15 @@
 				{
 					"type": "data",
 					"title": "2024年Tinder年度報告顯示，受訪者在談戀愛時最重視的條件依序為：",
-					"desc": [
-						{
-							"prefix": "40%",
-							"text": "信任感",
-							"style": { "color": "blue", "position": "right-bottom" }
-						},
-						{
-							"prefix": "35%",
-							"text": "外表吸引力",
-							"style": { "color": "red", "position": "left-bottom" }
-						},
-						{
-							"prefix": "31%",
-							"text": "價值觀一致",
-							"style": { "color": "blue", "position": "right-bottom" }
-						},
-						{
-							"prefix": "30%",
-							"text": "情緒價值提供",
-							"style": { "color": "red", "position": "left-bottom" }
-						},
-						{
-							"prefix": "28%",
-							"text": "共同興趣",
-							"style": { "color": "blue", "position": "right-bottom" }
-						}
-					],
-					"classname": "tinder-data"
+					"img": {
+						"src": "/img/intimate_relationships_p0502_dialogboxes",
+						"ext": "png",
+						"alt": "",
+						"use2x": false,
+						"webp": true,
+						"width": 530,
+						"height": 470
+					}
 				},
 				{
 					"type": "text",
@@ -157,29 +138,15 @@
 				{
 					"type": "data",
 					"title": "根據衛福部《2024年婦女生活狀況調查》，觀察婦女處理家務情形：",
-					"desc": [
-						{
-							"prefix": "86.5%",
-							"text": "的婦女需處理家務",
-							"style": { "color": "blue", "position": "right-bottom" }
-						},
-						{
-							"prefix": "1.75 小時",
-							"text": "每日家務平均花費時間",
-							"style": { "color": "blue", "position": "left-bottom" }
-						},
-						{
-							"prefix": "93.9%",
-							"text": "有配偶或同居伴侶婦女需做家務",
-							"style": { "color": "red", "position": "right-bottom" }
-						},
-						{
-							"prefix": "2.13小時",
-							"text": "每日家務平均花費時間",
-							"style": { "color": "red", "position": "left-bottom" }
-						}
-					],
-					"classname": "housework-data",
+					"img": {
+						"src": "/img/intimate_relationships_p0502_dialogboxes_01",
+						"ext": "png",
+						"alt": "",
+						"use2x": false,
+						"webp": true,
+						"width": 530,
+						"height": 525
+					},
 					"note": "註：該調查以全台812萬位15至64歲女性為分析樣本。"
 				},
 				{

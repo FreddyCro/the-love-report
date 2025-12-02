@@ -70,19 +70,21 @@ const isFlipped = (index: number) => {
 
 		<!-- Cards Grid -->
 		<div
-			class="px-4 xs:px-6 sm:px-12 md:px-0 grid grid-cols-1 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-12 md:grid-cols-3 gap-x-12 gap-y-[60px] mt-[60px] max-w-[1056px] mx-auto"
-		>
+			class="px-6 grid grid-cols-1 gap-y-6 mx-auto
+					sm:px-12 sm:grid-cols-2 sm:gap-y-12 sm:gap-x-8 sm:mt-[60px]
+					md:grid-cols-3 md:gap-x-12 md:gap-y-[60px] md:max-w-[1056px] md:px-0"
+			>
 			<div
 				v-for="caseItem in cases"
 				:key="caseItem.index"
 				class="perspective-[1000px] cursor-pointer h-[430px] sm:h-[500px]"
 				:class="{
-					'sm:relative sm:bottom-15':
+					'sm:-mt-15':
 						caseItem.index === 1 ||
 						caseItem.index === 3 ||
 						caseItem.index === 5,
-					'md:bottom-0': caseItem.index === 4 || caseItem.index === 6,
-					'md:bottom-15': caseItem.index === 2 || caseItem.index === 5,
+					'md:mt-0': caseItem.index === 1 || caseItem.index === 3,
+					'md:-mt-15': caseItem.index === 2 || caseItem.index === 5,
 				}"
 				@click="toggleCard(caseItem.index)"
 			>

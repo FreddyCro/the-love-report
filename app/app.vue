@@ -8,7 +8,7 @@ import LSectionC from "./components/LSectionC.vue";
 import LSectionD from "./components/LSectionD.vue";
 import LSectionE from "./components/LSectionE.vue";
 import LSectionF from "./components/LSectionF.vue";
-// import TestAllImg from './components/TestAllImg.vue';
+import TestAllImg from './components/TestAllImg.vue';
 import meta from "./locales/meta.json";
 
 const config = useRuntimeConfig();
@@ -77,8 +77,8 @@ onMounted(() => {
 	<NuxtLayout>
 		<AppHeader />
 		<main class="main-content" :class="{ 'is-ready': isReady }">
-			<LSectionA />
-			<LSectionB />
+			<!-- <LSectionA />
+			<LSectionB /> -->
 			<LSectionC />
 			<LSectionD />
 			<LSectionE />
