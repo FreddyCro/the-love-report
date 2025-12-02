@@ -11,37 +11,38 @@ import { useScroll, useIntersectionObserver } from '@vueuse/core';
 │          │   → Activate immediately         │ • Only resets on scroll to top     │
 │          │                                  │                                    │
 ├──────────┼──────────────────────────────────┼────────────────────────────────────┤
-│ Frame 2  │ • ENTER (any direction)          │ • No automatic deactivation        │
-│          │   + Previous frame active        │ • Only resets on scroll to top     │
-│          │   + Previous frame animation     │                                    │
-│          │     complete                     │                                    │
+│ Frame 2  │ • ENTER (any direction)          │ • LEAVE_UP only                    │
+│          │   + Previous frame conditions:   │   → Deactivate immediately         │
+│          │                                  │   → Cleanup any waiting watcher    │
+│          │   Path 1: Frame 1 NOT active     │                                    │
+│          │   → Activate immediately         │                                    │
 │          │                                  │                                    │
-│          │   Path 1: Frame 1 active +       │                                    │
+│          │   Path 2: Frame 1 active +       │                                    │
 │          │            animation complete    │                                    │
 │          │   → Activate immediately         │                                    │
 │          │                                  │                                    │
-│          │   Path 2: Frame 1 NOT ready      │                                    │
+│          │   Path 3: Frame 1 active +       │                                    │
+│          │            animation NOT complete│                                    │
 │          │   → Wait with watchEffect        │                                    │
-│          │   → Auto-activate when           │                                    │
-│          │      Frame 1 active AND          │                                    │
-│          │      animation complete          │                                    │
-│          │                                  │                                    │
+│          │   → Auto-activate when:          │                                    │
+│          │      - Frame 1 leaves viewport   │                                    │
+│          │      - Frame 1 animation done    │                                    │
 ├──────────┼──────────────────────────────────┼────────────────────────────────────┤
-│ Frame 3-6│ • Same logic as Frame 2          │ • No automatic deactivation        │
-│          │   Must wait for previous frame   │ • Only resets on scroll to top     │
-│          │   to be active first             │                                    │
+│ Frame 3-6│ • Same logic as Frame 2          │ • LEAVE_UP only                    │
+│          │   (depends on previous frame)    │   → Deactivate immediately         │
+│          │                                  │   → Cleanup any waiting watcher    │
 └──────────┴──────────────────────────────────┴────────────────────────────────────┘
 
 ⚠️ Global Reset Condition:
-- When scroll position = 0px (page top): Reset ALL frames (1-6) and re-check viewport
+- When scroll position < 10px (page top): Reset ALL frames (1-6) and re-check viewport
 
 Key Implementation Notes:
-- Frame 1: Uses createStrictHandler() - only responds to ENTER (no LEAVE deactivation)
-- Frame 2-6: Use createSequentialHandler() - sequential activation, no LEAVE deactivation
-- All frames stay active once activated until scroll-to-top reset
+- Frame 1: Uses createStrictHandler() - only responds to ENTER (no LEAVE)
+- Frame 2-6: Use createSequentialHandler() - sequential activation with waiting
+- ENTER_DOWN: User scrolling down, frame entering viewport (threshold: 0)
 - IntersectionObserver threshold: 0 (triggers as soon as any part is visible)
 - Initial viewport check: Runs 100ms after mount to handle pre-loaded frames
-- Watcher cleanup: Always cleanup before creating new watcher
+- Watcher cleanup: Always cleanup before creating new watcher or on LEAVE
 */
 
 // Type definitions
@@ -71,11 +72,10 @@ export type FrameConfig = {
  * Composable for managing sequential frame animations with viewport detection
  *
  * Features:
- * - Sequential activation: Frame N waits for Frame N-1 to be active AND animation complete
- * - Frames stay active once activated (no deactivation on LEAVE)
+ * - Sequential activation: Frame N waits for Frame N-1 to complete
+ * - Direction-aware: Only activates on ENTER_DOWN (scrolling down into viewport)
  * - Initial viewport detection: Handles frames already visible on page load
- * - Scroll-to-top reset: All frames reset only when scrolling to page top
- * - Auto-cleanup: Properly manages watchEffect cleanup
+ * - Auto-cleanup: Properly manages watchEffect cleanup on frame leave
  *
  * @param frameConfigs - Array of frame configurations with id and animationDuration
  * @param initialCheckDelay - Delay in ms before checking initial frames in viewport (default: 100)
@@ -278,7 +278,6 @@ export function useSequentialFrames(
 
   /**
    * Check if previous frame allows current frame to activate
-   * Rule: Previous frame must be active AND animation complete
    */
   function canActivateByPreviousFrame(frameIndex: number): boolean {
     if (frameIndex === 0) return true;
@@ -286,12 +285,15 @@ export function useSequentialFrames(
     const prevFrame = frames[frameIndex - 1];
     if (!prevFrame) return false;
 
-    // Previous frame must be active AND animation must be complete
+    // Previous frame left viewport
+    if (!prevFrame.isEnter.value) return true;
+
+    // Previous frame animation complete
     return prevFrame.isEnter.value && prevFrame.isAnimationComplete.value;
   }
 
   /**
-   * Wait for previous frame to become active AND complete animation using watchEffect
+   * Wait for previous frame to complete using watchEffect
    */
   function waitForPreviousFrame(frameIndex: number) {
     cleanupWatcher(frameIndex);
@@ -300,7 +302,7 @@ export function useSequentialFrames(
     if (!prevFrame) return;
 
     const stopWatch = watchEffect(() => {
-      if (prevFrame.isEnter.value && prevFrame.isAnimationComplete.value) {
+      if (!prevFrame.isEnter.value || prevFrame.isAnimationComplete.value) {
         activateFrame(frameIndex);
         stopWatch();
       }
@@ -310,16 +312,22 @@ export function useSequentialFrames(
   }
   /**
    * Create handler for Frame 2-6 (sequential mode)
-   * Activates on ENTER when previous frame is active
-   * Never deactivates (only resets on scroll-to-top)
+   * Activates on ENTER (any direction), only deactivates on LEAVE_UP
    */
   function createSequentialHandler(frameIndex: number) {
     return (state: FrameState) => {
       const frame = frames[frameIndex];
       if (!frame) return;
 
-      // Track viewport state on LEAVE (but don't deactivate)
-      if (state.action === 'LEAVE') {
+      // LEAVE_UP: Reset and cleanup (only when scrolling up and leaving)
+      if (state.STATE === 'LEAVE_UP') {
+        framesInViewport.set(frameIndex, false);
+        deactivateFrame(frameIndex);
+        return;
+      }
+
+      // Ignore LEAVE_DOWN (scrolling down and leaving viewport)
+      if (state.STATE === 'LEAVE_DOWN') {
         framesInViewport.set(frameIndex, false);
         return;
       }
@@ -327,9 +335,6 @@ export function useSequentialFrames(
       // Handle ENTER (any direction)
       if (state.action === 'ENTER') {
         framesInViewport.set(frameIndex, true);
-
-        // Skip if already active
-        if (frame.isEnter.value) return;
 
         if (canActivateByPreviousFrame(frameIndex)) {
           activateFrame(frameIndex);
