@@ -65,9 +65,9 @@ const cssTimings = {
     <!--
       Animation Script:
       Step 1 (0s-1s): img1 crop - clip-path from full to center (20% each side)
-      Step 2 (1s-1.5s): img1 fade out + img2 fade in (crossfade)
-      Step 3 (1.5s-2.5s): img3 fly in from right to left
-      Step 3 (2s-3s): text fly in from left to right
+      Step 2 (1s-2s): img1 fade out + img2 fade in (crossfade)
+      Step 2 (1s-2s): img3 fly in from right to left
+      Step 2 (1s-2s): text fly in from left to right
     -->
     <div class="relative w-full flex justify-center">
       <!-- img back wrapper (for crop effect) -->
@@ -113,9 +113,6 @@ const cssTimings = {
         </LChatBubble>
       </div>
     </div>
-
-    <!-- ruler -->
-    <div class="h-2.5 w-(--seca-f1-img-max-w) mx-auto bg-black" />
   </div>
 </template>
 
@@ -136,6 +133,9 @@ const cssTimings = {
   --seca-f1-text-delay: v-bind('cssTimings.textDelay');
 
   width: 100%;
+  margin-bottom: 20px;
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
 
   &__img-back-wrap {
     position: relative;
@@ -168,25 +168,41 @@ const cssTimings = {
   &__img3-wrap {
     position: absolute;
     right: 0;
-    top: 0;
+    top: calc(52 / 716 * 100%);
     max-width: 300px;
     display: inline-block;
+    border-radius: 10px;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
     transform: translateX(100%);
+    opacity: 0;
+
+    @include rwd-min(sm) {
+      right: calc((100vw - 720px) / 2);
+      top: calc(118 / 700 * 100%);
+    }
   }
 
   &__text-wrap {
     position: absolute;
-    bottom: 0;
+    bottom: calc(211 / 716 * 100%);
     left: 0;
     display: inline-block;
     color: #fff;
     font-size: 1.6rem;
     transform: translateX(-100%);
+    opacity: 0;
+
+    @include rwd-min(sm) {
+      left: calc((100vw - 720px) / 2);
+      bottom: calc(38 / 700 * 100%);
+    }
   }
 
   &.active {
+    opacity: 1;
+
     .l-seca-f1__img-back-wrap {
-      /* width: var(--seca-f1-img-max-w); */
+      width: calc(100% - 24px * 2);
       clip-path: inset(
         0 calc((100% - var(--seca-f1-img-max-w)) / 2) 0
           calc((100% - var(--seca-f1-img-max-w)) / 2)
@@ -195,6 +211,7 @@ const cssTimings = {
         width var(--seca-f1-crop-duration) ease;
 
       @include rwd-min(2xl) {
+        width: 100%;
         clip-path: inset(
           0 calc((1920px - var(--seca-f1-img-max-w)) / 2) 0
             calc((1920px - var(--seca-f1-img-max-w)) / 2)
@@ -216,14 +233,18 @@ const cssTimings = {
 
     .l-seca-f1__img3-wrap {
       transform: translateX(0);
+      opacity: 1;
       transition: transform var(--seca-f1-img3-duration)
-        var(--seca-f1-img3-delay) ease;
+          var(--seca-f1-img3-delay) ease,
+        opacity var(--seca-f1-img3-duration) var(--seca-f1-img3-delay) ease;
     }
 
     .l-seca-f1__text-wrap {
       transform: translateX(0);
+      opacity: 1;
       transition: transform var(--seca-f1-text-duration)
-        var(--seca-f1-text-delay) ease;
+          var(--seca-f1-text-delay) ease,
+        opacity var(--seca-f1-text-duration) var(--seca-f1-text-delay) ease;
     }
   }
 }

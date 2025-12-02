@@ -11,11 +11,11 @@ function handleTestClick() {
   });
 
   // Visual feedback
-  console.log('GA event sent:', {
-    action: 'click_btn',
-    category: 'term',
-    label: 'testing',
-  });
+  // console.log('GA event sent:', {
+  //   action: 'click_btn',
+  //   category: 'term',
+  //   label: 'testing',
+  // });
 }
 </script>
 

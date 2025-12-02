@@ -26,12 +26,19 @@ setup();
 
 <template>
   <section
-    class="sec-a l-article bg-black-6 pt-(--navbar-height) overflow-hidden"
+    class="sec-a l-article pt-(--navbar-height) bg-black-6 overflow-hidden"
   >
     <!-- visually hidden for seo -->
     <h1 class="visually-hidden">
       {{ str.title }}
     </h1>
+
+    <!-- ruler: 672px -->
+    <!-- <div class="fixed z-50 top-15 left-0 w-full">
+      <div class="max-w-2xl h-1 w-full mx-auto bg-blue-600">
+        max-width: 672px
+      </div>
+    </div> -->
 
     <!-- frame 1 -->
     <div class="max-w-[1920px] mx-auto">
