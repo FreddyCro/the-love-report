@@ -22,7 +22,14 @@ const cssTimings = {
       active: active,
     }"
   >
-    <div class="relative w-full max-w-7xl aspect-1280/720 mx-auto">
+    <div class="relative w-full mx-auto">
+      <!-- text -->
+      <div class="l-seca-f3__text-wrap l-p">
+        <LChatBubble :shadow="true" pointer="bottom-right">
+          {{ str.frame3_1 }}
+        </LChatBubble>
+      </div>
+
       <!-- img -->
       <div class="l-seca-f3__img-wrap">
         <LPic
@@ -33,18 +40,13 @@ const cssTimings = {
           :webp="true"
         />
       </div>
-
-      <!-- text -->
-      <div class="l-seca-f3__text-wrap l-p">
-        <LChatBubble :shadow="true" pointer="bottom-right">
-          {{ str.frame3_1 }}
-        </LChatBubble>
-      </div>
     </div>
   </div>
 </template>
 
 <style lang="scss">
+@use '@/assets/styles/mixins' as *;
+
 .l-seca-f3 {
   /* Animation timing variables - synced from animationTimings.ts */
   --seca-f3-img-duration: v-bind('cssTimings.imgDuration');
@@ -55,15 +57,31 @@ const cssTimings = {
   width: 100%;
 
   &__img-wrap {
+    width: calc(100% - var(--seca-px) * 2);
+    max-width: var(--seca-img-max-w);
+    margin: 0 auto;
     opacity: var(--seca-animation-opacity-start);
   }
 
   &__text-wrap {
-    position: absolute;
-    top: 50%;
-    left: 0;
+    position: relative;
+    z-index: 5;
+    width: calc(100% - var(--seca-px) * 2);
+    margin: 0 auto 20px auto;
     opacity: var(--seca-animation-opacity-start);
-    transform: translate(-100%, -50%);
+    transform: translateX(-100%);
+
+    @include rwd-min(sm) {
+      position: absolute;
+      top: calc(40 / 316 * 100%);
+      left: calc((100vw - 720px) / 2);
+      width: 100%;
+      max-width: 276px;
+    }
+
+    @include rwd-min(2xl) {
+      left: calc((1920px - 720px) / 2);
+    }
   }
 
   &.active {
@@ -74,7 +92,7 @@ const cssTimings = {
 
     .l-seca-f3__text-wrap {
       opacity: 1;
-      transform: translate(0, -50%);
+      transform: translateX(0);
       transition: transform var(--seca-f3-text-duration)
         var(--seca-f3-text-delay) ease;
     }

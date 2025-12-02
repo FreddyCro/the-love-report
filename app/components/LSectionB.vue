@@ -346,6 +346,8 @@ function handleIsEntered(shouldEnter: boolean) {
   min-height: 100vh;
   padding: 4rem 0;
   padding-bottom: calc(4rem + 70px);
+  overflow: hidden;
+
   @include rwd-min(sm) {
     padding-bottom: calc(4rem + 100px);
   }
