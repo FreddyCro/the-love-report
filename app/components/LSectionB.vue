@@ -4,6 +4,7 @@ import LSectionBCard from './LSectionBCard.vue';
 import LSectionBIntro from './LSectionBIntro.vue';
 import LPic from './LPic.vue';
 import { useIntersectionObserver } from '@vueuse/core';
+import { useActiveOnViewport } from '../composables/useActiveOnViewport';
 import str from '../locales/section-b.json';
 
 type CartType = {
@@ -70,6 +71,13 @@ const isAnimationReady = ref(false);
 const sectionRef = ref<HTMLElement | null>(null);
 const scrollTriggerInstances: any[] = [];
 
+// Track active chart content elements in viewport
+const { setup: setupActiveTracking } = useActiveOnViewport(
+  sectionRef,
+  '.chart-content',
+  { threshold: 0.5 }
+);
+
 // Setup intersection observer for viewport tracking
 onMounted(() => {
   // Wait for next tick to ensure DOM is ready
@@ -114,6 +122,9 @@ onMounted(async () => {
 
   // Mark as ready - triggers fade-in via CSS transition
   isAnimationReady.value = true;
+
+  // Setup active class tracking for chart content elements
+  setupActiveTracking();
 });
 
 // Register lifecycle hook BEFORE any async operations
@@ -273,12 +284,15 @@ function handleIsEntered(shouldEnter: boolean) {
               :note="item.note"
             >
               <!-- Render different placeholder content based on item.chart (A..F) -->
-              <div v-if="item.chart === 'chartA'" class="contents">
-                <div class="chart-a-placeholder" />
+              <div v-if="item.chart === 'chartA'" class="chart-a-placeholder">
+                <div class="chart-content" />
               </div>
 
-              <div v-else-if="item.chart === 'chartB'" class="contents">
-                <div class="chart-a-placeholder" />
+              <div
+                v-else-if="item.chart === 'chartB'"
+                class="chart-a-placeholder"
+              >
+                <div class="chart-content" />
               </div>
 
               <div v-else-if="item.chart === 'chartC'">
@@ -415,7 +429,6 @@ function handleIsEntered(shouldEnter: boolean) {
   width: 100%;
   height: 100%;
   aspect-ratio: 308 / 269;
-  background-color: gray;
 
   @include rwd-min(sm) {
     aspect-ratio: 492 / 197;
@@ -423,6 +436,19 @@ function handleIsEntered(shouldEnter: boolean) {
 
   @include rwd-min(lg) {
     aspect-ratio: 640 / 206;
+  }
+}
+
+.chart-content {
+  width: 100%;
+  height: 100%;
+  background-color: gray;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  // Active state when in viewport
+  &.active {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   }
 }
 </style>
