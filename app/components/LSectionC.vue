@@ -37,13 +37,13 @@ const dialogCase = ref<CaseItem | null>(null);
 const openDialog = (caseItem: CaseItem) => {
 	dialogCase.value = caseItem;
 	isDialogOpen.value = true;
-	document.body.style.overflow = 'hidden';
+	document.body.style.overflow = "hidden";
 };
 
 const closeDialog = () => {
 	isDialogOpen.value = false;
 	dialogCase.value = null;
-	document.body.style.overflow = '';
+	document.body.style.overflow = "";
 };
 
 // 切換到上一個
@@ -87,7 +87,6 @@ const getTransformX = (index: number) => {
 		return `-${index * cardWithGap}px`;
 	}
 
-
 	// 最後一張：計算讓右邊保持 padding 的位移
 	const totalWidth = cases.length * CARD_WIDTH + (cases.length - 1) * CARD_GAP;
 	const paddingRatio = (SIDE_PADDING * 2) / VIEWPORT_WIDTH;
@@ -98,7 +97,7 @@ const getTransformX = (index: number) => {
 
 <template>
 	<section
-		class="section-c min-h-screen l-article bg-love-blue-01 overflow-x-hidden"
+		class="section-c min-h-screen l-article bg-love-blue-01 rounded-t-[100px] relative overflow-x-hidden"
 	>
 		<!-- Title -->
 		<div class="text-center mb-6">
@@ -215,13 +214,13 @@ const getTransformX = (index: number) => {
 						{{ caseItem.sections?.[0]?.title }}
 					</h5>
 					<p class="l-p">
-						{{ truncateText(caseItem.sections?.[0]?.desc?.[0] ?? '', 104) }}
+						{{ truncateText(caseItem.sections?.[0]?.desc?.[0] ?? "", 104) }}
 					</p>
 					<p
 						v-if="(caseItem.sections?.[0]?.desc?.[0]?.length ?? 0) < 104"
 						class="l-p mt-4"
 					>
-						{{ truncateText(caseItem.sections?.[0]?.desc?.[1] ?? '', 20) }}
+						{{ truncateText(caseItem.sections?.[0]?.desc?.[1] ?? "", 20) }}
 					</p>
 				</div>
 
@@ -249,53 +248,53 @@ const getTransformX = (index: number) => {
 				<Transition name="fade">
 					<div
 						v-if="isDialogOpen"
-						class="section-c__overlay fixed inset-0 z-50 flex items-center justify-center  l-article"
+						class="section-c__overlay fixed inset-0 z-50 flex items-center justify-center l-article"
 						@click.self="closeDialog"
 					>
-					<div class="relative mx-4 max-w-[944px]">
-						<!-- Close Button -->
-						<button
-							class="absolute top-3 right-3 z-10 cursor-pointer w-10 h-10 rounded-full bg-love-blue-02 flex items-center justify-center"
-							aria-label="關閉"
-							@click="closeDialog"
-						>
-							<div class="w-5 h-5 rotate-45">
-								<LPic
-									src="/img/button_card_plus_corner"
-									ext="svg"
-									:use-prefix="false"
-									:use2x="false"
-									:webp="false"
-									:width="20"
-									:height="20"
-								/>
-							</div>
-						</button>
-
-						<div
-							class="section-c__dialog bg-white rounded-[30px] border-2 border-love-blue-02 p-10 max-h-150 overflow-y-auto"
-						>
-						<!-- Dialog Content -->
-						<div v-if="dialogCase" class="space-y-6 pr-8">
-							<div
-								v-for="(section, sectionIndex) in dialogCase.sections"
-								:key="sectionIndex"
+						<div class="relative mx-4 max-w-[944px]">
+							<!-- Close Button -->
+							<button
+								class="absolute top-3 right-3 z-10 cursor-pointer w-10 h-10 rounded-full bg-love-blue-02 flex items-center justify-center"
+								aria-label="關閉"
+								@click="closeDialog"
 							>
-								<h5 class="text-love-red-03 mb-2 l-h5 font-bold">
-									{{ section.title }}
-								</h5>
-								<p
-									v-for="(paragraph, pIndex) in section.desc"
-									:key="pIndex"
-									class="l-p"
-									:class="{ 'mt-4': pIndex > 0 }"
-								>
-									{{ paragraph }}
-								</p>
+								<div class="w-5 h-5 rotate-45">
+									<LPic
+										src="/img/button_card_plus_corner"
+										ext="svg"
+										:use-prefix="false"
+										:use2x="false"
+										:webp="false"
+										:width="20"
+										:height="20"
+									/>
+								</div>
+							</button>
+
+							<div
+								class="section-c__dialog bg-white rounded-[30px] border-2 border-love-blue-02 p-10 max-h-150 overflow-y-auto"
+							>
+								<!-- Dialog Content -->
+								<div v-if="dialogCase" class="space-y-6 pr-8">
+									<div
+										v-for="(section, sectionIndex) in dialogCase.sections"
+										:key="sectionIndex"
+									>
+										<h5 class="text-love-red-03 mb-2 l-h5 font-bold">
+											{{ section.title }}
+										</h5>
+										<p
+											v-for="(paragraph, pIndex) in section.desc"
+											:key="pIndex"
+											class="l-p"
+											:class="{ 'mt-4': pIndex > 0 }"
+										>
+											{{ paragraph }}
+										</p>
+									</div>
+								</div>
 							</div>
 						</div>
-						</div>
-					</div>
 					</div>
 				</Transition>
 			</Teleport>
@@ -305,8 +304,8 @@ const getTransformX = (index: number) => {
 
 <style scoped lang="scss">
 .section-c {
-	min-height: 100vh;
-	padding: 80px 0 120px;
+	padding: 80px 0 180px;
+	margin-top: -100px;
 
 	&__overlay {
 		background-color: rgba(0, 0, 0, 0.3);

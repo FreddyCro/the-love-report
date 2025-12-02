@@ -345,110 +345,111 @@ function handleIsEntered(shouldEnter: boolean) {
 .sec-b {
   min-height: 100vh;
   padding: 4rem 0;
+	padding-bottom: calc(4rem + 100px);
 
-  &__pin-container {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
-  }
+	&__pin-container {
+		position: relative;
+		width: 100%;
+		min-height: 100vh;
+	}
 
-  &__intro-container {
-    position: relative; // Changed from absolute to allow normal document flow
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1; // Below cards
-    min-height: 100vh; // Ensure it takes full height
-  }
+	&__intro-container {
+		position: relative; // Changed from absolute to allow normal document flow
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 1; // Below cards
+		min-height: 100vh; // Ensure it takes full height
+	}
 
-  &__cards-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 20px;
-    z-index: 2; // Above intro
-    pointer-events: none; // Allow interaction with intro before cards appear
+	&__cards-container {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0 20px;
+		z-index: 2; // Above intro
+		pointer-events: none; // Allow interaction with intro before cards appear
 
-    // Re-enable pointer events for cards themselves
-    .state-card {
-      pointer-events: auto;
-    }
-  }
+		// Re-enable pointer events for cards themselves
+		.state-card {
+			pointer-events: auto;
+		}
+	}
 }
 
 .sec-b-transition {
-  // Only transition visual properties, not layout/transform properties
-  // This prevents conflicts with GSAP animations during fast scrolling
-  transition: background-color 1s, color 1s;
+	// Only transition visual properties, not layout/transform properties
+	// This prevents conflicts with GSAP animations during fast scrolling
+	transition: background-color 1s, color 1s;
 
-  /* LSectionBIntro.vue */
-  path,
-  rect {
-    transition: fill 1s, stroke 1s;
-  }
+	/* LSectionBIntro.vue */
+	path,
+	rect {
+		transition: fill 1s, stroke 1s;
+	}
 }
 
 .state-card-group {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.6s ease-in-out;
+	position: relative;
+	width: 100%;
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity 0.6s ease-in-out;
 
-  &.is-ready {
-    opacity: 1;
-  }
+	&.is-ready {
+		opacity: 1;
+	}
 }
 
 .state-card-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 // LSectionBCard.vue
 .state-card {
-  will-change: transform, opacity;
+	will-change: transform, opacity;
 }
 
 .chart-a-placeholder {
-  width: 100%;
-  height: 100%;
-  aspect-ratio: 308 / 269;
+	width: 100%;
+	height: 100%;
+	aspect-ratio: 308 / 269;
 
-  @include rwd-min(sm) {
-    aspect-ratio: 492 / 197;
-  }
+	@include rwd-min(sm) {
+		aspect-ratio: 492 / 197;
+	}
 
-  @include rwd-min(lg) {
-    aspect-ratio: 640 / 206;
-  }
+	@include rwd-min(lg) {
+		aspect-ratio: 640 / 206;
+	}
 }
 
 .chart-content {
-  width: 100%;
-  height: 100%;
-  background-color: gray;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+	width: 100%;
+	height: 100%;
+	background-color: gray;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-  // Active state when in viewport
-  &.active {
-    transform: translateY(-4px) scale(1.01);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  }
+	// Active state when in viewport
+	&.active {
+		transform: translateY(-4px) scale(1.01);
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+	}
 }
 </style>
