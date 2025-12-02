@@ -31,7 +31,7 @@ const cssTimings = {
       active: active,
     }"
   >
-    <div class="relative w-full max-w-7xl aspect-1280/720 mx-auto">
+    <div class="relative w-full mx-auto">
       <div class="l-seca-f4__box">
         <!-- img 1 -->
         <div class="l-seca-f4__img1-wrap">
