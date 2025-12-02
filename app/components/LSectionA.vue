@@ -99,9 +99,11 @@ setup();
 </template>
 
 <style lang="scss">
+@use '@/assets/styles/mixins' as *;
+
 .sec-a-part {
   --seca-img-max-w: 672px;
-  --seca-px: 24px;
+  --seca-px: 20px;
   --seca-animation-opacity-start: 0.3;
 
   /* min-height: 100vh; */
@@ -113,6 +115,10 @@ setup();
 
   &:last-child {
     margin-bottom: 0;
+  }
+
+  @include rwd-min(xs) {
+    --seca-px: 24px;
   }
 }
 </style>

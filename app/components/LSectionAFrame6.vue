@@ -35,7 +35,7 @@ const cssTimings = {
 
       <!-- text 1 -->
       <div class="l-seca-f6__text-wrap">
-        <LChatBubble :shadow="true" pointer="bottom-left">
+        <LChatBubble :shadow="true">
           {{ str.frame6_1 }}
         </LChatBubble>
       </div>
@@ -44,6 +44,8 @@ const cssTimings = {
 </template>
 
 <style lang="scss">
+@use '@/assets/styles/mixins' as *;
+
 .l-seca-f6 {
   /* Animation timing variables - synced from animationTimings.ts */
   --seca-f6-img-duration: v-bind('cssTimings.imgDuration');
@@ -60,8 +62,14 @@ const cssTimings = {
     position: absolute;
     top: 50%;
     left: 50%;
+    width: 100%;
+    padding: 0 var(--seca-px);
     transform: translate(-50%, -50%);
     opacity: var(--seca-animation-opacity-start);
+
+    @include rwd-min(sm) {
+      max-width: 359px;
+    }
   }
 
   &.active {

@@ -8,12 +8,12 @@ interface Props {
    */
   shadow?: boolean | string;
   /** 指向的泡泡角落：四個選項 */
-  pointer?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+  pointer?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'none';
 }
 
 const props = withDefaults(defineProps<Props>(), {
   shadow: false,
-  pointer: 'bottom-left',
+  pointer: 'none',
 });
 </script>
 

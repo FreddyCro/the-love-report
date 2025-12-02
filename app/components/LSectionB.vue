@@ -316,7 +316,6 @@ function handleIsEntered(shouldEnter: boolean) {
               <div v-else-if="item.chart === 'chartE'">
                 <LPic
                   src="/img/intimate_relationships_p0202_card05_info"
-                  :srcset="['pad', 'mob']"
                   ext="svg"
                   :use2x="false"
                   :webp="false"
