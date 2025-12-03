@@ -67,10 +67,10 @@ const getAvatarImage = (name: string) => {
 		<div
 			v-for="caseItem in cases"
 			:key="caseItem.index"
-			class="mb-5 px-6 pc:px-0"
+			class="l-container pt-9 sm:pt-12"
 		>
 			<!-- Step Indicator -->
-			<div class="py-12 l-container">
+			<div class="pt-5">
 				<div class="section-d__step">
 					<p class="text-love-red-03">{{ caseItem.index }}</p>
 				</div>
@@ -81,11 +81,11 @@ const getAvatarImage = (name: string) => {
 			</div>
 
 			<!-- Stories -->
-			<div class="flex flex-col gap-9 max-w-[944px] m-auto mb-9">
+			<div class="flex flex-col gap-7 sm:gap-9 max-w-[944px] m-auto mt-9 sm:mt-12">
 				<div
 					v-for="(story, index) in caseItem.stories"
 					:key="index"
-					class="flex flex-col gap-3 xs:gap-6"
+					class="flex flex-col gap-3 sm:gap-6"
 					:class="{
 						'sm:flex-row': story.position === 'left',
 						'sm:flex-row-reverse': story.position === 'right',
@@ -129,8 +129,8 @@ const getAvatarImage = (name: string) => {
 							class="bg-white px-5 py-4 max-w-[547px] l-p"
 							:class="
 								story.position === 'left'
-									? 'rounded-tr-[10px] rounded-b-[10px]'
-									: 'rounded-tl-[10px] rounded-b-[10px]'
+									? 'rounded-tr-[10px] rounded-b-[10px] mr-[38px] sm:mr-0'
+									: 'rounded-tl-[10px] rounded-b-[10px] ml-[38px] sm:ml-0'
 							"
 						>
 							{{ story.content }}
@@ -142,7 +142,7 @@ const getAvatarImage = (name: string) => {
 			<!-- Images -->
 			<div
 				v-if="caseItem.images"
-				class="flex flex-wrap gap-6 max-w-[944px] m-auto mb-9"
+				class="flex flex-wrap gap-6 max-w-[944px] m-auto mt-7 sm:mt-9"
 			>
 				<div
 					v-for="(image, index) in caseItem.images"
@@ -163,7 +163,7 @@ const getAvatarImage = (name: string) => {
 						:height="image.height"
 						classname="w-full h-auto"
 					/>
-					<p class="mt-4 pic-info">{{ image.desc }}</p>
+					<p class="mt-2 pic-info">{{ image.desc }}</p>
 				</div>
 			</div>
 		</div>

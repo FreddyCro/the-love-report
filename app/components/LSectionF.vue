@@ -48,7 +48,7 @@ const isFlipped = (index: number) => {
 
 		<!-- Download Button -->
 		<h5
-			class="flex items-center gap-2.5 justify-center mt-9 mb-24 l-h5 font-bold"
+			class="flex items-center gap-2.5 justify-center my-7 sm:mt-9 sm:mb-24 l-pc-h5 font-bold"
 		>
 			<button>點擊卡牌看建議</button>
 			<div class="w-10 h-10 text-love-dark">
@@ -92,8 +92,8 @@ const isFlipped = (index: number) => {
 					<div
 						class="absolute w-full h-full backface-hidden rounded-[20px] p-[30px] border-2 border-love-red-02 overflow-hidden bg-white"
 					>
-						<h4 class="mb-3 text-black l-h4 font-bold">{{ caseItem.title }}</h4>
-						<h5 class="mb-5 text-black l-h5 font-bold">
+						<h4 class="mb-3 text-black section-f__card-title font-bold">{{ caseItem.title }}</h4>
+						<h5 class="mb-5 text-black section-f__card-question font-bold">
 							{{ caseItem.content.question }}
 						</h5>
 						<div class="mb-5">
@@ -154,6 +154,24 @@ const isFlipped = (index: number) => {
 </template>
 
 <style scoped lang="scss">
+@use "@/assets/styles/mixins" as *;
+
 .section-f {
+	&__card-title {
+		font-size: var(--mob-h3-font-size);
+	    line-height: var(--mob-h3-line-height);
+		@include rwd-min(sm) {
+			font-size: var(--pc-h4-font-size);
+			line-height: var(--pc-h4-line-height);
+		}
+	}
+	&__card-question {
+		font-size: var(--mob-h4-font-size);
+    	line-height: var(--mob-h4-line-height);
+		@include rwd-min(sm) {
+			font-size: var(--pc-h5-font-size);
+			line-height: var(--pc-h5-line-height);
+		}
+	}
 }
 </style>
