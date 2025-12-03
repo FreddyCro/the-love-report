@@ -41,7 +41,7 @@ const isFlipped = (index: number) => {
 			:title="content.title"
 			:intro="content.intro"
 			title-color="text-black"
-			dialogbox-img="p0601"
+			dialogbox-img="p0601_dialogbox_pc"
 			intro-container-class="l-p l-container"
 			intro-paragraph-class=""
 		/>

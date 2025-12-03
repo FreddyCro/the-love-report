@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const dialogboxStyle = computed(() => ({
-	backgroundImage: `url("/img/intimate_relationships_${props.dialogboxImg}_dialogbox_pad.svg")`,
+	backgroundImage: `url("/img/intimate_relationships_${props.dialogboxImg}.svg")`,
 }));
 </script>
 

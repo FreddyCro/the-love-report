@@ -50,7 +50,7 @@ const cases = sectionEData.cases as CaseItem[];
 				:title="content.title"
 				:intro="content.intro"
 				title-color="text-black"
-				dialogbox-img="p0501"
+				dialogbox-img="p0501_dialogbox_pc"
 				intro-container-class="space-y-9"
 			/>
 

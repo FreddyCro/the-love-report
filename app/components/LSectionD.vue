@@ -60,7 +60,7 @@ const getAvatarImage = (name: string) => {
 			:title="content.title"
 			:intro="content.intro"
 			title-color="text-love-red-03"
-			dialogbox-img="p0401"
+			dialogbox-img="p0401_dialogbox_pc"
 		/>
 
 		<!-- Cases -->

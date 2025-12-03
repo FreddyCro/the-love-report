@@ -203,7 +203,7 @@ const getTransformX = computed(() => {
 			:title="content.title"
 			:intro="content.intro"
 			title-color="text-love-blue-03"
-			dialogbox-img="p0201"
+			dialogbox-img="p0201_dialogbox_pad"
 		/>
 
 		<!-- Avatar Selection -->
@@ -304,13 +304,13 @@ const getTransformX = computed(() => {
 						/>
 					</div>
 					<div class="flex-1 text-black">
-						<p class="mb-2 l-h4 font-bold">
+						<h3 class="mb-2 l-h4 font-bold">
 							{{ caseItem.name }}
 							<span class="text-card-regular"
 								>{{ caseItem.age }}{{ caseItem.occupation ? " | " : ""
 								}}{{ caseItem.occupation }}</span
 							>
-						</p>
+						</h3>
 						<div v-if="caseItem.tag" class="text-card-bold mb-2">
 							{{ caseItem.tag }}
 						</div>
@@ -319,9 +319,9 @@ const getTransformX = computed(() => {
 				</div>
 
 				<div class="hidden sm:block pt-7 border-t border-black">
-					<p class="text-love-red-03 mb-1 l-h5 font-bold">
+					<h4 class="text-love-red-03 mb-1 l-h5 font-bold">
 						{{ caseItem.sections?.[0]?.title }}
-					</p>
+					</h4>
 					<p class="l-p">
 						{{ truncateText(caseItem.sections?.[0]?.desc?.[0] ?? "", 104) }}
 					</p>
@@ -393,9 +393,9 @@ const getTransformX = computed(() => {
 										v-for="(section, sectionIndex) in dialogCase.sections"
 										:key="sectionIndex"
 									>
-										<p class="text-love-red-03 mb-2 l-h5 font-bold">
+										<h4 class="text-love-red-03 mb-2 l-h5 font-bold">
 											{{ section.title }}
-										</p>
+										</h4>
 										<p
 											v-for="(paragraph, pIndex) in section.desc"
 											:key="pIndex"
