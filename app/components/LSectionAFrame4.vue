@@ -127,7 +127,7 @@ const cssTimings = {
 
   &__box {
     position: relative;
-    max-width: 248px;
+    max-width: calc(248px + 24px);
     margin-bottom: 20px;
 
     /* 2nd */
@@ -149,7 +149,12 @@ const cssTimings = {
 
   /* box 1 */
   &__img1-wrap {
+    margin-left: 20px;
     opacity: var(--seca-animation-opacity-start);
+
+    @include rwd-min(xs) {
+      margin-left: 24px;
+    }
   }
 
   &__text1-wrap {
@@ -166,7 +171,12 @@ const cssTimings = {
 
   /* box 2 */
   &__img2-wrap {
+    margin-right: 20px;
     opacity: var(--seca-animation-opacity-start);
+
+    @include rwd-min(xs) {
+      margin-right: 24px;
+    }
   }
 
   &__text2-wrap {
@@ -183,7 +193,12 @@ const cssTimings = {
 
   /* box 3 */
   &__img3-wrap {
+    margin-left: 20px;
     opacity: var(--seca-animation-opacity-start);
+
+    @include rwd-min(xs) {
+      margin-left: 24px;
+    }
   }
 
   &__text3-wrap {
