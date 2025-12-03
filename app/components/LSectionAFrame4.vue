@@ -31,7 +31,8 @@ const cssTimings = {
       active: active,
     }"
   >
-    <div class="relative w-full mx-auto">
+    <!-- 672px -->
+    <div class="relative w-full max-w-2xl mx-auto">
       <div class="l-seca-f4__box">
         <!-- img 1 -->
         <div class="l-seca-f4__img1-wrap">
@@ -46,7 +47,7 @@ const cssTimings = {
 
         <!-- text 1 -->
         <div class="l-seca-f4__text1-wrap l-p">
-          <LChatBubble :shadow="true" pointer="bottom-right">
+          <LChatBubble :shadow="true" pointer="bottom-left">
             {{ str.frame4_1 }}
           </LChatBubble>
         </div>
@@ -66,34 +67,36 @@ const cssTimings = {
 
         <!-- text 2 -->
         <div class="l-seca-f4__text2-wrap l-p">
-          <LChatBubble :shadow="true" pointer="bottom-left">
+          <LChatBubble :shadow="true" pointer="bottom-right">
             {{ str.frame4_2 }}
           </LChatBubble>
         </div>
       </div>
 
       <div class="l-seca-f4__box">
-        <!-- img 3 -->
-        <div class="l-seca-f4__img3-wrap">
-          <LPic
-            src="/img/intimate_relationships_p01_frame04_08"
-            :srcset="['pad', 'mob']"
-            ext="jpg"
-            :use2x="false"
-            :webp="true"
-          />
-        </div>
+        <div class="relative sm:translate-x-[161px]">
+          <!-- img 3 -->
+          <div class="l-seca-f4__img3-wrap">
+            <LPic
+              src="/img/intimate_relationships_p01_frame04_08"
+              :srcset="['pad', 'mob']"
+              ext="jpg"
+              :use2x="false"
+              :webp="true"
+            />
+          </div>
 
-        <!-- text 3 -->
-        <div class="l-seca-f4__text3-wrap l-p">
-          <LChatBubble :shadow="true" pointer="bottom-right">
-            {{ str.frame4_3 }}
-          </LChatBubble>
+          <!-- text 3 -->
+          <div class="l-seca-f4__text3-wrap l-p">
+            <LChatBubble :shadow="true" pointer="bottom-left">
+              {{ str.frame4_3 }}
+            </LChatBubble>
+          </div>
         </div>
 
         <!-- text 4 -->
         <div class="l-seca-f4__text4-wrap l-p">
-          <LChatBubble :shadow="true" pointer="bottom-left">
+          <LChatBubble :shadow="true" pointer="top-right">
             {{ str.frame4_4 }}
           </LChatBubble>
         </div>
@@ -103,6 +106,8 @@ const cssTimings = {
 </template>
 
 <style lang="scss">
+@use '@/assets/styles/mixins' as *;
+
 .l-seca-f4 {
   /* Animation timing variables - synced from animationTimings.ts */
   --seca-f4-img1-duration: v-bind('cssTimings.img1Duration');
@@ -122,6 +127,18 @@ const cssTimings = {
 
   &__box {
     position: relative;
+    max-width: 248px;
+    margin-bottom: 20px;
+
+    /* 2nd */
+    &:nth-child(2) {
+      margin-left: auto;
+    }
+
+    @include rwd-min(sm) {
+      max-width: 380px;
+      margin-bottom: 0;
+    }
   }
 
   &__img1-wrap,
@@ -130,6 +147,7 @@ const cssTimings = {
     max-width: 540px;
   }
 
+  /* box 1 */
   &__img1-wrap {
     opacity: var(--seca-animation-opacity-start);
   }
@@ -137,34 +155,61 @@ const cssTimings = {
   &__text1-wrap {
     position: absolute;
     top: 0;
-    left: 0;
+    right: 0;
+    max-width: 169px;
     opacity: var(--seca-animation-opacity-start);
+    transform: translateX(100%);
+
+    @include rwd-min(sm) {
+    }
   }
 
+  /* box 2 */
   &__img2-wrap {
     opacity: var(--seca-animation-opacity-start);
   }
 
   &__text2-wrap {
     position: absolute;
-    top: 0;
+    top: calc(20 / 168 * 100%);
     left: 0;
+    max-width: 169px;
     opacity: var(--seca-animation-opacity-start);
+    transform: translateX(-100%);
+
+    @include rwd-min(sm) {
+    }
   }
 
+  /* box 3 */
   &__img3-wrap {
     opacity: var(--seca-animation-opacity-start);
   }
 
   &__text3-wrap {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: calc(88 / 168 * 100%);
+    right: 0;
+    max-width: 169px;
     opacity: var(--seca-animation-opacity-start);
+    transform: translateX(100%);
+
+    @include rwd-min(sm) {
+      top: calc(108 / 258 * 100%);
+    }
   }
 
   &__text4-wrap {
     opacity: var(--seca-animation-opacity-start);
+    max-width: 292px;
+    margin-top: 88px;
+    transform: translateX(-100%);
+
+    @include rwd-min(sm) {
+      position: absolute;
+      bottom: -20px;
+      margin-top: 0;
+    }
   }
 
   &.active {
@@ -174,33 +219,46 @@ const cssTimings = {
     }
 
     .l-seca-f4__text1-wrap {
+      transform: translateX(0);
       opacity: 1;
-      transition: opacity var(--seca-f4-text1-duration) ease;
+      transition: transform var(--seca-f4-text1-duration) ease,
+        opacity var(--seca-f4-text1-duration) ease;
     }
 
     .l-seca-f4__img2-wrap {
       opacity: 1;
-      transition: opacity var(--seca-f4-img2-duration) var(--seca-f4-img2-delay) ease;
+      transition: opacity var(--seca-f4-img2-duration) var(--seca-f4-img2-delay)
+        ease;
     }
 
     .l-seca-f4__text2-wrap {
+      transform: translateX(0);
       opacity: 1;
-      transition: opacity var(--seca-f4-text2-duration) var(--seca-f4-text2-delay) ease;
+      transition: transform var(--seca-f4-text2-duration)
+          var(--seca-f4-text2-delay) ease,
+        opacity var(--seca-f4-text2-duration) var(--seca-f4-text2-delay) ease;
     }
 
     .l-seca-f4__img3-wrap {
       opacity: 1;
-      transition: opacity var(--seca-f4-img3-duration) var(--seca-f4-img3-delay) ease;
+      transition: opacity var(--seca-f4-img3-duration) var(--seca-f4-img3-delay)
+        ease;
     }
 
     .l-seca-f4__text3-wrap {
+      transform: translateX(0);
       opacity: 1;
-      transition: opacity var(--seca-f4-text3-duration) var(--seca-f4-text3-delay) ease;
+      transition: transform var(--seca-f4-text3-duration)
+          var(--seca-f4-text3-delay) ease,
+        opacity var(--seca-f4-text3-duration) var(--seca-f4-text3-delay) ease;
     }
 
     .l-seca-f4__text4-wrap {
+      transform: translateX(0);
       opacity: 1;
-      transition: opacity var(--seca-f4-text4-duration) var(--seca-f4-text4-delay) ease;
+      transition: transform var(--seca-f4-text4-duration)
+          var(--seca-f4-text4-delay) ease,
+        opacity var(--seca-f4-text4-duration) var(--seca-f4-text4-delay) ease;
     }
   }
 }
