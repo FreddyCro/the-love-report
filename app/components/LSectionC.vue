@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import sectionCData from "~/locales/section-c.json";
 import LPic from "./LPic.vue";
+import { useScrollAnimation } from "~/composables/useScrollAnimation";
 
 interface Section {
 	title: string;
@@ -37,16 +38,28 @@ const dialogCase = ref<CaseItem | null>(null);
 // 視窗寬度
 const windowWidth = ref(1280);
 
-const openDialog = (caseItem: CaseItem) => {
+// Lenis 實例參考
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let lenisInstance: any = null;
+
+const openDialog = async (caseItem: CaseItem) => {
 	dialogCase.value = caseItem;
 	isDialogOpen.value = true;
-	document.body.style.overflow = "hidden";
+
+	// 暫停 Lenis 平滑滾動
+	if (!lenisInstance) {
+		const { lenis } = await useScrollAnimation();
+		lenisInstance = lenis;
+	}
+	lenisInstance?.stop();
 };
 
 const closeDialog = () => {
 	isDialogOpen.value = false;
 	dialogCase.value = null;
-	document.body.style.overflow = "";
+
+	// 恢復 Lenis 平滑滾動
+	lenisInstance?.start();
 };
 
 // 切換到上一個
@@ -349,8 +362,10 @@ const getTransformX = computed(() => {
 				<Transition name="fade">
 					<div
 						v-if="isDialogOpen"
-						class="section-c__overlay fixed inset-0 z-50 flex items-center justify-center l-article"
+						class="section-c__overlay fixed inset-0 z-50 flex items-center justify-center l-article overflow-hidden"
 						@click.self="closeDialog"
+						@wheel.prevent
+						@touchmove.prevent
 					>
 						<div class="relative mx-4 max-w-[944px]">
 							<!-- Close Button -->
@@ -373,7 +388,9 @@ const getTransformX = computed(() => {
 							</button>
 
 							<div
-								class="section-c__dialog bg-white rounded-[30px] border-2 border-love-blue-02 p-10 max-h-150 overflow-y-auto"
+								class="section-c__dialog bg-white rounded-[30px] border-2 border-love-blue-02 p-10 max-h-[83vh] overflow-y-auto overscroll-contain"
+								@wheel.stop
+								@touchmove.stop
 							>
 								<!-- Dialog Content -->
 								<div v-if="dialogCase" class="space-y-6 pr-8">
