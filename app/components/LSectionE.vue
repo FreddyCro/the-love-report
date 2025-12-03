@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import sectionEData from "~/locales/section-e.json";
 import LPic from "./LPic.vue";
+import LSectionHeader from "./LSectionHeader.vue";
 
 interface ContentBlock {
 	type: string;
@@ -45,19 +46,13 @@ const cases = sectionEData.cases as CaseItem[];
 <template>
 	<section class="section-e min-h-screen l-article bg-white rounded-t-[120px]">
 		<div class="l-container">
-			<!-- Title -->
-			<div class="text-center mb-6">
-				<div class="section-e__dialogbox">
-					<h2 class="text-black l-h2 font-bold">{{ content.title }}</h2>
-				</div>
-			</div>
-
-			<!-- Intro Text -->
-			<div class="space-y-9">
-				<p v-for="(paragraph, index) in content.intro" :key="index" class="l-p">
-					{{ paragraph }}
-				</p>
-			</div>
+			<LSectionHeader
+				:title="content.title"
+				:intro="content.intro"
+				title-color="text-black"
+				dialogbox-img="p0501"
+				intro-container-class="space-y-9"
+			/>
 
 			<!-- Cases -->
 			<div v-for="caseItem in cases" :key="caseItem.index" class="mt-[68px]">
@@ -144,17 +139,5 @@ const cases = sectionEData.cases as CaseItem[];
 .section-e {
 	padding: 80px 0 120px;
 
-	&__dialogbox {
-		width: 240px;
-		height: 90px;
-		background-image: url("/img/intimate_relationships_p0501_dialogbox_pc.svg");
-		background-size: contain;
-		background-repeat: no-repeat;
-		background-position: center;
-		display: flex;
-		justify-content: center;
-		margin: 0 auto;
-		padding-top: 6px;
-	}
 }
 </style>

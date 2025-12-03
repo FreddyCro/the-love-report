@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import sectionCData from "~/locales/section-c.json";
 import LPic from "./LPic.vue";
+import LSectionHeader from "./LSectionHeader.vue";
 import { useScrollAnimation } from "~/composables/useScrollAnimation";
 
 interface Section {
@@ -198,23 +199,16 @@ const getTransformX = computed(() => {
 	<section
 		class="section-c min-h-screen l-article bg-love-blue-01 relative overflow-x-hidden pt-12 pb-[130px] sm:pt-20 rounded-t-[70px] -mt-[70px] sm:rounded-t-[100px] sm:-mt-[100px] sm:pb-45 lg:rounded-t-[120px] lg:-mt-[120px] lg:pb-50"
 	>
-		<!-- Title -->
-		<div class="text-center mb-6">
-			<div class="section-c__dialogbox">
-				<h2 class="text-love-blue-03 l-h2 font-bold">{{ content.title }}</h2>
-			</div>
-		</div>
-
-		<!-- Intro Text -->
-		<div class="l-container space-y-9">
-			<p v-for="(paragraph, index) in content.intro" :key="index" class="l-p">
-				{{ paragraph }}
-			</p>
-		</div>
+		<LSectionHeader
+			:title="content.title"
+			:intro="content.intro"
+			title-color="text-love-blue-03"
+			dialogbox-img="p0201"
+		/>
 
 		<!-- Avatar Selection -->
 		<div
-			class="my-6 flex justify-center items-center gap-2 sm:gap-4 max-w-[712px] mx-auto h-[70px] sm:h-[100px]"
+			class="mt-9 mb-7 sm:my-9 flex justify-center items-center gap-2 sm:gap-4 max-w-[712px] mx-auto h-[70px] sm:h-[100px]"
 		>
 			<!-- Left Arrow -->
 			<button
@@ -293,8 +287,9 @@ const getTransformX = computed(() => {
 			<div
 				v-for="caseItem in cases"
 				:key="caseItem.id"
-				class="bg-white rounded-[30px] border-2 border-love-blue-02 pt-[38px] px-[26px] pb-[50px] relative overflow-hidden shrink-0 w-full max-w-[280px] sm:max-w-[561px] max-h-[486px]"
-			>
+				class="bg-white rounded-[20px] border-2 border-love-blue-02  pt-[18px] pb-[65px] px-[18px]  relative overflow-hidden shrink-0 w-full max-w-70 max-h-[450px]
+						sm:rounded-[30px] sm:pt-10 sm:px-[26px] sm:pb-[50px] sm:max-w-[561px] sm:max-h-[486px]"
+					>
 				<div class="flex gap-6 mb-7 flex-col sm:flex-row">
 					<div class="w:100% h:100% sm:w-[154px] sm:h-[158px] py-0.5">
 						<LPic
@@ -309,13 +304,13 @@ const getTransformX = computed(() => {
 						/>
 					</div>
 					<div class="flex-1 text-black">
-						<h4 class="mb-2 l-h4 font-bold">
+						<p class="mb-2 l-h4 font-bold">
 							{{ caseItem.name }}
 							<span class="text-card-regular"
 								>{{ caseItem.age }}{{ caseItem.occupation ? " | " : ""
 								}}{{ caseItem.occupation }}</span
 							>
-						</h4>
+						</p>
 						<div v-if="caseItem.tag" class="text-card-bold mb-2">
 							{{ caseItem.tag }}
 						</div>
@@ -323,10 +318,10 @@ const getTransformX = computed(() => {
 					</div>
 				</div>
 
-				<div class="pt-7 border-t border-black">
-					<h5 class="text-love-red-03 mb-1 l-h5 font-bold">
+				<div class="hidden sm:block pt-7 border-t border-black">
+					<p class="text-love-red-03 mb-1 l-h5 font-bold">
 						{{ caseItem.sections?.[0]?.title }}
-					</h5>
+					</p>
 					<p class="l-p">
 						{{ truncateText(caseItem.sections?.[0]?.desc?.[0] ?? "", 104) }}
 					</p>
@@ -398,9 +393,9 @@ const getTransformX = computed(() => {
 										v-for="(section, sectionIndex) in dialogCase.sections"
 										:key="sectionIndex"
 									>
-										<h5 class="text-love-red-03 mb-2 l-h5 font-bold">
+										<p class="text-love-red-03 mb-2 l-h5 font-bold">
 											{{ section.title }}
-										</h5>
+										</p>
 										<p
 											v-for="(paragraph, pIndex) in section.desc"
 											:key="pIndex"
@@ -431,18 +426,6 @@ const getTransformX = computed(() => {
 		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 	}
 
-	&__dialogbox {
-		width: 240px;
-		height: 90px;
-		background-image: url("/img/intimate_relationships_p0201_dialogbox_pad.svg");
-		background-size: contain;
-		background-repeat: no-repeat;
-		background-position: center;
-		display: flex;
-		justify-content: center;
-		margin: 0 auto;
-		padding-top: 6px;
-	}
 
 	&__corner-button {
 		z-index: 1;

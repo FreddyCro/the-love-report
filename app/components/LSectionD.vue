@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import sectionDData from "~/locales/section-d.json";
 import LPic from "./LPic.vue";
+import LSectionHeader from "./LSectionHeader.vue";
 
 interface Story {
 	position: "left" | "right" | "center" | "centerLeft" | "centerRight";
@@ -55,19 +56,12 @@ const getAvatarImage = (name: string) => {
 	<section
 		class="section-d min-h-screen l-article relative bg-love-red-01 rounded-[70px] -mt-[70px] pt-12 pb-20 sm:rounded-[100px] sm:-mt-[100px] sm:pt-20 sm:pb-[100px] lg:rounded-[120px] lg:-mt-30 lg:pb-30"
 	>
-		<!-- Title -->
-		<div class="text-center mb-6">
-			<div class="section-d__dialogbox">
-				<h2 class="text-love-red-03 l-h2 font-bold">{{ content.title }}</h2>
-			</div>
-		</div>
-
-		<!-- Intro Text -->
-		<div class="l-container space-y-9">
-			<p v-for="(paragraph, index) in content.intro" :key="index" class="l-p">
-				{{ paragraph }}
-			</p>
-		</div>
+		<LSectionHeader
+			:title="content.title"
+			:intro="content.intro"
+			title-color="text-love-red-03"
+			dialogbox-img="p0401"
+		/>
 
 		<!-- Cases -->
 		<div
@@ -178,18 +172,6 @@ const getAvatarImage = (name: string) => {
 
 <style scoped lang="scss">
 .section-d {
-	&__dialogbox {
-		width: 240px;
-		height: 90px;
-		background-image: url("/img/intimate_relationships_p0401_dialogbox_pc.svg");
-		background-size: contain;
-		background-repeat: no-repeat;
-		background-position: center;
-		display: flex;
-		justify-content: center;
-		margin: 0 auto;
-		padding-top: 6px;
-	}
 
 	&__step {
 		width: 70px;

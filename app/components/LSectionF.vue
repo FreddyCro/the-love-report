@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import sectionFData from "~/locales/section-f.json";
 import LPic from "./LPic.vue";
+import LSectionHeader from "./LSectionHeader.vue";
 
 interface CaseContent {
 	question: string;
@@ -36,19 +37,14 @@ const isFlipped = (index: number) => {
 
 <template>
 	<section class="section-f min-h-screen l-article pb-15 sm:pb-30 md:pb-20">
-		<!-- Title -->
-		<div class="text-center mb-6">
-			<div class="section-f__dialogbox">
-				<h2 class="text-black l-h2 font-bold">{{ content.title }}</h2>
-			</div>
-		</div>
-
-		<!-- Intro Text -->
-		<div class="l-p l-container">
-			<p v-for="(paragraph, index) in content.intro" :key="index">
-				{{ paragraph }}
-			</p>
-		</div>
+		<LSectionHeader
+			:title="content.title"
+			:intro="content.intro"
+			title-color="text-black"
+			dialogbox-img="p0601"
+			intro-container-class="l-p l-container"
+			intro-paragraph-class=""
+		/>
 
 		<!-- Download Button -->
 		<h5
@@ -159,17 +155,5 @@ const isFlipped = (index: number) => {
 
 <style scoped lang="scss">
 .section-f {
-	&__dialogbox {
-		width: 240px;
-		height: 90px;
-		background-image: url("/img/intimate_relationships_p0601_dialogbox_pc.svg");
-		background-size: contain;
-		background-repeat: no-repeat;
-		background-position: center;
-		display: flex;
-		justify-content: center;
-		margin: 0 auto;
-		padding-top: 6px;
-	}
 }
 </style>
