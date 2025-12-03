@@ -10,6 +10,7 @@ import LSectionD from './components/LSectionD.vue';
 import LSectionE from './components/LSectionE.vue';
 import LSectionF from './components/LSectionF.vue';
 // import TestAllImg from './components/TestAllImg.vue';
+import { useTracking } from '~/assets/js/tracking.js';
 import meta from './locales/meta.json';
 
 const config = useRuntimeConfig();
@@ -28,6 +29,7 @@ useSeoMeta({
   robots: APP_MODE === 'production' ? 'index, follow' : 'noindex, nofollow',
 });
 
+useHead(useTracking());
 useHead({
   link: [
     {

@@ -80,9 +80,9 @@ const sectionRef = ref<HTMLElement | null>(null);
 const scrollTriggerInstances: any[] = [];
 
 // Track active chart content elements in viewport
-const { setup: setupActiveTracking } = useActiveOnViewport(
+const { setup: setupActiveTracking, activeIndex } = useActiveOnViewport(
   sectionRef,
-  '.chart-content',
+  '.js-chart-content',
   { threshold: 0.5 }
 );
 
@@ -292,15 +292,30 @@ function handleIsEntered(shouldEnter: boolean) {
               :note="item.note"
             >
               <!-- Render different placeholder content based on item.chart (A..F) -->
-              <div v-if="item.chart === 'chartA'" class="chart-a-placeholder">
-                <LSectionBCardLoveChart />
+              <div
+                v-if="item.chart === 'chartA'"
+                class="js-chart-content chart-a-placeholder"
+              >
+                <LSectionBCardLoveChart
+                  :active-love-number="35"
+                  :percentage="70"
+                  active-color="var(--color-love-blue-03)"
+                  inactive-color="var(--color-love-blue-01)"
+                  :active="activeIndex === 0"
+                />
               </div>
 
               <div
                 v-else-if="item.chart === 'chartB'"
-                class="chart-a-placeholder"
+                class="js-chart-content chart-a-placeholder"
               >
-                <LSectionBCardLoveChart />
+                <LSectionBCardLoveChart
+                  :active-love-number="20"
+                  :percentage="40"
+                  active-color="var(--color-love-red-03)"
+                  inactive-color="var(--color-love-red-01)"
+                  :active="activeIndex === 1"
+                />
               </div>
 
               <div v-else-if="item.chart === 'chartC'">

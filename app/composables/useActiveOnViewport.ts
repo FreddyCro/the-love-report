@@ -1,4 +1,4 @@
-import { ref, onMounted, type Ref } from 'vue';
+import { ref, type Ref } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
 
 /**
@@ -36,9 +36,15 @@ export function useActiveOnViewport(
 ) {
   // Track which elements are currently active (in viewport)
   const activeElements = ref<Set<HTMLElement>>(new Set());
+  
+  // Track the index of the currently active element
+  const activeIndex = ref<number>(-1);
 
   // Store stop functions for cleanup
   const stopFunctions: Array<() => void> = [];
+  
+  // Store elements array for index tracking
+  let elementsArray: HTMLElement[] = [];
 
   /**
    * Setup function to initialize observers
@@ -60,9 +66,12 @@ export function useActiveOnViewport(
       );
       return;
     }
+    
+    // Store elements array for index tracking
+    elementsArray = Array.from(elements);
 
     // Create observer for each element
-    elements.forEach((el) => {
+    elements.forEach((el, index) => {
       const elRef = ref(el);
 
       // Use VueUse's useIntersectionObserver for clean lifecycle management
@@ -77,10 +86,16 @@ export function useActiveOnViewport(
             // Add active class when entering viewport
             target.classList.add('active');
             activeElements.value.add(target);
+            // Update active index to current element
+            activeIndex.value = index;
           } else {
             // Remove active class when leaving viewport
             target.classList.remove('active');
             activeElements.value.delete(target);
+            // Reset activeIndex if this was the active element
+            if (activeIndex.value === index) {
+              activeIndex.value = -1;
+            }
           }
 
           // Trigger reactivity by creating new Set
@@ -101,11 +116,13 @@ export function useActiveOnViewport(
     stopFunctions.forEach((stop) => stop());
     stopFunctions.length = 0;
     activeElements.value.clear();
+    activeIndex.value = -1;
   }
 
   return {
     setup,
     cleanup,
     activeElements,
+    activeIndex,
   };
 }

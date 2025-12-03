@@ -1,6 +1,17 @@
+<script lang="ts" setup>
+interface Props {
+  active?: boolean;
+}
+
+withDefaults(defineProps<Props>(), {
+  active: false,
+});
+</script>
+
 <template>
   <svg
     class="secb-card-love"
+    :class="{ 'secb-card-love--active': active }"
     width="50"
     height="43"
     viewBox="0 0 50 43"
@@ -16,6 +27,10 @@
 
 <style lang="scss">
 .secb-card-love {
-  --secb-love-color: #d6f2fa;
+  --secb-love-color: var(--secb-love-chart-color);
+
+  path {
+    transition: fill 0.3s ease;
+  }
 }
 </style>

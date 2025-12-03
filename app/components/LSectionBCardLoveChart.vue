@@ -1,52 +1,96 @@
 <script lang="ts" setup>
+import { ref, watch } from 'vue';
 import LSectionBCardLove from './LSectionBCardLove.vue';
 
 interface Props {
-  activeLoveNumber?: number; // Number of active love icons (out of 50)
-  percentage?: number; // Percentage to display
-  activeColor?: string; // Color for active love icons
-  inactiveColor?: string; // Color for inactive love icons
+  activeLoveNumber: number; // Number of active love icons (out of 50)
+  percentage: number; // Percentage to display
+  activeColor: string; // Color for active love icons
+  inactiveColor: string; // Color for inactive love icons
+  active?: boolean; // Control animation activation
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  activeLoveNumber: 35,
-  percentage: 70,
-  activeColor: '#00A0E9',
-  inactiveColor: '#E0E0E0',
+  active: false,
 });
 
 // Calculate which love icons should be active (total 50 icons: 5 rows × 10 columns)
 const totalLoves = 50;
+const activeCount = ref(0);
+
 const loves = Array.from({ length: totalLoves }, (_, index) => ({
   id: index,
-  isActive: index < props.activeLoveNumber,
+  isActive: ref(false),
 }));
+
+// Store timeout ID for cleanup
+let animationTimeout: ReturnType<typeof setTimeout> | null = null;
+
+// Watch for active prop change to trigger sequential animation
+watch(
+  () => props.active,
+  (newActive, oldActive) => {
+    // Clear any existing animation timeout
+    if (animationTimeout) {
+      clearTimeout(animationTimeout);
+      animationTimeout = null;
+    }
+
+    if (newActive) {
+      // Reset all loves to inactive first when becoming active
+      loves.forEach((love) => {
+        love.isActive.value = false;
+      });
+      activeCount.value = 0;
+
+      // Sequentially activate loves
+      const animateLoves = () => {
+        // Ensure we don't attempt to access an out-of-range index
+        const target = Math.min(props.activeLoveNumber, loves.length);
+        if (activeCount.value < target) {
+          const current = loves[activeCount.value];
+          if (current) {
+            current.isActive.value = true;
+          }
+          activeCount.value++;
+          animationTimeout = setTimeout(animateLoves, 50); // 50ms delay between each activation
+        }
+      };
+      animateLoves();
+    }
+    // When becoming inactive, keep the current state (don't reset)
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
   <div class="secb-love-chart">
-    <!-- Love icons grid + percentage display -->
-    <div class="secb-love-chart__chart">
-      <!-- Love icons grid (5 rows × 10 columns) -->
-      <div class="secb-love-chart__loves">
-        <LSectionBCardLove
-          v-for="love in loves"
-          :key="love.id"
-          :color="love.isActive ? activeColor : inactiveColor"
-          class="secb-love-chart__love-icon"
-        />
-      </div>
+    <!-- Love icons grid -->
+    <div class="secb-love-chart__loves">
+      <LSectionBCardLove
+        v-for="love in loves"
+        :key="love.id"
+        class="secb-love-chart__love-icon"
+        :active="love.isActive.value"
+        :style="{
+          '--secb-love-chart-color': love.isActive.value
+            ? activeColor
+            : inactiveColor,
+        }"
+      />
+    </div>
 
-      <!-- Percentage display -->
-      <div class="secb-love-chart__percentage">
-        {{ percentage }}<span class="secb-love-chart__percentage-sign">%</span>
-      </div>
+    <!-- Percentage display -->
+    <div class="secb-love-chart__percentage">
+      {{ percentage }}<span class="secb-love-chart__percentage-sign">%</span>
     </div>
 
     <!-- Legend -->
     <div class="secb-love-chart__legend">
       <LSectionBCardLove
-        :color="activeColor"
+        :active="true"
+        :style="{ '--secb-love-chart-color': activeColor }"
         class="secb-love-chart__legend-icon"
       />
       <span>=2%</span>
@@ -82,21 +126,12 @@ const loves = Array.from({ length: totalLoves }, (_, index) => ({
     }
   }
 
-  &__chart {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-    margin-bottom: 1.5rem;
-  }
-
   &__loves {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(5, 1fr);
     gap: 0.5rem;
-    flex: 1;
+    margin-bottom: 1.5rem;
 
     @include rwd-min(sm) {
       gap: 0.75rem;
@@ -113,6 +148,7 @@ const loves = Array.from({ length: totalLoves }, (_, index) => ({
     font-weight: bold;
     line-height: 1;
     white-space: nowrap;
+    margin-bottom: 1.5rem;
 
     @include rwd-min(sm) {
       font-size: 5rem;
