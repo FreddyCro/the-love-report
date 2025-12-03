@@ -81,15 +81,15 @@ onMounted(() => {
       <LSectionA />
       <LSectionB />
 
-      <!-- GA test -->
-      <LSectionGA />
-
       <LSectionC />
       <LSectionD />
       <LSectionE />
       <LSectionF />
     </main>
     <AppFooter />
+
+    <!-- GA test -->
+    <LSectionGA />
     <!-- <TestAllImg /> -->
   </NuxtLayout>
 </template>

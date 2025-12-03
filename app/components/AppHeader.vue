@@ -26,11 +26,13 @@ const menu = [
   <div class="ls-header">
     <NmdProgressbar />
     <NmdHeader>
-      <NmdHeaderShare
-        :facebook="{ href: shareURL_fb }"
-        :line="{ href: shareURL_line, target: '_blank' }"
-        :twitter="{ href: shareURL_twitter }"
-      />
+      <ClientOnly>
+        <NmdHeaderShare
+          :facebook="{ href: shareURL_fb }"
+          :line="{ href: shareURL_line, target: '_blank' }"
+          :twitter="{ href: shareURL_twitter }"
+        />
+      </ClientOnly>
       <NmdHamburger />
     </NmdHeader>
     <NmdMenu>

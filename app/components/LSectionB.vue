@@ -2,6 +2,7 @@
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
 import LSectionBCard from './LSectionBCard.vue';
 import LSectionBIntro from './LSectionBIntro.vue';
+import LSectionBCardLoveChart from './LSectionBCardLoveChart.vue';
 import LPic from './LPic.vue';
 import { useIntersectionObserver } from '@vueuse/core';
 import { useActiveOnViewport } from '../composables/useActiveOnViewport';
@@ -11,6 +12,7 @@ type CartType = {
   title: string;
   description: string;
   note: string;
+  rotation: number; // Target rotation angle in degrees
 
   // small marker to choose which chart/placeholder to render
   chart?: 'chartA' | 'chartB' | 'chartC' | 'chartD' | 'chartE' | 'chartF';
@@ -21,36 +23,42 @@ const data: CartType[] = [
     title: str.card1Title,
     description: str.card1Description,
     note: str.card1Note,
+    rotation: 0,
     chart: 'chartA',
   },
   {
     title: str.card2Title,
     description: str.card2Description,
     note: str.card2Note,
+    rotation: -5,
     chart: 'chartB',
   },
   {
     title: str.card3Title,
     description: str.card3Description,
     note: str.card3Note,
+    rotation: 5,
     chart: 'chartC',
   },
   {
     title: str.card4Title,
     description: str.card4Description,
     note: str.card4Note,
+    rotation: -5,
     chart: 'chartD',
   },
   {
     title: str.card5Title,
     description: str.card5Description,
     note: str.card5Note,
+    rotation: 5,
     chart: 'chartE',
   },
   {
     title: str.card6Title,
     description: str.card6Description,
     note: str.card6Note,
+    rotation: 0,
     chart: 'chartF',
   },
 ];
@@ -190,19 +198,19 @@ async function handleAnimation(
 
   // Set initial state: cards are below viewport
   // tl.set(cards, { y: '100vh', opacity: 0 }, 0);
-  tl.set(cards, { y: '100vh', opacity: 1 }, 0);
+  tl.set(cards, { y: '100vh', opacity: 1, rotation: 0 }, 0);
 
   // Cards stack on top of intro after a delay (to give time for sticky effect)
   cards.forEach((card, index) => {
     const yOffset = index * 0; // Each card slightly offset from previous
-    const rotation = (index - 2.5) * 2; // Slight rotation for visual interest
+    const targetRotation = data[index]?.rotation || 0; // Use rotation from data
 
     tl.to(
       card,
       {
         y: yOffset,
         opacity: 1,
-        rotation: rotation,
+        rotation: targetRotation,
         duration: 1,
         ease: 'power2.out',
       },
@@ -285,14 +293,14 @@ function handleIsEntered(shouldEnter: boolean) {
             >
               <!-- Render different placeholder content based on item.chart (A..F) -->
               <div v-if="item.chart === 'chartA'" class="chart-a-placeholder">
-                <div class="chart-content" />
+                <LSectionBCardLoveChart />
               </div>
 
               <div
                 v-else-if="item.chart === 'chartB'"
                 class="chart-a-placeholder"
               >
-                <div class="chart-content" />
+                <LSectionBCardLoveChart />
               </div>
 
               <div v-else-if="item.chart === 'chartC'">
@@ -355,109 +363,96 @@ function handleIsEntered(shouldEnter: boolean) {
     padding-bottom: calc(4rem + 120px);
   }
 
-	&__pin-container {
-		position: relative;
-		width: 100%;
-		min-height: 100vh;
-	}
+  &__pin-container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+  }
 
-	&__intro-container {
-		position: relative; // Changed from absolute to allow normal document flow
-		width: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		z-index: 1; // Below cards
-		min-height: 100vh; // Ensure it takes full height
-	}
+  &__intro-container {
+    position: relative; // Changed from absolute to allow normal document flow
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1; // Below cards
+    min-height: 100vh; // Ensure it takes full height
+  }
 
-	&__cards-container {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 0 20px;
-		z-index: 2; // Above intro
-		pointer-events: none; // Allow interaction with intro before cards appear
+  &__cards-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    z-index: 2; // Above intro
+    pointer-events: none; // Allow interaction with intro before cards appear
 
-		// Re-enable pointer events for cards themselves
-		.state-card {
-			pointer-events: auto;
-		}
-	}
+    // Re-enable pointer events for cards themselves
+    .state-card {
+      pointer-events: auto;
+    }
+  }
 }
 
 .sec-b-transition {
-	// Only transition visual properties, not layout/transform properties
-	// This prevents conflicts with GSAP animations during fast scrolling
-	transition: background-color 1s, color 1s;
+  // Only transition visual properties, not layout/transform properties
+  // This prevents conflicts with GSAP animations during fast scrolling
+  transition: background-color 1s, color 1s;
 
-	/* LSectionBIntro.vue */
-	path,
-	rect {
-		transition: fill 1s, stroke 1s;
-	}
+  /* LSectionBIntro.vue */
+  path,
+  rect {
+    transition: fill 1s, stroke 1s;
+  }
 }
 
 .state-card-group {
-	position: relative;
-	width: 100%;
-	min-height: 100vh;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	opacity: 0;
-	transition: opacity 0.6s ease-in-out;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
 
-	&.is-ready {
-		opacity: 1;
-	}
+  &.is-ready {
+    opacity: 1;
+  }
 }
 
 .state-card-wrapper {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 // LSectionBCard.vue
 .state-card {
-	will-change: transform, opacity;
+  will-change: transform, opacity;
 }
 
 .chart-a-placeholder {
-	width: 100%;
-	height: 100%;
-	aspect-ratio: 308 / 269;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 308 / 269;
 
-	@include rwd-min(sm) {
-		aspect-ratio: 492 / 197;
-	}
+  @include rwd-min(sm) {
+    aspect-ratio: 492 / 197;
+  }
 
-	@include rwd-min(lg) {
-		aspect-ratio: 640 / 206;
-	}
-}
-
-.chart-content {
-	width: 100%;
-	height: 100%;
-	background-color: gray;
-	transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-	// Active state when in viewport
-	&.active {
-		transform: translateY(-4px) scale(1.01);
-		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-	}
+  @include rwd-min(lg) {
+    aspect-ratio: 640 / 206;
+  }
 }
 </style>

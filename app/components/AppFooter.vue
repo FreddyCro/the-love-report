@@ -24,12 +24,14 @@ const CURRENT_YEAR = new Date().getFullYear();
         <template #製作單位>{{ strFooter.editor7 }}</template>
         <template #上線日期>{{ strFooter.editor8 }}</template>
       </NmdAuthor>
-      <NmdShare
-        :facebook="{ href: shareURL_fb }"
-        :line="{ href: shareURL_line, target: '_blank' }"
-        :twitter="{ href: shareURL_twitter }"
-        twitter-icon="x"
-      />
+      <ClientOnly>
+        <NmdShare
+          :facebook="{ href: shareURL_fb }"
+          :line="{ href: shareURL_line, target: '_blank' }"
+          :twitter="{ href: shareURL_twitter }"
+          twitter-icon="x"
+        />
+      </ClientOnly>
     </div>
     <NmdToTop />
     <NmdFooter :year="CURRENT_YEAR" />
