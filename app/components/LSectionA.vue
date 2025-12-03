@@ -45,7 +45,9 @@ setup();
       <div
         :ref="el => frames[0]!.ref = el as HTMLElement"
         class="sec-a-part"
-        :class="{ active: frames[0]?.isEnter.value }"
+        :class="{
+          active: frames[0]?.isEnter.value,
+        }"
       >
         <LSectionAFrame1 :active="frames[0]?.isEnter.value ?? false" />
       </div>
@@ -71,7 +73,7 @@ setup();
       <!-- frame 4 -->
       <div
         :ref="el => frames[3]!.ref = el as HTMLElement"
-        class="sec-a-part"
+        class="sec-a-part sec-a-part--f4"
         :class="{ active: frames[3]?.isEnter.value }"
       >
         <LSectionAFrame4 :active="frames[3]?.isEnter.value ?? false" />
@@ -80,7 +82,7 @@ setup();
       <!-- frame 5 -->
       <div
         :ref="el => frames[4]!.ref = el as HTMLElement"
-        class="sec-a-part"
+        class="sec-a-part sect-a-part--f5"
         :class="{ active: frames[4]?.isEnter.value }"
       >
         <LSectionAFrame5 :active="frames[4]?.isEnter.value ?? false" />
@@ -115,6 +117,16 @@ setup();
 
   &:last-child {
     margin-bottom: 0;
+  }
+
+  &--f4 {
+    @include rwd-min(sm) {
+      margin-bottom: 84px;
+    }
+  }
+
+  &--f5 {
+    margin-top: 40px;
   }
 
   @include rwd-min(xs) {

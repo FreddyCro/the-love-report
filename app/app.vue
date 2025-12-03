@@ -77,6 +77,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <!-- <NuxtLayout style="opacity: 0.5"> -->
   <NuxtLayout>
     <AppHeader />
     <main class="main-content" :class="{ 'is-ready': isReady }">

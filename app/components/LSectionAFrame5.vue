@@ -32,36 +32,38 @@ const cssTimings = {
           :use2x="false"
           :webp="true"
         />
-      </div>
 
-      <!-- text 1 -->
-      <div class="l-seca-f5__text1-wrap l-p">
-        <LChatBubble :shadow="true" pointer="bottom-left">
-          {{ str.frame5_1 }}
-        </LChatBubble>
-      </div>
+        <!-- text 1 -->
+        <div class="l-seca-f5__text1-wrap l-p">
+          <LChatBubble :shadow="true" pointer="bottom-left">
+            {{ str.frame5_1 }}
+          </LChatBubble>
+        </div>
 
-      <!-- text 2 -->
-      <div class="l-seca-f5__text2-wrap l-p">
-        <LChatBubble :shadow="true" pointer="bottom-left">
-          {{ str.frame5_2 }}
-        </LChatBubble>
+        <!-- text 2 -->
+        <div class="l-seca-f5__text2-wrap l-p">
+          <LChatBubble :shadow="true" pointer="bottom-left">
+            {{ str.frame5_2 }}
+          </LChatBubble>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss">
+@use '@/assets/styles/mixins' as *;
+
 .l-seca-f5 {
   /* Animation timing variables - synced from animationTimings.ts */
   --seca-f5-img-duration: v-bind('cssTimings.imgDuration');
   --seca-f5-text1-duration: v-bind('cssTimings.text1Duration');
   --seca-f5-text2-duration: v-bind('cssTimings.text2Duration');
 
-  position: relative;
   width: 100%;
 
   &__img-wrap {
+    position: relative;
     width: calc(100% - var(--seca-px) * 2);
     max-width: var(--seca-img-max-w);
     margin: 0 auto;
@@ -73,13 +75,18 @@ const cssTimings = {
     top: 0;
     right: 0;
     opacity: var(--seca-animation-opacity-start);
+    transform: translateX(100%);
   }
 
   &__text2-wrap {
-    position: absolute;
-    bottom: 0;
-    left: 0;
     opacity: var(--seca-animation-opacity-start);
+    transform: translateX(-100%);
+
+    @include rwd-min(sm) {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
   }
 
   &.active {
@@ -89,13 +96,17 @@ const cssTimings = {
     }
 
     .l-seca-f5__text1-wrap {
+      transform: translateX(0);
       opacity: 1;
-      transition: opacity var(--seca-f5-text1-duration) ease;
+      transition: transform var(--seca-f5-text1-duration) ease,
+        opacity var(--seca-f5-text1-duration) ease;
     }
 
     .l-seca-f5__text2-wrap {
+      transform: translateX(0);
       opacity: 1;
-      transition: opacity var(--seca-f5-text2-duration) ease;
+      transition: transform var(--seca-f5-text2-duration) ease,
+        opacity var(--seca-f5-text2-duration) ease;
     }
   }
 }
