@@ -8,11 +8,11 @@ import { useScroll, useIntersectionObserver } from '@vueuse/core';
 │ Frame    │ ACTIVE Conditions                │ INACTIVE Conditions                │
 ├──────────┼──────────────────────────────────┼────────────────────────────────────┤
 │ Frame 1  │ • ENTER (any direction)          │ • No automatic deactivation        │
-│          │   → Activate immediately         │ • Only resets on scroll to top     │
+│          │   → Activate immediately         │ • [REMOVED] Reset on scroll to top │
 │          │                                  │                                    │
 ├──────────┼──────────────────────────────────┼────────────────────────────────────┤
 │ Frame 2  │ • ENTER (any direction)          │ • No automatic deactivation        │
-│          │   + Previous frame active        │ • Only resets on scroll to top     │
+│          │   + Previous frame active        │ • [REMOVED] Reset on scroll to top │
 │          │   + Previous frame animation     │                                    │
 │          │     complete                     │                                    │
 │          │                                  │                                    │
@@ -28,17 +28,17 @@ import { useScroll, useIntersectionObserver } from '@vueuse/core';
 │          │                                  │                                    │
 ├──────────┼──────────────────────────────────┼────────────────────────────────────┤
 │ Frame 3-6│ • Same logic as Frame 2          │ • No automatic deactivation        │
-│          │   Must wait for previous frame   │ • Only resets on scroll to top     │
+│          │   Must wait for previous frame   │ • [REMOVED] Reset on scroll to top │
 │          │   to be active first             │                                    │
 └──────────┴──────────────────────────────────┴────────────────────────────────────┘
 
 ⚠️ Global Reset Condition:
-- When scroll position = 0px (page top): Reset ALL frames (1-6) and re-check viewport
+- [TEMPORARILY REMOVED] When scroll position = 0px (page top): Reset ALL frames (1-6) and re-check viewport
 
 Key Implementation Notes:
 - Frame 1: Uses createStrictHandler() - only responds to ENTER (no LEAVE deactivation)
 - Frame 2-6: Use createSequentialHandler() - sequential activation, no LEAVE deactivation
-- All frames stay active once activated until scroll-to-top reset
+- All frames stay active once activated (scroll-to-top reset temporarily disabled)
 - IntersectionObserver threshold: 0 (triggers as soon as any part is visible)
 - Initial viewport check: Runs 100ms after mount to handle pre-loaded frames
 - Watcher cleanup: Always cleanup before creating new watcher
@@ -428,25 +428,26 @@ export function useSequentialFrames(
   }
 
   /**
+   * [TEMPORARILY DISABLED]
    * Setup scroll-to-top reset watcher
    * Resets all frames when user scrolls to page top
    */
-  function setupScrollToTopReset() {
-    let hasScrolledDown = false;
+  // function setupScrollToTopReset() {
+  //   let hasScrolledDown = false;
 
-    watch(y, (scrollY) => {
-      // Track if user has scrolled down
-      if (scrollY > 100) {
-        hasScrolledDown = true;
-      }
+  //   watch(y, (scrollY) => {
+  //     // Track if user has scrolled down
+  //     if (scrollY > 100) {
+  //       hasScrolledDown = true;
+  //     }
 
-      // Reset only when scrolling back to top after scrolling down
-      if (scrollY === 0 && hasScrolledDown) {
-        hasScrolledDown = false;
-        resetAllFrames();
-      }
-    });
-  }
+  //     // Reset only when scrolling back to top after scrolling down
+  //     if (scrollY === 0 && hasScrolledDown) {
+  //       hasScrolledDown = false;
+  //       resetAllFrames();
+  //     }
+  //   });
+  // }
 
   /**
    * Watch frame intersection and call callback with state
@@ -499,8 +500,8 @@ export function useSequentialFrames(
         checkInitialFramesInViewport();
       }, initialCheckDelay);
 
-      // Setup scroll-to-top reset watcher
-      setupScrollToTopReset();
+      // [TEMPORARILY DISABLED] Setup scroll-to-top reset watcher
+      // setupScrollToTopReset();
     });
   }
 
