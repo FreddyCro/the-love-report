@@ -64,12 +64,16 @@
 			],
 			"images": [
 				{
-					"src": "/img/intimate_relationships_p0405_picsq02_luma__pcpadmob",
+					"src": "/img/intimate_relationships_p0405_picsq01_luma__pcpadmob",
 					"alt": "",
 					"desc": "對露瑪而言，伊傑並非AI工具，而是真實伴侶。",
 					"width": 474,
 					"height": 535,
-					"position": "center"
+					"position": "center",
+					"sequence": [
+						"/img/intimate_relationships_p0405_picsq01_luma__pcpadmob",
+						"/img/intimate_relationships_p0405_picsq02_luma__pcpadmob"
+					]
 				}
 			]
 		},

@@ -68,7 +68,7 @@ const isFlipped = (index: number) => {
 		<div
 			class="px-6 grid grid-cols-1 gap-y-6 mx-auto
 					sm:px-12 sm:grid-cols-2 sm:gap-y-12 sm:gap-x-8 sm:mt-[60px]
-					md:grid-cols-3 md:gap-x-12 md:gap-y-[60px] md:max-w-[1056px] md:px-0"
+					md:grid-cols-3 md:gap-x-12 md:gap-y-[60px] md:max-w-6xl"
 			>
 			<div
 				v-for="caseItem in cases"

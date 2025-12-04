@@ -1,10 +1,12 @@
 <script lang="ts" setup>
+import { onMounted, onBeforeUnmount, nextTick } from "vue";
 import sectionDData from "~/locales/section-d.json";
 import LPic from "./LPic.vue";
 import LSectionHeader from "./LSectionHeader.vue";
+import { useScrollAnimation } from "~/composables/useScrollAnimation";
 
 interface Story {
-	position: "left" | "right" | "center" | "centerLeft" | "centerRight";
+	position: "left" | "right";
 	name: string;
 	content: string;
 }
@@ -16,6 +18,7 @@ interface ImageItem {
 	width: number;
 	height: number;
 	position?: "left" | "right" | "center" | "centerLeft" | "centerRight";
+	sequence?: string[];
 }
 
 interface CaseItem {
@@ -23,7 +26,7 @@ interface CaseItem {
 	title: string;
 	desc: string;
 	stories: Story[];
-	images: ImageItem[];
+	images?: ImageItem[];
 }
 
 const imgPositionClasses = {
@@ -50,6 +53,75 @@ const getAvatarImage = (name: string) => {
 	}
 	return "";
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let scrollTriggers: any[] = [];
+
+onMounted(async () => {
+	const { gsap, ScrollTrigger } = await useScrollAnimation();
+
+	await nextTick();
+
+	// Story items 透明度動畫
+	const storyItems = document.querySelectorAll(".story-item");
+	storyItems.forEach((item) => {
+		gsap.set(item, { opacity: 0.3 });
+
+		const trigger = ScrollTrigger.create({
+			trigger: item,
+			start: "top 80%",
+			end: "bottom 10%",
+			onEnter: () => gsap.to(item, { opacity: 1, duration: 0.4, ease: "power2.out" }),
+			onLeave: () => gsap.to(item, { opacity: 0.3, duration: 0.4, ease: "power2.out" }),
+			onEnterBack: () => gsap.to(item, { opacity: 1, duration: 0.4, ease: "power2.out" }),
+			onLeaveBack: () => gsap.to(item, { opacity: 0.3, duration: 0.4, ease: "power2.out" }),
+		});
+		scrollTriggers.push(trigger);
+	});
+
+	// 圖片序列切換動畫
+	const sequenceContainers = document.querySelectorAll(".image-sequence-container");
+	sequenceContainers.forEach((container) => {
+		const images = container.querySelectorAll(".sequence-image");
+		if (images.length < 2) return;
+
+		const firstImage = images[0];
+		const secondImage = images[1];
+
+		gsap.set(firstImage, { opacity: 1 });
+		gsap.set(secondImage, { opacity: 0 });
+
+		const trigger = ScrollTrigger.create({
+			trigger: container,
+			start: "top 40%",
+			end: "bottom 10%",
+			onEnter: () => {
+				gsap.to(firstImage, { opacity: 0, duration: 0.5 });
+				gsap.to(secondImage, { opacity: 1, duration: 0.5 });
+			},
+			onLeave: () => {
+				gsap.to(firstImage, { opacity: 1, duration: 0.5 });
+				gsap.to(secondImage, { opacity: 0, duration: 0.5 });
+			},
+			onEnterBack: () => {
+				gsap.to(firstImage, { opacity: 0, duration: 0.5 });
+				gsap.to(secondImage, { opacity: 1, duration: 0.5 });
+			},
+			onLeaveBack: () => {
+				gsap.to(firstImage, { opacity: 1, duration: 0.5 });
+				gsap.to(secondImage, { opacity: 0, duration: 0.5 });
+			},
+		});
+		scrollTriggers.push(trigger);
+	});
+
+	ScrollTrigger.refresh();
+});
+
+onBeforeUnmount(() => {
+	scrollTriggers.forEach((trigger) => trigger.kill());
+	scrollTriggers = [];
+});
 </script>
 
 <template>
@@ -67,10 +139,10 @@ const getAvatarImage = (name: string) => {
 		<div
 			v-for="caseItem in cases"
 			:key="caseItem.index"
-			class="l-container pt-9 sm:pt-12"
+			class="pt-9 sm:pt-12"
 		>
 			<!-- Step Indicator -->
-			<div class="pt-5">
+			<div class="l-container pt-5">
 				<div class="section-d__step">
 					<p class="text-love-red-03">{{ caseItem.index }}</p>
 				</div>
@@ -85,7 +157,7 @@ const getAvatarImage = (name: string) => {
 				<div
 					v-for="(story, index) in caseItem.stories"
 					:key="index"
-					class="flex flex-col gap-3 sm:gap-6"
+					class="story-item flex flex-col gap-3 sm:gap-6"
 					:class="{
 						'sm:flex-row': story.position === 'left',
 						'sm:flex-row-reverse': story.position === 'right',
@@ -144,27 +216,62 @@ const getAvatarImage = (name: string) => {
 				v-if="caseItem.images"
 				class="flex flex-wrap gap-6 max-w-[944px] m-auto mt-7 sm:mt-9"
 			>
-				<div
-					v-for="(image, index) in caseItem.images"
-					:key="index"
-					class="flex flex-col"
-					:class="
-						image.position ? imgPositionClasses[image.position] : 'mx-auto'
-					"
-					:style="`width: ${image.width}px;`"
-				>
-					<LPic
-						:src="image.src"
-						ext="jpg"
-						:use-prefix="false"
-						:use2x="false"
-						:use-webp="true"
-						:width="image.width"
-						:height="image.height"
-						classname="w-full h-auto"
-					/>
-					<p class="mt-2 pic-info">{{ image.desc }}</p>
-				</div>
+				<!-- 有 sequence 的圖片：使用 pin + 切換動畫 -->
+				<template v-for="(image, index) in caseItem.images" :key="index">
+					<div
+						v-if="image.sequence && image.sequence.length > 1"
+						class="image-sequence-container flex flex-col"
+						:class="
+							image.position ? imgPositionClasses[image.position] : 'mx-auto'
+						"
+						:style="`width: ${image.width}px;`"
+					>
+						<div
+							class="relative"
+							:style="`width: ${image.width}px; height: ${image.height}px;`"
+						>
+							<div
+								v-for="(seqSrc, seqIndex) in image.sequence"
+								:key="seqIndex"
+								class="sequence-image absolute inset-0"
+							>
+								<LPic
+									:src="seqSrc"
+									ext="jpg"
+									:use-prefix="false"
+									:use2x="false"
+									:use-webp="true"
+									:width="image.width"
+									:height="image.height"
+									classname="w-full h-auto"
+								/>
+							</div>
+						</div>
+						<p class="mt-2 pic-info">{{ image.desc }}</p>
+					</div>
+
+					<!-- 一般圖片：無 sequence -->
+					<div
+						v-else
+						class="flex flex-col"
+						:class="
+							image.position ? imgPositionClasses[image.position] : 'mx-auto'
+						"
+						:style="`width: ${image.width}px;`"
+					>
+						<LPic
+							:src="image.src"
+							ext="jpg"
+							:use-prefix="false"
+							:use2x="false"
+							:use-webp="true"
+							:width="image.width"
+							:height="image.height"
+							classname="w-full h-auto"
+						/>
+						<p class="mt-2 pic-info">{{ image.desc }}</p>
+					</div>
+				</template>
 			</div>
 		</div>
 	</section>
@@ -190,4 +297,5 @@ const getAvatarImage = (name: string) => {
 		}
 	}
 }
+
 </style>
