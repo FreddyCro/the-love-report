@@ -153,7 +153,7 @@ onBeforeUnmount(() => {
 			</div>
 
 			<!-- Stories -->
-			<div class="flex flex-col gap-7 sm:gap-9 max-w-[944px] m-auto mt-9 sm:mt-12">
+			<div class="flex flex-col gap-7 sm:gap-9 max-w-[944px] m-auto mt-9 sm:mt-12 px-5 xs:px-6 sm:px-0">
 				<div
 					v-for="(story, index) in caseItem.stories"
 					:key="index"
@@ -214,26 +214,23 @@ onBeforeUnmount(() => {
 			<!-- Images -->
 			<div
 				v-if="caseItem.images"
-				class="flex flex-wrap gap-6 max-w-[944px] m-auto mt-7 sm:mt-9"
+				class="flex flex-wrap gap-6 max-w-[944px] m-auto mt-7 sm:mt-9 px-5 xs:px-6 sm:px-0"
 			>
 				<!-- 有 sequence 的圖片：使用 pin + 切換動畫 -->
 				<template v-for="(image, index) in caseItem.images" :key="index">
 					<div
 						v-if="image.sequence && image.sequence.length > 1"
-						class="image-sequence-container flex flex-col"
+						class="image-sequence-container flex flex-col max-w-full"
 						:class="
 							image.position ? imgPositionClasses[image.position] : 'mx-auto'
 						"
-						:style="`width: ${image.width}px;`"
 					>
-						<div
-							class="relative"
-							:style="`width: ${image.width}px; height: ${image.height}px;`"
-						>
+						<div class="relative w-full">
 							<div
 								v-for="(seqSrc, seqIndex) in image.sequence"
 								:key="seqIndex"
-								class="sequence-image absolute inset-0"
+								class="sequence-image"
+								:class="{ 'absolute inset-0': seqIndex > 0 }"
 							>
 								<LPic
 									:src="seqSrc"
@@ -257,7 +254,6 @@ onBeforeUnmount(() => {
 						:class="
 							image.position ? imgPositionClasses[image.position] : 'mx-auto'
 						"
-						:style="`width: ${image.width}px;`"
 					>
 						<LPic
 							:src="image.src"

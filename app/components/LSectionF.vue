@@ -66,14 +66,14 @@ const isFlipped = (index: number) => {
 
 		<!-- Cards Grid -->
 		<div
-			class="px-6 grid grid-cols-1 gap-y-6 mx-auto
+			class=" px-5 xs:px-6 grid grid-cols-1 gap-y-6 mx-auto
 					sm:px-12 sm:grid-cols-2 sm:gap-y-12 sm:gap-x-8 sm:mt-[60px]
 					md:grid-cols-3 md:gap-x-12 md:gap-y-[60px] md:max-w-6xl"
 			>
 			<div
 				v-for="caseItem in cases"
 				:key="caseItem.index"
-				class="perspective-[1000px] cursor-pointer h-[430px] sm:h-[500px]"
+				class="perspective-[1000px] cursor-pointer"
 				:class="{
 					'sm:-mt-15':
 						caseItem.index === 1 ||
@@ -85,29 +85,27 @@ const isFlipped = (index: number) => {
 				@click="toggleCard(caseItem.index)"
 			>
 				<div
-					class="relative w-full h-full transition-transform duration-600 transform-3d"
+					class="relative w-full transition-transform duration-600 transform-3d grid"
 					:class="{ 'transform-[rotateY(180deg)]': isFlipped(caseItem.index) }"
 				>
 					<!-- Front Side (Question) -->
 					<div
-						class="absolute w-full h-full backface-hidden rounded-[20px] p-[30px] border-2 border-love-red-02 overflow-hidden bg-white"
+						class="relative col-start-1 row-start-1 backface-hidden rounded-[20px] p-5 pb-20 border-2 border-love-red-02 overflow-hidden bg-white"
 					>
 						<h4 class="mb-3 text-black section-f__card-title font-bold">{{ caseItem.title }}</h4>
 						<h5 class="mb-5 text-black section-f__card-question font-bold">
 							{{ caseItem.content.question }}
 						</h5>
-						<div class="mb-5">
-							<LPic
-								:src="caseItem.content.image"
-								ext="jpg"
-								default="pad"
-								:srcset="['pad', 'mob']"
-								:use2x="false"
-								:webp="true"
-								:width="280"
-								:height="211"
-							/>
-						</div>
+						<LPic
+							:src="caseItem.content.image"
+							ext="jpg"
+							default="pad"
+							:srcset="['pad', 'mob']"
+							:use2x="false"
+							:webp="true"
+							:width="280"
+							:height="211"
+						/>
 						<div
 							class="absolute bottom-0 right-0 w-[100px] h-[100px] bg-love-red-02 rounded-tl-[100px] overflow-hidden hover:w-[125px] hover:h-[125px] hover:rounded-tl-[125px] transition-all duration-300"
 						>
@@ -127,7 +125,7 @@ const isFlipped = (index: number) => {
 
 					<!-- Back Side (Answer) -->
 					<div
-						class="absolute w-full h-full backface-hidden rounded-[20px] p-5 border-2 border-love-red-02 overflow-hidden rotate-y-180 bg-love-red-02"
+						class="relative col-start-1 row-start-1 backface-hidden rounded-[20px] p-5 pb-20 border-2 border-love-red-02 overflow-hidden rotate-y-180 bg-love-red-02"
 					>
 						<h3 class="mb-5 text-black l-h3 font-bold">專家解答</h3>
 						<p class="l-p text-black">{{ caseItem.content.answer }}</p>

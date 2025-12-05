@@ -121,11 +121,18 @@ const cardConstants = computed(() => {
 			SIDE_PADDING: 119,
 			VISIBLE_AVATARS: 4,
 		};
-	} else {
+	} else if (width >= 414) {
 		return {
 			CARD_WIDTH: 280,
 			CARD_GAP: 20,
 			SIDE_PADDING: 24,
+			VISIBLE_AVATARS: 3,
+		};
+	} else {
+		return {
+			CARD_WIDTH: 280,
+			CARD_GAP: 20,
+			SIDE_PADDING: 20,
 			VISIBLE_AVATARS: 3,
 		};
 	}
@@ -287,8 +294,9 @@ const getTransformX = computed(() => {
 			<div
 				v-for="caseItem in cases"
 				:key="caseItem.id"
-				class="bg-white rounded-[20px] border-2 border-love-blue-02  pt-[18px] pb-[65px] px-[18px]  relative overflow-hidden shrink-0 w-full max-w-70 max-h-[450px]
+				class="cursor-pointer bg-white rounded-[20px] border-2 border-love-blue-02  pt-[18px] pb-[65px] px-[18px]  relative overflow-hidden shrink-0 w-full max-w-70 max-h-[450px]
 						sm:rounded-[30px] sm:pt-10 sm:px-[26px] sm:pb-[50px] sm:max-w-[561px] sm:max-h-[486px]"
+				@click="openDialog(caseItem)"
 					>
 				<div class="flex gap-6 mb-7 flex-col sm:flex-row">
 					<div class="w:100% h:100% sm:w-[154px] sm:h-[158px] py-0.5">
@@ -336,7 +344,6 @@ const getTransformX = computed(() => {
 				<button
 					class="section-c__corner-button absolute right-4 bottom-5 w-5 h-5 cursor-pointer"
 					aria-label="查看更多"
-					@click="openDialog(caseItem)"
 				>
 					<LPic
 						src="/img/button_card_plus_corner"
@@ -362,7 +369,7 @@ const getTransformX = computed(() => {
 						@wheel.prevent
 						@touchmove.prevent
 					>
-						<div class="relative mx-15 max-w-[944px]">
+						<div class="relative mx-15 max-w-[944px] overflow-hidden rounded-[30px] bg-white border-2 border-love-blue-02">
 							<!-- Close Button -->
 							<button
 								class="absolute top-3 right-3 z-10 cursor-pointer w-10 h-10 rounded-full bg-love-blue-02 flex items-center justify-center"
@@ -383,12 +390,12 @@ const getTransformX = computed(() => {
 							</button>
 
 							<div
-								class="section-c__dialog bg-white rounded-[30px] border-2 border-love-blue-02 py-15 px-8 sm:p-15 lg:py-15 lg:px-20 max-h-[83vh] overflow-y-auto overscroll-contain"
+								class="section-c__dialog py-15 px-8 sm:p-15 lg:py-15 lg:px-20 max-h-[83vh] overflow-y-auto overscroll-contain"
 								@wheel.stop
 								@touchmove.stop
 							>
 								<!-- Dialog Content -->
-								<div v-if="dialogCase" class="space-y-6 pr-8">
+								<div v-if="dialogCase" class="space-y-6">
 									<div
 										v-for="(section, sectionIndex) in dialogCase.sections"
 										:key="sectionIndex"
