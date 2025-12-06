@@ -26,7 +26,7 @@ setup();
 
 <template>
   <section
-    class="sec-a l-article pt-(--navbar-height) bg-black-6 overflow-hidden"
+    class="sec-a l-article pt-(--navbar-height) bg-black-6 overflow-hidden pb-20"
   >
     <!-- visually hidden for seo -->
     <h1 class="visually-hidden">

@@ -130,6 +130,7 @@ onBeforeUnmount(() => {
 
 <template>
 	<section
+		id="ai-companion"
 		class="section-d min-h-screen l-article relative bg-love-red-01 rounded-[70px] -mt-[70px] pt-12 pb-20 sm:rounded-[100px] sm:-mt-[100px] sm:pt-20 sm:pb-[100px] lg:rounded-[120px] lg:-mt-30 lg:pb-30"
 	>
 		<LSectionHeader

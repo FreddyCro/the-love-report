@@ -1,5 +1,5 @@
 // @ts-check
-import withNuxt from './.nuxt/eslint.config.mjs'
+import withNuxt from './.nuxt/eslint.config.mjs';
 
 export default withNuxt(
   // Your custom configs here
@@ -10,6 +10,9 @@ export default withNuxt(
       '@typescript-eslint/no-explicit-any': 'off',
       // Allow usage of `v-html` in Vue templates (disable the rule that forbids it)
       'vue/no-v-html': 'off',
+      // Enforce no self-closing syntax for HTML void elements like <source>, <img>, <br>, etc.
+      // This makes `<source>` preferred over `<source/>` in templates.
+      'vue/html-self-closing': 'off',
     },
   }
-)
+);
