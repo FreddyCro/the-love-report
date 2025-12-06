@@ -11,6 +11,13 @@ type TextStory = {
 	name: string;
 	content: string;
 	type?: undefined;
+	image?: {
+		src: string;
+		alt: string;
+		desc: string;
+		width: number;
+		height: number;
+	};
 };
 
 type ImageStory = {
@@ -32,12 +39,6 @@ interface CaseItem {
 	desc: string;
 	stories: Story[];
 }
-
-// const imgPositionClasses = {
-// 	left: "mx-auto sm:mr-auto sm:ml-0",
-// 	right: "mx-auto sm:ml-auto sm:mr-0",
-// 	center: "mx-auto"
-// };
 
 const content = {
 	title: sectionDData.title,
@@ -155,59 +156,37 @@ onBeforeUnmount(() => {
 				<h5 class="pt-3 l-h5 font-bold">{{ caseItem.desc }}</h5>
 			</div>
 
-			<!-- Stories & Images -->
 			<div class="flex flex-col gap-7 sm:gap-9 section-d__container m-auto mt-9 sm:mt-12 px-5 xs:px-6 sm:px-0">
 				<template v-for="(story, index) in caseItem.stories" :key="index">
 					<!-- 圖片型 story -->
 					<div
-						v-if="story.type === 'image'"
-						:class="[
-							story.sequence && story.sequence.length > 1
-								? 'image-sequence-container flex flex-col max-w-full'
-								: 'flex flex-col',
-							// story.position ? imgPositionClasses[story.position] : 'mx-auto',
-							'mt-1 sm:mt-3 mx-auto'
-						]"
+						v-if="story.type === 'image' && story.sequence"
+						class="t-1 sm:mt-3 mx-auto image-sequence-container flex flex-col max-w-full"
 					>
-						<template v-if="story.sequence && story.sequence.length > 1">
-							<div class="relative w-full">
-								<div
-									v-for="(seqSrc, seqIndex) in story.sequence"
-									:key="seqIndex"
-									class="sequence-image"
-									:class="{ 'absolute inset-0': seqIndex > 0 }"
-								>
-									<LPic
-										:src="seqSrc"
-										ext="jpg"
-										:use-prefix="false"
-										:use2x="false"
-										:use-webp="true"
-										:width="story.width"
-										:height="story.height"
-										classname="w-full h-auto"
-									/>
-								</div>
+						<div class="relative w-full" :style="`max-width: ${story.width}px;`">
+							<div
+								v-for="(seqSrc, seqIndex) in story.sequence"
+								:key="seqIndex"
+								class="sequence-image"
+								:class="{ 'absolute inset-0': seqIndex > 0 }"
+							>
+								<LPic
+									:src="seqSrc"
+									ext="jpg"
+									:use-prefix="false"
+									:use2x="false"
+									:use-webp="true"
+									:width="story.width"
+									:height="story.height"
+									classname="w-full h-auto"
+								/>
 							</div>
 							<p class="mt-2 pic-info">{{ story.desc }}</p>
-						</template>
-						<template v-else>
-							<LPic
-								:src="story.src"
-								ext="jpg"
-								:use-prefix="false"
-								:use2x="false"
-								:use-webp="true"
-								:width="story.width"
-								:height="story.height"
-								classname="w-full h-auto"
-							/>
-							<p class="mt-2 pic-info">{{ story.desc }}</p>
-						</template>
+						</div>
 					</div>
 					<!-- 文字型 story -->
 					<div
-						v-else
+						v-else-if="!story.type"
 						class="story-item flex flex-col gap-3 sm:gap-6"
 						:class="{
 							'sm:flex-row': story.position === 'left',
@@ -249,15 +228,28 @@ onBeforeUnmount(() => {
 							</h4>
 							<!-- Content -->
 							<p
-								class="bg-white px-5 py-4 max-w-100 lg:max-w-[547px] l-p"
+								class="bg-white px-5 py-4 l-p max-w-[547px]"
 								:class="
 									story.position === 'left'
-										? 'rounded-tr-[10px] rounded-b-[10px]'
-										: 'rounded-tl-[10px] rounded-b-[10px]'
+										? 'rounded-tr-[10px] rounded-b-[10px] mr-[38px] sm:mr-0'
+										: 'rounded-tl-[10px] rounded-b-[10px] ml-[38px] sm:ml-0'
 								"
 							>
 								{{ story.content }}
 							</p>
+							<div v-if="story.image" class="mt-7 sm:mt-9 max-w-[547px]">
+								<LPic
+									:src="story.image.src"
+									ext="jpg"
+									:use-prefix="false"
+									:use2x="false"
+									:use-webp="true"
+									:width="story.image.width"
+									:height="story.image.height"
+									classname="w-full h-auto"
+								/>
+								<p class="mt-2 pic-info">{{ story.image.desc }}</p>
+							</div>
 						</div>
 					</div>
 				</template>
