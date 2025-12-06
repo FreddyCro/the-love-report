@@ -278,13 +278,24 @@ const imgBack2Paths = {
   &__img2-wrap {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    left: 50%;
+    width: calc(100% - var(--seca-px) * 2);
+    aspect-ratio: 280/556;
+    transform: translateX(-50%);
     opacity: 0;
 
+    @include rwd-min(xxs) {
+      aspect-ratio: 366/716;
+    }
+
+    @include rwd-min(sm) {
+      width: 672px;
+      aspect-ratio: 672/700;
+    }
+
     img {
-      /* object-fit: contain; */
+      width: 100%;
+      height: 100%;
       object-fit: cover;
     }
   }
@@ -350,6 +361,9 @@ const imgBack2Paths = {
 
     .l-seca-f1__img2-wrap {
       opacity: 1;
+      border: solid 2px var(--color-love-red-03);
+      border-radius: 10px;
+      overflow: hidden;
       transition: opacity var(--seca-f1-crossfade-duration)
         var(--seca-f1-crossfade-delay) ease;
     }
