@@ -204,7 +204,7 @@ const imgBack2Paths = {
 
       <!-- Read more -->
       <div
-        class="absolute bottom-0 left-1/2 flex flex-col items-center transform -translate-x-1/2 text-white"
+        class="absolute bottom-0.5 left-1/2 flex flex-col items-center transform -translate-x-1/2 text-white"
       >
         {{ str.readMore }}
         <div class="h-[60px] w-0.5 mt-0.5 bg-white" role="presentation" />

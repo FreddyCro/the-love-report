@@ -204,6 +204,7 @@ const getTransformX = computed(() => {
 
 <template>
 	<section
+		id="story"
 		class="section-c min-h-screen l-article bg-love-blue-01 relative overflow-x-hidden pt-12 pb-[130px] sm:pt-20 rounded-t-[70px] -mt-[70px] sm:rounded-t-[100px] sm:-mt-[100px] sm:pb-45 lg:rounded-t-[120px] lg:-mt-[120px] lg:pb-50"
 	>
 		<LSectionHeader

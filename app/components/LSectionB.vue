@@ -244,6 +244,7 @@ function handleIsEntered(shouldEnter: boolean) {
 
 <template>
   <section
+    id="insight"
     ref="sectionRef"
     class="sec-b l-article bg-black-6 sec-b-transition"
     :class="{

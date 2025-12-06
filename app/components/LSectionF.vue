@@ -36,7 +36,7 @@ const isFlipped = (index: number) => {
 </script>
 
 <template>
-	<section class="section-f min-h-screen l-article pb-15 sm:pb-30 md:pb-20">
+	<section id="analysis" class="section-f min-h-screen l-article pb-15 sm:pb-30 md:pb-20">
 		<LSectionHeader
 			:title="content.title"
 			:intro="content.intro"
