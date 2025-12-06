@@ -34,11 +34,10 @@ const toggleCard = (index: number) => {
 	flippedCards.value[index] = !wasFlipped;
 
 	// GA tracking: 常見問題－展開/關閉按鈕
-	const questionNum = `Q${index}`;
 	if (!wasFlipped) {
-		gaClickBtn(`question_${questionNum}打開`);
+		gaClickBtn(`question_Q${index}打開`);
 	} else {
-		gaClickBtn(`question_${questionNum}關閉`);
+		gaClickBtn(`question_Q${index}關閉`);
 	}
 };
 
