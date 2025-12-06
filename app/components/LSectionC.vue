@@ -4,6 +4,9 @@ import sectionCData from "~/locales/section-c.json";
 import LPic from "./LPic.vue";
 import LSectionHeader from "./LSectionHeader.vue";
 import { useScrollAnimation } from "~/composables/useScrollAnimation";
+import useTrackingEvent from "~/composables/useTrackingEvent";
+
+const { gaClickAnchor, gaClickSeries, gaClickBtn } = useTrackingEvent();
 
 interface Section {
 	title: string;
@@ -47,6 +50,9 @@ const openDialog = async (caseItem: CaseItem) => {
 	dialogCase.value = caseItem;
 	isDialogOpen.value = true;
 
+	// GA tracking: 個案故事－展開按鈕
+	gaClickSeries(`story_${caseItem.name}打開`);
+
 	// 暫停 Lenis 平滑滾動
 	if (!lenisInstance) {
 		const { lenis } = await useScrollAnimation();
@@ -56,6 +62,11 @@ const openDialog = async (caseItem: CaseItem) => {
 };
 
 const closeDialog = () => {
+	// GA tracking: 個案故事－關閉按鈕
+	if (dialogCase.value) {
+		gaClickBtn(`story_${dialogCase.value.name}關閉`);
+	}
+
 	isDialogOpen.value = false;
 	dialogCase.value = null;
 
@@ -65,17 +76,23 @@ const closeDialog = () => {
 
 // 切換到上一個
 const goToPrevious = () => {
+	// GA tracking: 個案故事－錨點切換按鈕
+	gaClickBtn('left_左側按鈕');
 	activeAvatarIndex.value = Math.max(0, activeAvatarIndex.value - 1);
 };
 
 // 切換到下一個
 const goToNext = () => {
+	// GA tracking: 個案故事－錨點切換按鈕
+	gaClickBtn('right_右側按鈕');
 	const maxIndex = cases.length - 1;
 	activeAvatarIndex.value = Math.min(maxIndex, activeAvatarIndex.value + 1);
 };
 
 // 設定 active 頭像
-const setActiveAvatar = (index: number) => {
+const setActiveAvatar = (index: number, caseName: string) => {
+	// GA tracking: 個案故事－錨點按鈕
+	gaClickAnchor(caseName);
 	activeAvatarIndex.value = index;
 };
 
@@ -249,7 +266,7 @@ const getTransformX = computed(() => {
 							: 'w-[50px] h-[50px] sm:w-20 sm:h-20 opacity-30'
 					"
 					class="shrink-0 cursor-pointer transition-all duration-300"
-					@click="setActiveAvatar(index)"
+					@click="setActiveAvatar(index, caseItem.name)"
 				>
 					<LPic
 						:src="caseItem.imgCircle"

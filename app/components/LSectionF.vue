@@ -3,6 +3,9 @@ import { ref } from "vue";
 import sectionFData from "~/locales/section-f.json";
 import LPic from "./LPic.vue";
 import LSectionHeader from "./LSectionHeader.vue";
+import useTrackingEvent from "~/composables/useTrackingEvent";
+
+const { gaClickBtn } = useTrackingEvent();
 
 interface CaseContent {
 	question: string;
@@ -27,7 +30,16 @@ const cases = sectionFData.cases as CaseItem[];
 const flippedCards = ref<Record<number, boolean>>({});
 
 const toggleCard = (index: number) => {
-	flippedCards.value[index] = !flippedCards.value[index];
+	const wasFlipped = flippedCards.value[index] || false;
+	flippedCards.value[index] = !wasFlipped;
+
+	// GA tracking: 常見問題－展開/關閉按鈕
+	const questionNum = `Q${index}`;
+	if (!wasFlipped) {
+		gaClickBtn(`question_${questionNum}打開`);
+	} else {
+		gaClickBtn(`question_${questionNum}關閉`);
+	}
 };
 
 const isFlipped = (index: number) => {
