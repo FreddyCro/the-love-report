@@ -257,7 +257,7 @@ const cssTimings = {
     }
 
     .l-seca-f4__text1-wrap {
-      transform: translateX(calc(100vw - 252px - 27px));
+      transform: translateX(calc(100vw - 252px - 21px));
       opacity: 1;
       transition: transform var(--seca-f4-text1-duration) ease,
         opacity var(--seca-f4-text1-duration) ease;
@@ -274,7 +274,7 @@ const cssTimings = {
     }
 
     .l-seca-f4__text2-wrap {
-      transform: translateX(calc((100vw - 252px - 27px) * -1));
+      transform: translateX(calc((100vw - 252px - 21px) * -1));
       opacity: 1;
       transition: transform var(--seca-f4-text2-duration)
           var(--seca-f4-text2-delay) ease,
@@ -292,7 +292,7 @@ const cssTimings = {
     }
 
     .l-seca-f4__text3-wrap {
-      transform: translateX(calc(100vw - 252px - 27px));
+      transform: translateX(calc(100vw - 252px - 21px));
       opacity: 1;
       transition: transform var(--seca-f4-text3-duration)
           var(--seca-f4-text3-delay) ease,
@@ -311,7 +311,7 @@ const cssTimings = {
         opacity var(--seca-f4-text4-duration) var(--seca-f4-text4-delay) ease;
 
       @include rwd-min(sm) {
-        transform: translateX(-27px);
+        transform: translateX(-21px);
       }
     }
   }
