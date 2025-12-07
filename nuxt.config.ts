@@ -3,6 +3,10 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
 
+  devServer: {
+    host: '0.0.0.0',
+    port: 3000,
+  },
   // Enable server-side rendering and use Nitro prerendering for static sites (replace `generate.fallback`)
   ssr: true,
   nitro: {
