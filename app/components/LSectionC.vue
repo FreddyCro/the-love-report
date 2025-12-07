@@ -386,7 +386,7 @@ const getTransformX = computed(() => {
 						@wheel.prevent
 						@touchmove.prevent
 					>
-						<div class="relative mx-15 max-w-[944px] overflow-hidden rounded-[30px] bg-white border-2 border-love-blue-02">
+						<div class="relative mx-5 xs:6 sm:mx-15 mx-max-w-[944px] overflow-hidden rounded-[30px] bg-white border-2 border-love-blue-02">
 							<!-- Close Button -->
 							<button
 								class="absolute top-3 right-3 z-10 cursor-pointer w-10 h-10 rounded-full bg-love-blue-02 flex items-center justify-center"
@@ -407,7 +407,7 @@ const getTransformX = computed(() => {
 							</button>
 
 							<div
-								class="section-c__dialog py-15 px-8 sm:p-15 lg:py-15 lg:px-20 max-h-[83vh] overflow-y-auto overscroll-contain"
+								class="section-c__dialog py-15 px-8 sm:p-15 lg:py-15 lg:px-20 h-[86vh] xs:h-[83vh] overflow-y-auto overscroll-contain"
 								@wheel.stop
 								@touchmove.stop
 							>
