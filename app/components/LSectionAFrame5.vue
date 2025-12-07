@@ -42,7 +42,7 @@ const cssTimings = {
 
         <!-- text 2 -->
         <div class="l-seca-f5__text2-wrap l-p">
-          <LChatBubble :shadow="true" pointer="bottom-left">
+          <LChatBubble :shadow="true" pointer="bottom-right">
             {{ str.frame5_2 }}
           </LChatBubble>
         </div>
