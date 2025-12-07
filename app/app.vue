@@ -4,11 +4,11 @@ import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
 import LSectionA from './components/LSectionA.vue';
 import LSectionB from './components/LSectionB.vue';
-import LSectionGA from './components/LSectionGA.vue';
 import LSectionC from './components/LSectionC.vue';
 import LSectionD from './components/LSectionD.vue';
 import LSectionE from './components/LSectionE.vue';
 import LSectionF from './components/LSectionF.vue';
+// import TestGA from './components/TestGA.vue';
 // import TestAllImg from './components/TestAllImg.vue';
 import { useTracking } from '~/assets/js/tracking.js';
 import meta from './locales/meta.json';
@@ -91,8 +91,7 @@ onMounted(() => {
     </main>
     <AppFooter />
 
-    <!-- GA test -->
-    <LSectionGA />
+    <!-- <TestGA /> -->
     <!-- <TestAllImg /> -->
   </NuxtLayout>
 </template>
