@@ -82,7 +82,7 @@ setup();
       <!-- frame 5 -->
       <div
         :ref="el => frames[4]!.ref = el as HTMLElement"
-        class="sec-a-part sect-a-part--f5"
+        class="sec-a-part sec-a-part--f5"
         :class="{ active: frames[4]?.isEnter.value }"
       >
         <LSectionAFrame5 :active="frames[4]?.isEnter.value ?? false" />
@@ -127,6 +127,10 @@ setup();
 
   &--f5 {
     margin-top: 40px;
+
+    @include rwd-min(sm) {
+      margin-bottom: 40px;
+    }
   }
 
   @include rwd-min(xs) {

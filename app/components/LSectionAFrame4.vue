@@ -309,10 +309,10 @@ const cssTimings = {
       transition: transform var(--seca-f4-text4-duration)
           var(--seca-f4-text4-delay) ease,
         opacity var(--seca-f4-text4-duration) var(--seca-f4-text4-delay) ease;
-    }
 
-    @include rwd-min(sm) {
-      transform: translateX(-27px);
+      @include rwd-min(sm) {
+        transform: translateX(-27px);
+      }
     }
   }
 }
