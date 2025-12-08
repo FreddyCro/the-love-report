@@ -93,7 +93,7 @@ const { setup: setupActiveTracking, activeIndex } = useActiveOnViewport(
 // Pin intro when it reaches viewport center
 const {
   isPinned,
-  introStyle,
+  introActive,
   placeholderStyle,
   indicator1Style,
   indicator2Style,
@@ -101,7 +101,7 @@ const {
 } = useIntroPin({
   sectionRef,
   introContainerClass: JS_CLASSES.INTRO_CONTAINER,
-  introClass: JS_CLASSES.INTRO,
+  introClassName: JS_CLASSES.INTRO,
   showIndicators: true, // Set to false in production
 });
 
@@ -306,9 +306,15 @@ function handleIsEntered(shouldEnter: boolean) {
       ></div>
 
       <div
-        :class="JS_CLASSES.INTRO"
-        class="intro l-container"
-        :style="introStyle"
+        :class="[
+          JS_CLASSES.INTRO,
+          'l-container',
+          'sec-b__intro',
+          {
+            'sec-b__intro--pinned': introActive === 'pinned',
+            'sec-b__intro--unpinned': introActive === 'unpinned',
+          },
+        ]"
       >
         <div class="intro-title flex justify-center mb-[38px] lg:mb-10">
           <!-- Indicators for debugging -->
@@ -445,6 +451,29 @@ function handleIsEntered(shouldEnter: boolean) {
     align-items: center;
     justify-content: center;
     z-index: 1;
+  }
+
+  &__intro {
+    // Pinned state: fixed at viewport center
+    &--pinned {
+      position: fixed;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    // Unpinned state: absolute at section bottom
+    &--unpinned {
+      position: absolute;
+      top: auto;
+      bottom: 50vh;
+      left: 0;
+      width: 100%;
+      transform: translateY(50%);
+      z-index: 1;
+    }
   }
 
   &__cards-container {

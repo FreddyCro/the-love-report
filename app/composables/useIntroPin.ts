@@ -3,13 +3,13 @@ import { ref, onMounted, onBeforeUnmount, type Ref } from 'vue';
 interface UseIntroPinOptions {
   sectionRef: Ref<HTMLElement | null>;
   introContainerClass: string;
-  introClass: string;
+  introClassName: string;
   showIndicators?: boolean; // Show visual indicators for debugging
 }
 
 interface UseIntroPinReturn {
   isPinned: Ref<boolean>;
-  introStyle: Ref<Record<string, string>>;
+  introActive: Ref<'pinned' | 'unpinned' | ''>;
   placeholderStyle: Ref<Record<string, string>>;
   indicator1Style: Ref<Record<string, string>>;
   indicator2Style: Ref<Record<string, string>>;
@@ -31,12 +31,12 @@ export const useIntroPin = (options: UseIntroPinOptions): UseIntroPinReturn => {
   const {
     sectionRef,
     introContainerClass,
-    introClass,
+    introClassName,
     showIndicators = false,
   } = options;
 
   const isPinned = ref(false);
-  const introStyle = ref<Record<string, string>>({});
+  const introActive = ref<'pinned' | 'unpinned' | ''>('');
   const placeholderStyle = ref<Record<string, string>>({});
   const indicator1Style = ref<Record<string, string>>({});
   const indicator2Style = ref<Record<string, string>>({});
@@ -118,15 +118,8 @@ export const useIntroPin = (options: UseIntroPinOptions): UseIntroPinReturn => {
       isPinned.value = true;
       introHeight = introContainerRect.height;
 
-      // Set intro to fixed at viewport center
-      introStyle.value = {
-        position: 'fixed',
-        top: '50%',
-        left: '0',
-        width: '100%',
-        transform: 'translateY(-50%)',
-        zIndex: '1',
-      };
+      // Set intro to pinned state
+      introActive.value = 'pinned';
 
       // Set placeholder to maintain layout space
       placeholderStyle.value = {
@@ -143,15 +136,7 @@ export const useIntroPin = (options: UseIntroPinOptions): UseIntroPinReturn => {
         isPinned.value = false;
 
         // Intro should stick to section, positioned at bottom - 50vh
-        introStyle.value = {
-          position: 'absolute',
-          top: 'auto',
-          bottom: '50vh',
-          left: '0',
-          width: '100%',
-          transform: 'translateY(50%)',
-          zIndex: '1',
-        };
+        introActive.value = 'unpinned';
 
         placeholderStyle.value = {};
       } else if (!introBelowCenter) {
@@ -159,7 +144,7 @@ export const useIntroPin = (options: UseIntroPinOptions): UseIntroPinReturn => {
         isPinned.value = false;
 
         // Reset to normal flow
-        introStyle.value = {};
+        introActive.value = '';
         placeholderStyle.value = {};
       }
     }
@@ -183,7 +168,7 @@ export const useIntroPin = (options: UseIntroPinOptions): UseIntroPinReturn => {
 
     // Get intro elements
     introContainer = sectionRef.value.querySelector(`.${introContainerClass}`);
-    intro = sectionRef.value.querySelector(`.${introClass}`);
+    intro = sectionRef.value.querySelector(`.${introClassName}`);
 
     if (!introContainer || !intro) {
       console.warn('Intro elements not found');
@@ -200,7 +185,7 @@ export const useIntroPin = (options: UseIntroPinOptions): UseIntroPinReturn => {
 
   return {
     isPinned,
-    introStyle,
+    introActive,
     placeholderStyle,
     indicator1Style,
     indicator2Style,
