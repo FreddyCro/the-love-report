@@ -102,7 +102,7 @@ const {
   sectionRef,
   introContainerClass: JS_CLASSES.INTRO_CONTAINER,
   introClassName: JS_CLASSES.INTRO,
-  showIndicators: true, // Set to false in production
+  showIndicators: false,
 });
 
 // Setup intersection observer for viewport tracking
@@ -184,19 +184,20 @@ async function handleAnimation(
   if (cards.length === 0) return;
 
   // Use IntersectionObserver to optimize: only create ScrollTrigger when cards enter viewport
+  let isAnimationCreated = false;
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && !isAnimationCreated) {
           // Cards container entered viewport, create GSAP animation
           createCardsAnimation(gsap, ScrollTrigger, cards);
-          observer.disconnect(); // Only observe once
+          isAnimationCreated = true;
         }
       });
     },
     {
       root: null,
-      rootMargin: '200px', // Start animation 200px before entering viewport
+      rootMargin: '300px', // Start animation 300px before entering viewport
       threshold: 0,
     }
   );
@@ -212,17 +213,22 @@ function createCardsAnimation(
   const cardsContainer = document.querySelector('.sec-b__cards-container');
   if (!cardsContainer) return;
 
+  // Calculate end position based on number of cards and stagger delay
+  const totalDuration = (cards.length - 1) * CARD_STAGGER_DELAY + 1; // Last card duration
+  const scrollDistance = totalDuration * 100; // 100vh per second of animation
+
   // Create timeline for the stacking animation (only controls cards, not intro)
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: cardsContainer,
       start: 'top top',
 
-      // Extend the scroll distance for smoother animation
-      end: '+=400%',
+      // Calculate end based on animation duration
+      end: `+=${scrollDistance}%`,
 
       // Pin (freeze) only the cards container, not intro
       pin: true,
+      pinSpacing: true, // Ensure proper spacing after pin
       scrub: 0.5,
 
       // Smooth pin start
