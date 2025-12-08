@@ -6,6 +6,7 @@ import LSectionBCardLoveChart from './LSectionBCardLoveChart.vue';
 import LPic from './LPic.vue';
 import { useIntersectionObserver } from '@vueuse/core';
 import { useActiveOnViewport } from '../composables/useActiveOnViewport';
+import { useIntroPin } from '../composables/useIntroPin';
 import str from '../locales/section-b.json';
 
 type CartType = {
@@ -63,6 +64,9 @@ const data: CartType[] = [
   },
 ];
 
+// Animation constants
+const CARD_STAGGER_DELAY = 1.0; // Delay between each card animation (in seconds)
+
 // JS-prefixed selector class names (used by script to query DOM)
 // Simplified keys + values for concise usage
 const JS_CLASSES = {
@@ -85,6 +89,21 @@ const { setup: setupActiveTracking, activeIndex } = useActiveOnViewport(
   '.js-chart-content',
   { threshold: 0.5 }
 );
+
+// Pin intro when it reaches viewport center
+const {
+  isPinned,
+  introActive,
+  placeholderStyle,
+  indicator1Style,
+  indicator2Style,
+  indicator3Style,
+} = useIntroPin({
+  sectionRef,
+  introContainerClass: JS_CLASSES.INTRO_CONTAINER,
+  introClassName: JS_CLASSES.INTRO,
+  showIndicators: true, // Set to false in production
+});
 
 // Setup intersection observer for viewport tracking
 onMounted(() => {
@@ -150,57 +169,76 @@ async function handleAnimation(
   ScrollTrigger: any,
   _lenis: any
 ): Promise<void> {
-  const section = document.querySelector(`.${JS_CLASSES.SECTION}`);
-  // const intro = document.querySelector(`.${JS_CLASSES.INTRO}`);
+  const cardsContainer = document.querySelector('.sec-b__cards-container');
 
-  if (!section) {
-    console.warn('Section not found');
+  if (!cardsContainer) {
+    console.warn('Cards container not found');
     return;
   }
 
   // Prefer JS-prefixed selector for script queries; fall back to regular class if missing
-  let cards = section.querySelectorAll(`.${JS_CLASSES.CARD}`);
+  let cards = cardsContainer.querySelectorAll(`.${JS_CLASSES.CARD}`);
   if (!cards || cards.length === 0) {
-    cards = section.querySelectorAll('.state-card');
+    cards = cardsContainer.querySelectorAll('.state-card');
   }
   if (cards.length === 0) return;
 
-  // Create timeline for the stacking animation
+  // Use IntersectionObserver to optimize: only create ScrollTrigger when cards enter viewport
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Cards container entered viewport, create GSAP animation
+          createCardsAnimation(gsap, ScrollTrigger, cards);
+          observer.disconnect(); // Only observe once
+        }
+      });
+    },
+    {
+      root: null,
+      rootMargin: '200px', // Start animation 200px before entering viewport
+      threshold: 0,
+    }
+  );
+
+  observer.observe(cardsContainer);
+}
+
+function createCardsAnimation(
+  gsap: any,
+  ScrollTrigger: any,
+  cards: NodeListOf<Element>
+) {
+  const cardsContainer = document.querySelector('.sec-b__cards-container');
+  if (!cardsContainer) return;
+
+  // Create timeline for the stacking animation (only controls cards, not intro)
   const tl = gsap.timeline({
     scrollTrigger: {
-      trigger: section,
+      trigger: cardsContainer,
       start: 'top top',
 
       // Extend the scroll distance for smoother animation
       end: '+=400%',
 
-      // Pin (freeze) the section
+      // Pin (freeze) only the cards container, not intro
       pin: true,
-      scrub: 0.5, // Reduced from 1 to 0.5 for faster response during quick scrolling
+      scrub: 0.5,
 
       // Smooth pin start
       anticipatePin: 1,
       invalidateOnRefresh: true,
 
       // Control refresh behavior to prevent scroll jumps on resize
-      refreshPriority: 0, // Lower priority for refresh calculations
-      fastScrollEnd: true, // Only update after fast scroll ends
-      onRefresh: () => {
-        // Reset cards position when scrolltrigger refreshes
-        // gsap.set(cards, { y: '100vh', opacity: 0 });
-        // gsap.set(cards, { y: '100vh', opacity: 1 });
-      },
+      refreshPriority: 0,
+      fastScrollEnd: true,
     },
   });
 
-  // Intro is already visible (no animation needed for intro)
-  // It will be pinned naturally when section is pinned
-
   // Set initial state: cards are below viewport
-  // tl.set(cards, { y: '100vh', opacity: 0 }, 0);
   tl.set(cards, { y: '100vh', opacity: 1, rotation: 0 }, 0);
 
-  // Cards stack on top of intro after a delay (to give time for sticky effect)
+  // Cards stack on top of intro (first card appears immediately)
   cards.forEach((card, index) => {
     const yOffset = index * 0; // Each card slightly offset from previous
     const targetRotation = data[index]?.rotation || 0; // Use rotation from data
@@ -214,7 +252,7 @@ async function handleAnimation(
         duration: 1,
         ease: 'power2.out',
       },
-      0.5 + index * 0.5 // Small delay then stagger each card
+      index * CARD_STAGGER_DELAY // First card starts immediately (no initial delay)
     );
   });
 
@@ -223,17 +261,8 @@ async function handleAnimation(
     scrollTriggerInstances.push(tl.scrollTrigger);
   }
 
-  // Refresh ScrollTrigger after setup to ensure correct calculations
-  // Use requestAnimationFrame to wait for next paint cycle (more reliable than setTimeout)
-  return new Promise<void>((resolve) => {
-    requestAnimationFrame(() => {
-      ScrollTrigger.refresh();
-      // Wait one more frame to ensure refresh is complete
-      requestAnimationFrame(() => {
-        resolve();
-      });
-    });
-  });
+  // Refresh ScrollTrigger
+  ScrollTrigger.refresh();
 }
 
 function handleIsEntered(shouldEnter: boolean) {
@@ -246,116 +275,151 @@ function handleIsEntered(shouldEnter: boolean) {
   <section
     id="insight"
     ref="sectionRef"
-    class="sec-b l-article bg-black-6 sec-b-transition"
+    class="sec-b l-article relative bg-black-6 sec-b-transition"
     :class="{
       'is-entered': isEntered,
       'bg-love-dark': isEntered,
       'text-white': isEntered,
     }"
   >
-    <!-- Pin container: intro + cards -->
-    <div :class="JS_CLASSES.SECTION" class="sec-b__pin-container">
-      <!-- intro -->
-      <div :class="JS_CLASSES.INTRO_CONTAINER" class="sec-b__intro-container">
-        <div :class="JS_CLASSES.INTRO" class="intro l-container">
-          <!-- title -->
-          <div class="intro-title flex justify-center mb-[38px] lg:mb-10">
-            <LSectionBIntro :is-entered="isEntered" />
+    <!-- Indicator 1: Section top + 50vh -->
+    <div
+      v-if="indicator1Style.position"
+      :style="indicator1Style"
+      class="indicator-1"
+    />
 
-            <h2 class="visually-hidden">
-              {{ str.sectionTitle1 }} {{ str.sectionTitle2 }}
-              {{ str.sectionTitle3 }}
-            </h2>
-          </div>
-          <p class="l-p sec-b-transition">{{ str.introText1 }}</p>
-          <p class="l-p sec-b-transition">{{ str.introText2 }}</p>
-        </div>
-      </div>
+    <!-- Indicator 3: Section bottom - 50vh -->
+    <div
+      v-if="indicator3Style.position"
+      :style="indicator3Style"
+      class="indicator-3"
+    />
 
-      <!-- cards -->
-      <div class="sec-b__cards-container">
-        <div
-          :class="[
-            'state-card-group',
-            JS_CLASSES.GROUP,
-            { 'is-ready': isAnimationReady },
-          ]"
-        >
+    <!-- intro (pinned by custom composable) -->
+    <div :class="JS_CLASSES.INTRO_CONTAINER" class="sec-b__intro-container">
+      <!-- Placeholder to maintain space when intro is fixed -->
+      <div
+        v-if="isPinned"
+        :style="placeholderStyle"
+        class="intro-placeholder"
+      ></div>
+
+      <div
+        :class="[
+          JS_CLASSES.INTRO,
+          'l-container',
+          'sec-b__intro',
+          {
+            'sec-b__intro--pinned': introActive === 'pinned',
+            'sec-b__intro--unpinned': introActive === 'unpinned',
+          },
+        ]"
+      >
+        <div class="intro-title flex justify-center mb-[38px] lg:mb-10">
+          <!-- Indicators for debugging -->
           <div
-            v-for="(item, index) in data"
-            :key="index"
-            :class="['state-card-wrapper', JS_CLASSES.WRAPPER]"
+            v-if="indicator2Style.position"
+            :style="indicator2Style"
+            class="indicator-2"
+          />
+
+          <!-- title -->
+          <LSectionBIntro :is-entered="isEntered" />
+
+          <h2 class="visually-hidden">
+            {{ str.sectionTitle1 }} {{ str.sectionTitle2 }}
+            {{ str.sectionTitle3 }}
+          </h2>
+        </div>
+        <p class="l-p sec-b-transition">{{ str.introText1 }}</p>
+        <p class="l-p sec-b-transition">{{ str.introText2 }}</p>
+      </div>
+    </div>
+
+    <!-- cards (controlled by GSAP pin) -->
+    <div :class="JS_CLASSES.SECTION" class="sec-b__cards-container">
+      <div
+        :class="[
+          'state-card-group',
+          JS_CLASSES.GROUP,
+          { 'is-ready': isAnimationReady },
+        ]"
+      >
+        <div
+          v-for="(item, index) in data"
+          :key="index"
+          :class="['state-card-wrapper', JS_CLASSES.WRAPPER]"
+        >
+          <LSectionBCard
+            :class="['state-card', JS_CLASSES.CARD]"
+            :title="item.title"
+            :description="item.description"
+            :note="item.note"
           >
-            <LSectionBCard
-              :class="['state-card', JS_CLASSES.CARD]"
-              :title="item.title"
-              :description="item.description"
-              :note="item.note"
+            <!-- Render different placeholder content based on item.chart (A..F) -->
+            <div
+              v-if="item.chart === 'chartA'"
+              class="js-chart-content chart-a-placeholder"
             >
-              <!-- Render different placeholder content based on item.chart (A..F) -->
-              <div
-                v-if="item.chart === 'chartA'"
-                class="js-chart-content chart-a-placeholder"
-              >
-                <LSectionBCardLoveChart
-                  :active-love-number="35"
-                  :percentage="70"
-                  active-color="var(--color-love-blue-03)"
-                  inactive-color="var(--color-love-blue-01)"
-                  :active="activeIndex === 0"
-                />
-              </div>
+              <LSectionBCardLoveChart
+                :active-love-number="35"
+                :percentage="70"
+                active-color="var(--color-love-blue-03)"
+                inactive-color="var(--color-love-blue-01)"
+                :active="activeIndex === 0"
+              />
+            </div>
 
-              <div
-                v-else-if="item.chart === 'chartB'"
-                class="js-chart-content chart-a-placeholder"
-              >
-                <LSectionBCardLoveChart
-                  :active-love-number="20"
-                  :percentage="40"
-                  active-color="var(--color-love-red-03)"
-                  inactive-color="var(--color-love-red-01)"
-                  :active="activeIndex === 1"
-                />
-              </div>
+            <div
+              v-else-if="item.chart === 'chartB'"
+              class="js-chart-content chart-a-placeholder"
+            >
+              <LSectionBCardLoveChart
+                :active-love-number="20"
+                :percentage="40"
+                active-color="var(--color-love-red-03)"
+                inactive-color="var(--color-love-red-01)"
+                :active="activeIndex === 1"
+              />
+            </div>
 
-              <div v-else-if="item.chart === 'chartC'">
-                <LPic
-                  src="/img/intimate_relationships_p0202_card03_info"
-                  ext="svg"
-                  :use2x="false"
-                  :webp="false"
-                />
-              </div>
+            <div v-else-if="item.chart === 'chartC'">
+              <LPic
+                src="/img/intimate_relationships_p0202_card03_info"
+                ext="svg"
+                :use2x="false"
+                :webp="false"
+              />
+            </div>
 
-              <div v-else-if="item.chart === 'chartD'">
-                <LPic
-                  src="/img/intimate_relationships_p0202_card04_info01"
-                  ext="svg"
-                  :use2x="false"
-                  :webp="false"
-                />
-              </div>
+            <div v-else-if="item.chart === 'chartD'">
+              <LPic
+                src="/img/intimate_relationships_p0202_card04_info01"
+                ext="svg"
+                :use2x="false"
+                :webp="false"
+              />
+            </div>
 
-              <div v-else-if="item.chart === 'chartE'">
-                <LPic
-                  src="/img/intimate_relationships_p0202_card05_info"
-                  ext="svg"
-                  :use2x="false"
-                  :webp="false"
-                />
-              </div>
+            <div v-else-if="item.chart === 'chartE'">
+              <LPic
+                src="/img/intimate_relationships_p0202_card05_info"
+                ext="svg"
+                :use2x="false"
+                :webp="false"
+              />
+            </div>
 
-              <div v-else-if="item.chart === 'chartF'">
-                <LPic
-                  src="/img/intimate_relationships_p0202_card06_info"
-                  ext="svg"
-                  :use2x="false"
-                  :webp="false"
-                />
-              </div>
-            </LSectionBCard>
-          </div>
+            <div v-else-if="item.chart === 'chartF'">
+              <LPic
+                src="/img/intimate_relationships_p0202_card06_info"
+                ext="svg"
+                :use2x="false"
+                :webp="false"
+              />
+            </div>
+          </LSectionBCard>
         </div>
       </div>
     </div>
@@ -379,28 +443,43 @@ function handleIsEntered(shouldEnter: boolean) {
     padding-bottom: calc(4rem + 120px);
   }
 
-  &__pin-container {
+  &__intro-container {
     position: relative;
     width: 100%;
     min-height: 100vh;
-  }
-
-  &__intro-container {
-    position: relative; // Changed from absolute to allow normal document flow
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1; // Below cards
-    min-height: 100vh; // Ensure it takes full height
+    z-index: 1;
+  }
+
+  &__intro {
+    // Pinned state: fixed at viewport center
+    &--pinned {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+
+    // Unpinned state: absolute at section bottom
+    &--unpinned {
+      position: absolute;
+      top: auto;
+      bottom: 50vh;
+      left: 0;
+      width: 100%;
+      transform: translateY(50%);
+      z-index: 1;
+    }
   }
 
   &__cards-container {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative; // Changed from absolute to allow GSAP pin to work
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;

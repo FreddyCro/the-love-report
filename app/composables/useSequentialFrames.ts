@@ -7,12 +7,19 @@ import { useScroll, useIntersectionObserver } from '@vueuse/core';
 ├──────────┬──────────────────────────────────┬────────────────────────────────────┤
 │ Frame    │ ACTIVE Conditions                │ INACTIVE Conditions                │
 ├──────────┼──────────────────────────────────┼────────────────────────────────────┤
-│ Frame 1  │ • ENTER (any direction)          │ • No automatic deactivation        │
-│          │   → Activate immediately         │ • [REMOVED] Reset on scroll to top │
+│ Frame 1  │ Case A: Page loaded at top       │ • No automatic deactivation        │
+│          │   • ENTER (any direction)        │ • [REMOVED] Reset on scroll to top │
+│          │   → Activate immediately         │                                    │
+│          │                                  │                                    │
+│          │ Case B: Page NOT loaded at top   │                                    │
+│          │   • ENTER (any direction)        │                                    │
+│          │   → Activate immediately         │                                    │
+│          │   (skip sequential wait)         │                                    │
 │          │                                  │                                    │
 ├──────────┼──────────────────────────────────┼────────────────────────────────────┤
-│ Frame 2  │ • ENTER (any direction)          │ • No automatic deactivation        │
-│          │   + Previous frame active        │ • [REMOVED] Reset on scroll to top │
+│ Frame 2  │ Case A: Page loaded at top       │ • No automatic deactivation        │
+│          │   • ENTER (any direction)        │ • [REMOVED] Reset on scroll to top │
+│          │   + Previous frame active        │                                    │
 │          │   + Previous frame animation     │                                    │
 │          │     complete                     │                                    │
 │          │                                  │                                    │
@@ -26,18 +33,34 @@ import { useScroll, useIntersectionObserver } from '@vueuse/core';
 │          │      Frame 1 active AND          │                                    │
 │          │      animation complete          │                                    │
 │          │                                  │                                    │
+│          │ Case B: Page NOT loaded at top   │                                    │
+│          │   • ENTER (any direction)        │                                    │
+│          │   → Activate immediately         │                                    │
+│          │   (skip sequential wait)         │                                    │
+│          │                                  │                                    │
 ├──────────┼──────────────────────────────────┼────────────────────────────────────┤
 │ Frame 3-6│ • Same logic as Frame 2          │ • No automatic deactivation        │
 │          │   Must wait for previous frame   │ • [REMOVED] Reset on scroll to top │
 │          │   to be active first             │                                    │
+│          │   (unless page NOT loaded at top)│                                    │
 └──────────┴──────────────────────────────────┴────────────────────────────────────┘
 
 ⚠️ Global Reset Condition:
 - [TEMPORARILY REMOVED] When scroll position = 0px (page top): Reset ALL frames (1-6) and re-check viewport
 
+⚠️ Page Entry Position Detection:
+- isPageLoadedAtTop: Tracks if page was loaded with scroll Y < 100px
+- If page loaded at top (Y < 100): Normal sequential animation flow
+- If page NOT loaded at top (Y >= 100): All frames in viewport activate immediately
+  → Skip sequential wait logic
+  → Skip animation duration wait
+  → Provide instant content visibility for mid-page entry
+
 Key Implementation Notes:
 - Frame 1: Uses createStrictHandler() - only responds to ENTER (no LEAVE deactivation)
+  → Checks isPageLoadedAtTop for direct activation
 - Frame 2-6: Use createSequentialHandler() - sequential activation, no LEAVE deactivation
+  → Checks isPageLoadedAtTop for direct activation
 - All frames stay active once activated (scroll-to-top reset temporarily disabled)
 - IntersectionObserver threshold: 0 (triggers as soon as any part is visible)
 - Initial viewport check: Runs 100ms after mount to handle pre-loaded frames
@@ -114,6 +137,10 @@ export function useSequentialFrames(
   // Prevent race conditions during reset
   let resetInProgress = false;
 
+  // Track if page was loaded at top (for direct activation logic)
+  // Will be set in onMounted after scroll position is available
+  const isPageLoadedAtTop = ref(true);
+
   // Watch each frame's isEnter state and manage animation completion
   frames.forEach((frame, index) => {
     watch(frame.isEnter, (newValue, oldValue) => {
@@ -150,6 +177,8 @@ export function useSequentialFrames(
   /**
    * Create handler for Frame 1 (strict mode)
    * Activates immediately on any ENTER, never deactivates (except on scroll-to-top reset)
+   * 
+   * Special case: If page is NOT loaded at top, directly activate without sequential wait
    */
   function createStrictHandler(frameIndex: number) {
     return (state: FrameState) => {
@@ -312,6 +341,9 @@ export function useSequentialFrames(
    * Create handler for Frame 2-6 (sequential mode)
    * Activates on ENTER when previous frame is active
    * Never deactivates (only resets on scroll-to-top)
+   * 
+   * Special case: If page is NOT loaded at top, directly activate frames in viewport
+   * without waiting for previous frame animations
    */
   function createSequentialHandler(frameIndex: number) {
     return (state: FrameState) => {
@@ -331,6 +363,13 @@ export function useSequentialFrames(
         // Skip if already active
         if (frame.isEnter.value) return;
 
+        // If page was NOT loaded at top, directly activate (skip animation wait)
+        if (!isPageLoadedAtTop.value) {
+          activateFrame(frameIndex);
+          return;
+        }
+
+        // Normal flow: wait for previous frame
         if (canActivateByPreviousFrame(frameIndex)) {
           activateFrame(frameIndex);
         } else {
@@ -410,6 +449,7 @@ export function useSequentialFrames(
 
   /**
    * Check and activate frames that are initially in viewport on page load
+   * If page is NOT loaded at top, directly activate all frames in viewport
    */
   function checkInitialFramesInViewport() {
     frames.forEach((frame, index) => {
@@ -418,7 +458,13 @@ export function useSequentialFrames(
       // Skip if not in viewport or already activated
       if (!isInViewport || frame.isEnter.value) return;
 
-      // Check if can activate based on previous frame
+      // If page NOT loaded at top, directly activate (skip animation wait)
+      if (!isPageLoadedAtTop.value) {
+        activateFrame(index);
+        return;
+      }
+
+      // Normal flow: check previous frame
       if (canActivateByPreviousFrame(index)) {
         activateFrame(index);
       } else {
@@ -487,6 +533,9 @@ export function useSequentialFrames(
    */
   function setup() {
     onMounted(() => {
+      // Detect page entry position after mount (when scroll position is available)
+      isPageLoadedAtTop.value = y.value < 100;
+
       frames.forEach((frame, i) => {
         const handler =
           i === 0 ? createStrictHandler(i) : createSequentialHandler(i);
