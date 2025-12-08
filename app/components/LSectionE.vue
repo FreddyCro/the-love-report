@@ -55,7 +55,7 @@ const cases = sectionEData.cases as CaseItem[];
 			/>
 
 			<!-- Cases -->
-			<div v-for="caseItem in cases" :key="caseItem.index" class="mt-14 sm:mt-[68px]">
+			<div v-for="caseItem in cases" :key="caseItem.index" class="mt-14 sm:mt-17">
 				<!-- Step Indicator -->
 				<h3 class="section-e__step pb-2 mb-2 border-b border-black font-bold">
 					{{ caseItem.title }}
@@ -81,7 +81,7 @@ const cases = sectionEData.cases as CaseItem[];
 					<!-- Comment Block -->
 					<div
 						v-else-if="block.type === 'comment'"
-						class="px-6 py-2.5 border-2 max-w-[469px] mb-9 mx-auto"
+						class="px-6 py-2.5 border-2 max-w-117.25 mb-9 mx-auto"
 						:class="[
 							block.style?.color === 'red'
 								? 'border-love-red-03'
@@ -101,7 +101,7 @@ const cases = sectionEData.cases as CaseItem[];
 						<h5 v-if="block.title" class="l-h5 text-black font-bold">
 							{{ block.title }}
 						</h5>
-						<div class="mt-5 mx-auto max-w-[530px]">
+						<div class="mt-5 mx-auto max-w-132.5">
 							<LPic
 								v-if="block.img.src"
 								:src="block.img.src"

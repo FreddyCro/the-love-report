@@ -161,8 +161,8 @@
 
 /* Dialogbox - 共用標題對話框樣式 */
 .l-dialogbox {
-  width: 168px;
-  height: 70px;
+  width: 147px;
+  height: 64px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -170,8 +170,14 @@
   justify-content: center;
   margin: 0 auto;
   padding-top: 6px;
-  font-size: var(--mob-h3-font-size);
-  line-height: var(--mob-h3-line-height);
+  font-size: var(--mob-h4-font-size);
+  line-height: var(--mob-h4-line-height);
+  @include rwd-min(xs) {
+    width: 168px;
+    height: 70px;
+    font-size: var(--mob-h3-font-size);
+    line-height: var(--mob-h3-line-height);
+  }
   @include rwd-min(sm) {
     width: 192px;
     height: 80px;

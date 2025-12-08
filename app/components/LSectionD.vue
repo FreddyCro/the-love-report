@@ -131,7 +131,7 @@ onBeforeUnmount(() => {
 <template>
 	<section
 		id="ai-companion"
-		class="section-d min-h-screen l-article relative bg-love-red-01 rounded-[70px] -mt-[70px] pt-12 pb-20 sm:rounded-[100px] sm:-mt-[100px] sm:pt-20 sm:pb-[100px] lg:rounded-[120px] lg:-mt-30 lg:pb-30"
+		class="section-d min-h-screen l-article relative bg-love-red-01 rounded-[70px] -mt-17.5 pt-12 pb-20 sm:rounded-[100px] sm:-mt-25 sm:pt-20 sm:pb-25 lg:rounded-[120px] lg:-mt-30 lg:pb-30"
 	>
 		<LSectionHeader
 			:title="content.title"
@@ -147,7 +147,7 @@ onBeforeUnmount(() => {
 			class="pt-9 sm:pt-12"
 		>
 			<!-- Step Indicator -->
-			<div class="l-container pt-5 pb-6 sm:pb-12">
+			<div class="l-container pt-5 pb-9 lg:pb-12">
 				<div class="section-d__step">
 					<p class="text-love-red-03">{{ caseItem.index }}</p>
 				</div>
@@ -198,12 +198,12 @@ onBeforeUnmount(() => {
 					>
 						<!-- Avatar & Name (Mobile) -->
 						<div
-							class="flex gap-4 items-center sm:block sm:shrink-0 sm:w-[138px]"
+							class="flex gap-4 items-center sm:block sm:shrink-0 sm:w-34.5"
 							:class="
 								story.position === 'right' ? 'flex-row-reverse' : 'flex-row'
 							"
 						>
-							<div class="shrink-0 w-[100px] h-[100px] sm:w-[138px] sm:h-[138px]">
+							<div class="shrink-0 w-25 h-25 sm:w-34.5 sm:h-34.5">
 								<LPic
 									:src="getAvatarImage(story.name)"
 									ext="png"
@@ -229,16 +229,16 @@ onBeforeUnmount(() => {
 							</h4>
 							<!-- Content -->
 							<p
-								class="bg-white px-5 py-4 l-p max-w-[547px]"
+								class="bg-white px-5 py-4 l-p max-w-136.75"
 								:class="
 									story.position === 'left'
-										? 'rounded-tr-[10px] rounded-b-[10px] mr-[38px] sm:mr-0'
-										: 'rounded-tl-[10px] rounded-b-[10px] ml-[38px] sm:ml-0'
+										? 'rounded-tr-[10px] rounded-b-[10px] mr-9.5 sm:mr-0'
+										: 'rounded-tl-[10px] rounded-b-[10px] ml-9.5 sm:ml-0'
 								"
 							>
 								{{ story.content }}
 							</p>
-							<div v-if="story.image" class="mt-7 sm:mt-9 max-w-[547px]">
+							<div v-if="story.image" class="mt-7 sm:mt-9 max-w-136.75">
 								<LPic
 									:src="story.image.src"
 									ext="jpg"

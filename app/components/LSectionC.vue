@@ -222,7 +222,7 @@ const getTransformX = computed(() => {
 <template>
 	<section
 		id="story"
-		class="section-c min-h-screen l-article bg-love-blue-01 relative overflow-x-hidden pt-12 pb-[130px] sm:pt-20 rounded-t-[70px] -mt-[70px] sm:rounded-t-[100px] sm:-mt-[100px] sm:pb-45 lg:rounded-t-[120px] lg:-mt-[120px] lg:pb-50"
+		class="section-c min-h-screen l-article bg-love-blue-01 relative overflow-x-hidden pt-12 pb-32.5 sm:pt-20 rounded-t-[70px] -mt-17.5 sm:rounded-t-[100px] sm:-mt-25 sm:pb-45 lg:rounded-t-[120px] lg:-mt-30 lg:pb-50"
 	>
 		<LSectionHeader
 			:title="content.title"
@@ -233,11 +233,11 @@ const getTransformX = computed(() => {
 
 		<!-- Avatar Selection -->
 		<div
-			class="mt-9 mb-7 sm:my-9 flex justify-center items-center gap-2 sm:gap-4 max-w-[712px] mx-auto h-[70px] sm:h-[100px]"
+			class="mt-9 mb-7 sm:my-9 flex justify-center items-center gap-2 sm:gap-4 max-w-178 mx-auto h-17.5 sm:h-25"
 		>
 			<!-- Left Arrow -->
 			<button
-				class="w-[50px] h-[50px] shrink-0 transition-opacity duration-300"
+				class="w-12.5 h-12.5 shrink-0 transition-opacity duration-300"
 				:class="
 					canGoLeft ? 'opacity-100 cursor-pointer' : 'opacity-0 cursor-default'
 				"
@@ -263,8 +263,8 @@ const getTransformX = computed(() => {
 					:key="caseItem.id"
 					:class="
 						activeAvatarIndex === index
-							? 'w-[70px] h-[70px] sm:w-[100px] sm:h-[100px] opacity-100'
-							: 'w-[50px] h-[50px] sm:w-20 sm:h-20 opacity-30'
+							? 'w-17.5 h-17.5 sm:w-25 sm:h-25 opacity-100'
+							: 'w-12.5 h-12.5 sm:w-20 sm:h-20 opacity-30'
 					"
 					class="shrink-0 cursor-pointer transition-all duration-300"
 					@click="setActiveAvatar(index, caseItem.name)"
@@ -281,7 +281,7 @@ const getTransformX = computed(() => {
 
 			<!-- Right Arrow -->
 			<button
-				class="w-[50px] h-[50px] shrink-0 transition-opacity duration-300"
+				class="w-12.5 h-12.5 shrink-0 transition-opacity duration-300"
 				:class="
 					canGoRight ? 'opacity-100 cursor-pointer' : 'opacity-0 cursor-default'
 				"
@@ -312,12 +312,12 @@ const getTransformX = computed(() => {
 			<div
 				v-for="caseItem in cases"
 				:key="caseItem.id"
-				class="cursor-pointer bg-white rounded-[20px] border-2 border-love-blue-02  pt-[18px] pb-[65px] px-[18px]  relative overflow-hidden shrink-0 w-full max-w-70 max-h-[450px]
-						sm:rounded-[30px] sm:pt-10 sm:px-[26px] sm:pb-[50px] sm:max-w-[561px] sm:max-h-[486px]"
+				class="cursor-pointer bg-white rounded-[20px] border-2 border-love-blue-02  pt-4.5 pb-16.25 px-4.5 relative overflow-hidden shrink-0 w-full max-w-70 max-h-112.5
+						sm:rounded-[30px] sm:pt-10 sm:px-6.5 sm:pb-12.5 sm:max-w-140.25 sm:max-h-121.5"
 				@click="openDialog(caseItem)"
 					>
 				<div class="flex gap-6 mb-7 flex-col sm:flex-row">
-					<div class="w:100% h:100% sm:w-[154px] sm:h-[158px] py-0.5">
+					<div class="w:100% h:100% sm:w-38.5 sm:h-39.5 py-0.5">
 						<LPic
 							:src="caseItem.imgSquare"
 							ext="jpg"
@@ -387,10 +387,10 @@ const getTransformX = computed(() => {
 						@wheel.prevent
 						@touchmove.prevent
 					>
-						<div class="relative mx-5 xs:6 sm:mx-15 mx-max-w-[944px] overflow-hidden rounded-[30px] bg-white border-2 border-love-blue-02">
+						<div class="relative mx-5 xs:6 sm:mx-15 max-w-236 overflow-hidden rounded-[30px] bg-white border-2 border-love-blue-02">
 							<!-- Close Button -->
 							<button
-								class="absolute top-3 right-3 z-10 cursor-pointer w-10 h-10 rounded-full bg-love-blue-02 flex items-center justify-center"
+								class="absolute top-4 right-4 z-10 cursor-pointer w-10 h-10 rounded-full bg-love-blue-02 flex items-center justify-center"
 								aria-label="關閉"
 								@click="closeDialog"
 							>
@@ -418,7 +418,7 @@ const getTransformX = computed(() => {
 										v-for="(section, sectionIndex) in dialogCase.sections"
 										:key="sectionIndex"
 									>
-										<h4 class="text-love-red-03 mb-2 l-h5 font-bold">
+										<h4 class="text-love-red-03 mb-2 l-h4 font-bold">
 											{{ section.title }}
 										</h4>
 										<p

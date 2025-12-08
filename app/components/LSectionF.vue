@@ -78,13 +78,13 @@ const isFlipped = (index: number) => {
 		<!-- Cards Grid -->
 		<div
 			class=" px-5 xs:px-6 grid grid-cols-1 gap-y-6 mx-auto
-					sm:px-12 sm:grid-cols-2 sm:gap-y-12 sm:gap-x-8 sm:mt-[60px]
-					md:grid-cols-3 md:gap-x-12 md:gap-y-[60px] md:max-w-6xl"
+					sm:px-12 sm:grid-cols-2 sm:gap-y-12 sm:gap-x-8 sm:mt-15
+					md:grid-cols-3 md:gap-x-12 md:gap-y-15 md:max-w-6xl"
 			>
 			<div
 				v-for="caseItem in cases"
 				:key="caseItem.index"
-				class="perspective-[1000px] cursor-pointer"
+				class="perspective-midrange cursor-pointer"
 				:class="{
 					'sm:-mt-15':
 						caseItem.index === 1 ||
@@ -118,9 +118,9 @@ const isFlipped = (index: number) => {
 							:height="211"
 						/>
 						<div
-							class="absolute bottom-0 right-0 w-[100px] h-[100px] bg-love-red-02 rounded-tl-[100px] overflow-hidden hover:w-[125px] hover:h-[125px] hover:rounded-tl-[125px] transition-all duration-300"
+							class="absolute bottom-0 right-0 w-25 h-25 bg-love-red-02 rounded-tl-[100px] overflow-hidden hover:w-31.25 hover:h-31.25 hover:rounded-tl-[125px] transition-all duration-300"
 						>
-							<div class="absolute bottom-6 right-6 w-[30px] h-[30px]">
+							<div class="absolute bottom-6 right-6 w-7.5 h-7.5">
 								<LPic
 									src="/img/button_card_flip"
 									ext="svg"
@@ -141,9 +141,9 @@ const isFlipped = (index: number) => {
 						<h3 class="mb-5 text-black l-h3 font-bold">專家解答</h3>
 						<p class="l-p text-black">{{ caseItem.content.answer }}</p>
 						<div
-							class="absolute bottom-0 right-0 w-[100px] h-[100px] bg-white rounded-tl-[100px] overflow-hidden hover:w-[125px] hover:h-[125px] hover:rounded-tl-[125px] transition-all duration-300"
+							class="absolute bottom-0 right-0 w-25 h-25 bg-white rounded-tl-[100px] overflow-hidden hover:w-31.25 hover:h-31.25 hover:rounded-tl-[125px] transition-all duration-300"
 						>
-							<div class="absolute bottom-6 right-5 w-[30px] h-[30px]">
+							<div class="absolute bottom-6 right-5 w-7.5 h-7.5">
 								<LPic
 									src="/img/button_card_change_back"
 									ext="svg"
