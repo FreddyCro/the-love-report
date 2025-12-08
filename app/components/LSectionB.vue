@@ -446,10 +446,6 @@ function handleIsEntered(shouldEnter: boolean) {
   &__intro-container {
     position: relative;
     width: 100%;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     z-index: 1;
   }
 
@@ -458,9 +454,9 @@ function handleIsEntered(shouldEnter: boolean) {
     &--pinned {
       position: fixed;
       top: 50%;
-      left: 0;
+      left: 50%;
       width: 100%;
-      transform: translateY(-50%);
+      transform: translate(-50%, -50%);
       z-index: 1;
     }
 
