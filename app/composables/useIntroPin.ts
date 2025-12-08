@@ -175,6 +175,9 @@ export const useIntroPin = (options: UseIntroPinOptions): UseIntroPinReturn => {
       return;
     }
 
+    // Store initial intro height for consistent placeholder
+    introHeight = intro.offsetHeight;
+
     // Start RAF loop
     startRAF();
   });

@@ -446,6 +446,10 @@ function handleIsEntered(shouldEnter: boolean) {
   &__intro-container {
     position: relative;
     width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     z-index: 1;
   }
 
