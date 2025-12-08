@@ -63,6 +63,9 @@ const data: CartType[] = [
   },
 ];
 
+// Animation constants
+const CARD_STAGGER_DELAY = 1.0; // Delay between each card animation (in seconds)
+
 // JS-prefixed selector class names (used by script to query DOM)
 // Simplified keys + values for concise usage
 const JS_CLASSES = {
@@ -214,7 +217,7 @@ async function handleAnimation(
         duration: 1,
         ease: 'power2.out',
       },
-      0.5 + index * 0.5 // Small delay then stagger each card
+      0.5 + index * CARD_STAGGER_DELAY // Use constant for card spacing
     );
   });
 
