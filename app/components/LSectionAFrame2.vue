@@ -10,6 +10,7 @@ defineProps<{
 const timings = SECTION_A_FRAME_TIMINGS.FRAME_2;
 const cssTimings = {
   imgDuration: toCssTime(timings.IMG_DURATION),
+  imgDelay: toCssTime(timings.IMG_DELAY),
   textDuration: toCssTime(timings.TEXT_DURATION),
   textDelay: toCssTime(timings.TEXT_DELAY),
 };
@@ -50,6 +51,7 @@ const cssTimings = {
 .l-seca-f2 {
   /* Animation timing variables - synced from animationTimings.ts */
   --seca-f2-img-duration: v-bind('cssTimings.imgDuration');
+  --seca-f2-img-delay: v-bind('cssTimings.imgDelay');
   --seca-f2-text-duration: v-bind('cssTimings.textDuration');
   --seca-f2-text-delay: v-bind('cssTimings.textDelay');
 
@@ -84,7 +86,8 @@ const cssTimings = {
   &.active {
     .l-seca-f2__img-wrap {
       opacity: 1;
-      transition: opacity var(--seca-f2-img-duration) ease;
+      transition: opacity var(--seca-f2-img-duration) var(--seca-f2-img-delay)
+        ease;
     }
 
     .l-seca-f2__text-wrap {
