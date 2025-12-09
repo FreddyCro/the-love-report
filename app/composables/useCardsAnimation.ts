@@ -17,13 +17,13 @@ interface UseCardsAnimationOptions {
  * Composable for creating GSAP card stacking animation
  *
  * @param options - Configuration options
- * @returns Promise that resolves when animation setup is complete
+ * @returns Cleanup function to remove event listeners
  */
 export const useCardsAnimation = async (
   gsap: any,
   ScrollTrigger: any,
   options: UseCardsAnimationOptions
-): Promise<void> => {
+): Promise<(() => void) | undefined> => {
   const {
     cardsContainerClass,
     cardClass,
@@ -77,6 +77,26 @@ export const useCardsAnimation = async (
   );
 
   observer.observe(cardsContainer);
+
+  // Handle window resize to prevent layout issues
+  let resizeTimeout: NodeJS.Timeout;
+  const handleResize = () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      if (isAnimationCreated) {
+        ScrollTrigger.refresh();
+      }
+    }, 150); // Debounce resize events
+  };
+
+  window.addEventListener('resize', handleResize);
+
+  // Cleanup function
+  return () => {
+    observer.disconnect();
+    window.removeEventListener('resize', handleResize);
+    clearTimeout(resizeTimeout);
+  };
 };
 
 function createCardsAnimation(

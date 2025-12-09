@@ -89,6 +89,7 @@ const indicator1Ref = ref<HTMLElement | null>(null);
 const indicator2Ref = ref<HTMLElement | null>(null);
 const indicator3Ref = ref<HTMLElement | null>(null);
 const scrollTriggerInstances: any[] = [];
+let cleanupCardsAnimation: (() => void) | null = null;
 
 // Track active chart content elements in viewport
 const { setup: setupActiveTracking, activeIndex } = useActiveOnViewport(
@@ -153,7 +154,7 @@ onMounted(async () => {
   await nextTick();
 
   // Initialize animation using composable
-  await useCardsAnimation(gsap, ScrollTrigger, {
+  cleanupCardsAnimation = await useCardsAnimation(gsap, ScrollTrigger, {
     cardsContainerClass: '.sec-b__cards-container',
     cardClass: `.${JS_CLASSES.CARD}`,
     cardsFallbackClass: '.state-card',
@@ -178,6 +179,11 @@ onBeforeUnmount(() => {
   });
 
   scrollTriggerInstances.length = 0;
+
+  // Clean up resize listener
+  if (cleanupCardsAnimation) {
+    cleanupCardsAnimation();
+  }
 });
 
 function handleIsEntered(shouldEnter: boolean) {
