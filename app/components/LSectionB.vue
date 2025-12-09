@@ -107,7 +107,7 @@ const {
   indicator1Ref,
   indicator2Ref,
   indicator3Ref,
-  showIndicators: true,
+  showIndicators: false,
 });
 
 // Setup intersection observer for viewport tracking
@@ -196,9 +196,21 @@ function handleIsEntered(shouldEnter: boolean) {
     }"
   >
     <!-- Indicators for debugging (styled in CSS) -->
-    <div v-if="showIndicatorsFlag" ref="indicator1Ref" class="indicator-1" />
-    <div v-if="showIndicatorsFlag" ref="indicator2Ref" class="indicator-2" />
-    <div v-if="showIndicatorsFlag" ref="indicator3Ref" class="indicator-3" />
+    <div
+      ref="indicator1Ref"
+      class="indicator-1"
+      :style="{ opacity: showIndicatorsFlag ? 1 : 0 }"
+    />
+    <div
+      ref="indicator2Ref"
+      class="indicator-2"
+      :style="{ opacity: showIndicatorsFlag ? 1 : 0 }"
+    />
+    <div
+      ref="indicator3Ref"
+      class="indicator-3"
+      :style="{ opacity: showIndicatorsFlag ? 1 : 0 }"
+    />
 
     <!-- intro (pinned by custom composable) -->
     <!-- Fixed placeholder with 100vh height -->
