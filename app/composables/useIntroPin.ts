@@ -121,7 +121,7 @@ export const useIntroPin = (options: UseIntroPinOptions): UseIntroPinReturn => {
       // Set intro to pinned state
       introActive.value = 'pinned';
 
-      // Set placeholder to maintain layout space
+      // Set placeholder to maintain layout space (always present, just change height)
       placeholderStyle.value = {
         height: `${introHeight}px`,
         visibility: 'hidden',
@@ -138,14 +138,21 @@ export const useIntroPin = (options: UseIntroPinOptions): UseIntroPinReturn => {
         // Intro should stick to section, positioned at bottom - 50vh
         introActive.value = 'unpinned';
 
-        placeholderStyle.value = {};
+        // Hide placeholder by setting height to 0 (but keep in DOM)
+        placeholderStyle.value = {
+          height: '0px',
+          visibility: 'hidden',
+        };
       } else if (!introBelowCenter) {
         // Case 2: Scrolling back up, intro center moved above viewport center
         isPinned.value = false;
 
-        // Reset to normal flow
+        // Reset to normal flow - hide placeholder
         introActive.value = '';
-        placeholderStyle.value = {};
+        placeholderStyle.value = {
+          height: '0px',
+          visibility: 'hidden',
+        };
       }
     }
   };  const startRAF = () => {

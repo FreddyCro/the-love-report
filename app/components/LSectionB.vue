@@ -92,7 +92,7 @@ const { setup: setupActiveTracking, activeIndex } = useActiveOnViewport(
 
 // Pin intro when it reaches viewport center
 const {
-  isPinned,
+  // isPinned,
   introActive,
   placeholderStyle,
   indicator1Style,
@@ -213,9 +213,11 @@ function createCardsAnimation(
   const cardsContainer = document.querySelector('.sec-b__cards-container');
   if (!cardsContainer) return;
 
-  // Calculate end position based on number of cards and stagger delay
-  const totalDuration = (cards.length - 1) * CARD_STAGGER_DELAY + 1; // Last card duration
-  const scrollDistance = totalDuration * 100; // 100vh per second of animation
+  // Calculate scroll distance for smooth card stacking
+  // Each card needs sufficient scroll distance to animate smoothly
+  // Formula: cards.length * scroll per card
+  const scrollPerCard = 150; // 150vh per card for comfortable pacing
+  const scrollDistance = cards.length * scrollPerCard; // Total: 6 cards * 150vh = 900vh
 
   // Create timeline for the stacking animation (only controls cards, not intro)
   const tl = gsap.timeline({
@@ -223,7 +225,7 @@ function createCardsAnimation(
       trigger: cardsContainer,
       start: 'top top',
 
-      // Calculate end based on animation duration
+      // End after all cards have animated and extra viewing space
       end: `+=${scrollDistance}%`,
 
       // Pin (freeze) only the cards container, not intro
@@ -305,11 +307,11 @@ function handleIsEntered(shouldEnter: boolean) {
     <!-- intro (pinned by custom composable) -->
     <div :class="JS_CLASSES.INTRO_CONTAINER" class="sec-b__intro-container">
       <!-- Placeholder to maintain space when intro is fixed -->
+      <!-- Always present to avoid layout shift, visibility controlled by style -->
       <div
-        v-if="isPinned"
         :style="placeholderStyle"
         class="intro-placeholder"
-      ></div>
+      />
 
       <div
         :class="[
@@ -451,7 +453,6 @@ function handleIsEntered(shouldEnter: boolean) {
 
   &__intro-container {
     position: relative;
-    width: 100%;
     min-height: 100vh;
     display: flex;
     align-items: center;
