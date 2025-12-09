@@ -4,6 +4,9 @@ interface UseIntroPinOptions {
   sectionRef: Ref<HTMLElement | null>;
   introContainerClass: string;
   introClassName: string;
+  indicator1Ref: Ref<HTMLElement | null>;
+  indicator2Ref: Ref<HTMLElement | null>;
+  indicator3Ref: Ref<HTMLElement | null>;
   showIndicators?: boolean; // Show visual indicators for debugging
 }
 
@@ -32,6 +35,9 @@ export const useIntroPin = (options: UseIntroPinOptions): UseIntroPinReturn => {
     sectionRef,
     introContainerClass,
     introClassName,
+    indicator1Ref,
+    indicator2Ref,
+    indicator3Ref,
     showIndicators = false,
   } = options;
 
@@ -48,34 +54,27 @@ export const useIntroPin = (options: UseIntroPinOptions): UseIntroPinReturn => {
 
   const updatePinState = () => {
     if (!sectionRef.value || !introContainer || !intro) return;
+    if (!indicator1Ref.value || !indicator2Ref.value || !indicator3Ref.value) return;
 
-    const section = sectionRef.value;
-    const sectionRect = section.getBoundingClientRect();
-    const introContainerRect = introContainer.getBoundingClientRect();
     const introRect = intro.getBoundingClientRect();
-
-    // Calculate indicators
-    const viewportHeight = window.innerHeight;
-    const viewportCenter = viewportHeight / 2;
 
     // Update introHeight ref with intro element's actual height
     introHeight.value = introRect.height;
 
-    // Indicator 1: Fixed viewport center line (50vh from screen top)
-    const indicator1Y = viewportCenter;
+    // Get indicator positions directly from DOM elements
+    const indicator1Rect = indicator1Ref.value.getBoundingClientRect();
+    const indicator2Rect = indicator2Ref.value.getBoundingClientRect();
+    const indicator3Rect = indicator3Ref.value.getBoundingClientRect();
 
-    // Indicator 2: Intro top boundary (section top + padding + intro height/2)
-    const indicator2Y = sectionRect.top + viewportCenter;
-
-    // Indicator 3: Intro bottom boundary (section bottom - padding - intro height/2)
-    const indicator3Y = sectionRect.bottom - viewportCenter;
-
-    // Indicators are now styled in CSS, no inline styles needed
+    // Use the top edge of each indicator line
+    const indicator1Y = indicator1Rect.top;
+    const indicator2Y = indicator2Rect.top;
+    const indicator3Y = indicator3Rect.top;
 
     // Three-state logic based on indicator positions:
-    // 1. indicator1 < indicator2: intro 置頂 (unpinned-top)
-    // 2. indicator1 >= indicator2 && indicator1 <= indicator3: intro 置中 (pinned)
-    // 3. indicator1 > indicator3: intro 置底 (unpinned-bottom)
+    // 1. indicator1 < indicator2: intro 置頂 (unpinned-top) - yellow line above green line
+    // 2. indicator1 >= indicator2 && indicator1 <= indicator3: intro 置中 (pinned) - yellow line between green and blue
+    // 3. indicator1 > indicator3: intro 置底 (unpinned-bottom) - yellow line below blue line
 
     if (indicator1Y < indicator2Y) {
       // State 1: intro 置頂 - viewport center above intro top boundary

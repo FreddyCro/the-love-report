@@ -82,6 +82,9 @@ const JS_CLASSES = {
 const isEntered = ref(false);
 const isAnimationReady = ref(false);
 const sectionRef = ref<HTMLElement | null>(null);
+const indicator1Ref = ref<HTMLElement | null>(null);
+const indicator2Ref = ref<HTMLElement | null>(null);
+const indicator3Ref = ref<HTMLElement | null>(null);
 const scrollTriggerInstances: any[] = [];
 
 // Track active chart content elements in viewport
@@ -101,6 +104,9 @@ const {
   sectionRef,
   introContainerClass: JS_CLASSES.INTRO_CONTAINER,
   introClassName: JS_CLASSES.INTRO,
+  indicator1Ref,
+  indicator2Ref,
+  indicator3Ref,
   showIndicators: true,
 });
 
@@ -190,9 +196,9 @@ function handleIsEntered(shouldEnter: boolean) {
     }"
   >
     <!-- Indicators for debugging (styled in CSS) -->
-    <div v-if="showIndicatorsFlag" class="indicator-1" />
-    <div v-if="showIndicatorsFlag" class="indicator-2" />
-    <div v-if="showIndicatorsFlag" class="indicator-3" />
+    <div v-if="showIndicatorsFlag" ref="indicator1Ref" class="indicator-1" />
+    <div v-if="showIndicatorsFlag" ref="indicator2Ref" class="indicator-2" />
+    <div v-if="showIndicatorsFlag" ref="indicator3Ref" class="indicator-3" />
 
     <!-- intro (pinned by custom composable) -->
     <!-- Fixed placeholder with 100vh height -->
