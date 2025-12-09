@@ -106,10 +106,12 @@ function createCardsAnimation(
       // Pin (freeze) only the cards container, not intro
       pin: true,
       pinSpacing: true, // Ensure proper spacing after pin
-      scrub: 0.5,
+      scrub: 0.5, // Smooth scrubbing
 
       // Smooth pin start
       anticipatePin: 1,
+
+      // Recalculate on refresh
       invalidateOnRefresh: true,
 
       // Control refresh behavior to prevent scroll jumps on resize

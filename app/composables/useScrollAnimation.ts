@@ -71,28 +71,19 @@ export const useScrollAnimation = async (): Promise<ScrollAnimationReturn> => {
   });
 
   // Create Lenis instance (smooth scroller) - singleton
+  // DISABLED: Lenis conflicts with GSAP ScrollTrigger pin, causing scroll issues
   if (!lenisObject) {
-    lenisObject = new LenisInstance({ smooth: true, duration: 1.2 });
+    // Mock Lenis object to prevent errors
+    lenisObject = {
+      raf: () => {},
+      scrollTo: () => {},
+      destroy: () => {},
+      resize: () => {},
+    };
 
-    // Setup scrollerProxy: make ScrollTrigger use Lenis' scroll position
-    ScrollTriggerInstance.scrollerProxy(document.documentElement, {
-      scrollTop(value: number) {
-        if (arguments.length) lenisObject.scrollTo(value);
-        return lenisObject?.scroll?.instance?.scroll?.y ?? window.scrollY;
-      },
-      getBoundingClientRect() {
-        return {
-          top: 0,
-          left: 0,
-          width: window.innerWidth,
-          height: window.innerHeight,
-        };
-      },
-    });
-
-    // Start RAF loop (singleton - only runs once)
+    // Start RAF loop for ScrollTrigger only (no Lenis)
     function raf(time: number) {
-      lenisObject.raf(time);
+      // lenisObject.raf(time); // Disabled
       ScrollTriggerInstance.update();
       rafId = requestAnimationFrame(raf);
     }

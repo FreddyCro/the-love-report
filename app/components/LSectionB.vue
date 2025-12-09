@@ -156,7 +156,7 @@ onMounted(async () => {
     cardsFallbackClass: '.state-card',
     cardData: data,
     cardStaggerDelay: CARD_STAGGER_DELAY,
-    scrollPerCard: 150,
+    scrollPerCard: 135,
     scrollTriggerInstances,
   });
 
@@ -441,12 +441,6 @@ function handleIsEntered(shouldEnter: boolean) {
     justify-content: center;
     padding: 0 20px;
     z-index: 2; // Above intro
-    pointer-events: none; // Allow interaction with intro before cards appear
-
-    // Re-enable pointer events for cards themselves
-    .state-card {
-      pointer-events: auto;
-    }
   }
 }
 
