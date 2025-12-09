@@ -22,7 +22,8 @@ const { frames, setup } = useSequentialFrames([
 ]);
 
 // Setup frame watchers and intersection observers
-setup(true);
+// setup(true);
+setup();
 
 // Create computed properties for reactive tracking
 const frame1Phase1 = computed(() => frames[0]?.isEnter.value ?? false);
@@ -31,7 +32,7 @@ const frame1Phase2 = computed(() => frames[0]?.isSecondPhase.value ?? false);
 
 <template>
   <section
-    class="sec-a l-article pt-(--navbar-height) bg-black-6 overflow-hidden pb-20"
+    class="sec-a l-article pt-(--navbar-height) overflow-hidden pb-20"
   >
     <!-- visually hidden for seo -->
     <h1 class="visually-hidden">

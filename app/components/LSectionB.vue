@@ -8,6 +8,7 @@ import { useIntersectionObserver } from '@vueuse/core';
 import { useActiveOnViewport } from '../composables/useActiveOnViewport';
 import { useIntroPin } from '../composables/useIntroPin';
 import { useCardsAnimation } from '../composables/useCardsAnimation';
+import { useSectionBState } from '../composables/useSectionBState';
 import str from '../locales/section-b.json';
 
 type CartType = {
@@ -79,7 +80,9 @@ const JS_CLASSES = {
   WRAPPER: 'js-scw', // state-card-wrapper
 };
 
-const isEntered = ref(false);
+// Use shared state composable for Section B's isEntered status
+const { sectionBEntered } = useSectionBState();
+const isEntered = sectionBEntered;
 const isAnimationReady = ref(false);
 const sectionRef = ref<HTMLElement | null>(null);
 const indicator1Ref = ref<HTMLElement | null>(null);
@@ -187,12 +190,10 @@ function handleIsEntered(shouldEnter: boolean) {
   <section
     id="insight"
     ref="sectionRef"
-    class="sec-b l-article relative bg-black-6 sec-b-transition"
+    class="sec-b l-article relative sec-b-transition"
     :style="{ '--intro-height': `${introHeight}px` }"
     :class="{
       'is-entered': isEntered,
-      'bg-love-dark': isEntered,
-      'text-white': isEntered,
     }"
   >
     <!-- Indicators for debugging (styled in CSS) -->
@@ -244,6 +245,9 @@ function handleIsEntered(shouldEnter: boolean) {
         </div>
         <p class="l-p sec-b-transition">{{ str.introText1 }}</p>
         <p class="l-p sec-b-transition">{{ str.introText2 }}</p>
+        <p class="sec-b-transition font-[13px] leading-[22px]">
+          {{ str.introText3 }}
+        </p>
       </div>
     </div>
 

@@ -25,22 +25,21 @@ import { useScroll, useIntersectionObserver } from '@vueuse/core';
 │          │   + Frame 1 animation complete   │                                    │
 │          │   + First scroll detected        │                                    │
 │          │                                  │                                    │
-│          │   Path 1: Frame 1 phase 1 +      │                                    │
-│          │            phase 2 + animation   │                                    │
-│          │            complete +            │                                    │
-│          │            first scroll done     │                                    │
+│          │   Path 1: All conditions met     │                                    │
 │          │   → Activate immediately         │                                    │
+│          │   → CSS delay (1s) ensures       │                                    │
+│          │      visual wait for Frame 1     │                                    │
 │          │                                  │                                    │
-│          │   Path 2: Frame 1 NOT ready      │                                    │
+│          │   Path 2: Conditions NOT met     │                                    │
 │          │   → Wait with watchEffect        │                                    │
-│          │   → Auto-activate when           │                                    │
-│          │      Frame 1 active AND          │                                    │
-│          │      animation complete          │                                    │
+│          │   → Auto-activate when ready     │                                    │
+│          │   → CSS delay (1s) provides      │                                    │
+│          │      visual buffer               │                                    │
 │          │                                  │                                    │
 │          │ Case B: Page NOT loaded at top   │                                    │
 │          │   • ENTER (any direction)        │                                    │
 │          │   → Activate immediately         │                                    │
-│          │   (skip sequential wait)         │                                    │
+│          │   (skip sequential wait)         │
 │          │                                  │                                    │
 ├──────────┼──────────────────────────────────┼────────────────────────────────────┤
 │ Frame 3-6│ • Same logic as Frame 2          │ • No automatic deactivation        │
@@ -466,7 +465,7 @@ export function useSequentialFrames(
       animationTimers.clear();
 
       // 5. Reset all frame states (without transition to prevent glitch)
-      frames.forEach((frame, index) => {
+      frames.forEach((frame) => {
         if (frame.ref) {
           // Remove fade-out class and add no-transition
           frame.ref.classList.remove('frame-fade-out');
@@ -483,7 +482,7 @@ export function useSequentialFrames(
         firstScrollDetectorActive = true;
       }
 
-      frames.forEach((frame, index) => {
+      frames.forEach((frame) => {
         // Remove no-transition after style recalc
         // Why double rAF? (same reason as deactivateFrame)
         // Ensures browser fully processes the no-transition class before removing it

@@ -12,6 +12,7 @@ defineProps<{
 const timings = SECTION_A_FRAME_TIMINGS.FRAME_1;
 const cssTimings = {
   cropDuration: toCssTime(timings.CROP_DURATION),
+  cropDelay: toCssTime(timings.CROP_DELAY),
   crossfadeDuration: toCssTime(timings.CROSSFADE_DURATION),
   crossfadeDelay: toCssTime(timings.CROSSFADE_DELAY),
   img3Duration: toCssTime(timings.IMG3_DURATION),
@@ -222,6 +223,7 @@ const imgBack2Paths = {
 .l-seca-f1 {
   /* Animation timing variables - synced from animationTimings.ts */
   --seca-f1-crop-duration: v-bind('cssTimings.cropDuration');
+  --seca-f1-crop-delay: v-bind('cssTimings.cropDelay');
   --seca-f1-crossfade-duration: v-bind('cssTimings.crossfadeDuration');
   --seca-f1-crossfade-delay: v-bind('cssTimings.crossfadeDelay');
   --seca-f1-img3-duration: v-bind('cssTimings.img3Duration');
@@ -353,7 +355,7 @@ const imgBack2Paths = {
     opacity: 1;
 
     .l-seca-f1__img-back-wrap {
-      animation: cropImage var(--seca-f1-crop-duration) ease forwards;
+      animation: cropImage var(--seca-f1-crop-duration) ease var(--seca-f1-crop-delay) forwards;
     }
   }
 

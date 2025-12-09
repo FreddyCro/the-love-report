@@ -80,7 +80,7 @@ const cssTimings = {
 
     @include rwd-min(sm) {
       top: 0;
-      transform: translate(var(--seca-px), -50%);
+      transform: translate(100%, -50%);
     }
   }
 

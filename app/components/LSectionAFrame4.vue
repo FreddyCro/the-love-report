@@ -234,6 +234,7 @@ const cssTimings = {
     @include rwd-min(sm) {
       top: calc(108 / 258 * 100%);
       max-width: 239px;
+      transform: translateX(100%);
     }
   }
 

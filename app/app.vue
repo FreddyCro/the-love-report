@@ -11,10 +11,14 @@ import LSectionF from './components/LSectionF.vue';
 // import TestGA from './components/TestGA.vue';
 // import TestAllImg from './components/TestAllImg.vue';
 import { useTracking } from '~/assets/js/tracking.js';
+import { useSectionBState } from './composables/useSectionBState';
 import meta from './locales/meta.json';
 
 const config = useRuntimeConfig();
 const APP_MODE = config.public.APP_MODE;
+
+// Use shared state composable for Section B's isEntered status
+const { sectionBEntered } = useSectionBState();
 
 useSeoMeta({
   title: meta.metaTitle,
@@ -81,8 +85,17 @@ onMounted(() => {
   <NuxtLayout>
     <AppHeader />
     <main class="main-content" :class="{ 'is-ready': isReady }">
-      <LSectionA />
-      <LSectionB />
+      <div
+        class="sections-ab-wrapper"
+        :class="{
+          'bg-black-6': !sectionBEntered,
+          'bg-love-dark': sectionBEntered,
+          'text-white': sectionBEntered,
+        }"
+      >
+        <LSectionA />
+        <LSectionB />
+      </div>
 
       <LSectionC />
       <LSectionD />
@@ -104,5 +117,9 @@ onMounted(() => {
   &.is-ready {
     opacity: 1;
   }
+}
+
+.sections-ab-wrapper {
+  transition: background-color 1s, color 1s;
 }
 </style>
