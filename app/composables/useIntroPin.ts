@@ -9,23 +9,23 @@ interface UseIntroPinOptions {
 
 interface UseIntroPinReturn {
   isPinned: Ref<boolean>;
-  introActive: Ref<'pinned' | 'unpinned' | ''>;
-  placeholderStyle: Ref<Record<string, string>>;
-  indicator1Style: Ref<Record<string, string>>;
-  indicator2Style: Ref<Record<string, string>>;
-  indicator3Style: Ref<Record<string, string>>;
+  introActive: Ref<'unpinned-top' | 'pinned' | 'unpinned-bottom' | ''>;
+  showIndicatorsFlag: Ref<boolean>;
+  introHeight: Ref<number>;
 }
 
 /**
  * Composable for pinning intro element when it reaches viewport center
  *
  * Logic:
- * 1. Indicator 1: Section top + 50vh (viewport center marker)
- * 2. Indicator 2: Intro center point
- * 3. Indicator 3: Section bottom - 50vh
+ * 1. Indicator 1: Viewport center line (50vh from top) - FIXED LINE (on screen)
+ * 2. Indicator 2: Intro top boundary (section top + padding + intro height/2)
+ * 3. Indicator 3: Intro bottom boundary (section bottom - padding - intro height/2)
  *
- * When intro center (indicator 2) crosses indicator 1, intro becomes fixed at center
- * When intro center (indicator 2) crosses indicator 3, intro unfixes and scrolls with section
+ * Three states:
+ * - unpinned-top: indicator1 < indicator2 (viewport center above intro top boundary)
+ * - pinned: indicator1 >= indicator2 && indicator1 <= indicator3 (viewport center between boundaries)
+ * - unpinned-bottom: indicator1 > indicator3 (viewport center below intro bottom boundary)
  */
 export const useIntroPin = (options: UseIntroPinOptions): UseIntroPinReturn => {
   const {
@@ -36,16 +36,15 @@ export const useIntroPin = (options: UseIntroPinOptions): UseIntroPinReturn => {
   } = options;
 
   const isPinned = ref(false);
-  const introActive = ref<'pinned' | 'unpinned' | ''>('');
-  const placeholderStyle = ref<Record<string, string>>({});
-  const indicator1Style = ref<Record<string, string>>({});
-  const indicator2Style = ref<Record<string, string>>({});
-  const indicator3Style = ref<Record<string, string>>({});
+  const introActive = ref<'unpinned-top' | 'pinned' | 'unpinned-bottom' | ''>(
+    'unpinned-top'
+  );
+  const showIndicatorsFlag = ref(showIndicators);
+  const introHeight = ref(0);
 
   let rafId: number | null = null;
   let introContainer: HTMLElement | null = null;
   let intro: HTMLElement | null = null;
-  let introHeight = 0;
 
   const updatePinState = () => {
     if (!sectionRef.value || !introContainer || !intro) return;
@@ -53,109 +52,61 @@ export const useIntroPin = (options: UseIntroPinOptions): UseIntroPinReturn => {
     const section = sectionRef.value;
     const sectionRect = section.getBoundingClientRect();
     const introContainerRect = introContainer.getBoundingClientRect();
+    const introRect = intro.getBoundingClientRect();
 
     // Calculate indicators
     const viewportHeight = window.innerHeight;
     const viewportCenter = viewportHeight / 2;
 
-    // Indicator 1: Viewport center line (50vh from top) - FIXED LINE
+    // Update introHeight ref with intro element's actual height
+    introHeight.value = introRect.height;
+
+    // Indicator 1: Fixed viewport center line (50vh from screen top)
     const indicator1Y = viewportCenter;
 
-    // Indicator 2: Intro container center point (moves with scroll)
-    const indicator2Y = introContainerRect.top + introContainerRect.height / 2;
+    // Indicator 2: Intro top boundary (section top + padding + intro height/2)
+    const indicator2Y = sectionRect.top + viewportCenter;
 
-    // Indicator 3: Section bottom - 50vh line (moves with section)
+    // Indicator 3: Intro bottom boundary (section bottom - padding - intro height/2)
     const indicator3Y = sectionRect.bottom - viewportCenter;
 
-    // Update indicator styles for visualization
-    if (showIndicators) {
-      // Indicator 1: Red line at viewport center (fixed)
-      indicator1Style.value = {
-        position: 'absolute',
-        top: '50vh',
-        left: '0',
-        width: '100%',
-        height: '2px',
-        backgroundColor: 'red',
-        zIndex: '9999',
-        pointerEvents: 'none',
-      };
+    // Indicators are now styled in CSS, no inline styles needed
 
-      // Indicator 2: Green line at intro center (follows intro)
-      indicator2Style.value = {
-        position: 'absolute',
-        top: '50%',
-        left: '0',
-        width: '100%',
-        height: '2px',
-        backgroundColor: 'green',
-        zIndex: '9999',
-        pointerEvents: 'none',
-      };
+    // Three-state logic based on indicator positions:
+    // 1. indicator1 < indicator2: intro 置頂 (unpinned-top)
+    // 2. indicator1 >= indicator2 && indicator1 <= indicator3: intro 置中 (pinned)
+    // 3. indicator1 > indicator3: intro 置底 (unpinned-bottom)
 
-      // Indicator 3: Blue line at section bottom - 50vh (inside section)
-      indicator3Style.value = {
-        position: 'absolute',
-        bottom: '50vh',
-        left: '0',
-        width: '100%',
-        height: '2px',
-        backgroundColor: 'blue',
-        zIndex: '9999',
-        pointerEvents: 'none',
-      };
-    }
-
-    // Pin logic based on indicator positions:
-    // 1. Pin: when indicator 2 (intro center) crosses indicator 1 (viewport center) going down
-    // 2. Unpin: when indicator 2 goes back above indicator 1 (scrolling up) OR when indicator 3 reaches indicator 1 (section exiting)
-    
-    const introBelowCenter = indicator2Y <= indicator1Y; // Intro center is at or below viewport center
-    const sectionNotExiting = indicator3Y > indicator1Y; // Section bottom - 50vh is still below viewport center
-
-    if (introBelowCenter && sectionNotExiting && !isPinned.value) {
-      // Start pinning: intro center has reached viewport center (scrolling down)
-      isPinned.value = true;
-      introHeight = introContainerRect.height;
-
-      // Set intro to pinned state
+    if (indicator1Y < indicator2Y) {
+      // State 1: intro 置頂 - viewport center above intro top boundary
+      introActive.value = 'unpinned-top';
+      isPinned.value = false;
+    } else if (indicator1Y >= indicator2Y && indicator1Y <= indicator3Y) {
+      // State 2: intro 置中 (pinned) - viewport center between boundaries
       introActive.value = 'pinned';
-
-      // Set placeholder to maintain layout space (always present, just change height)
-      placeholderStyle.value = {
-        height: `${introHeight}px`,
-        visibility: 'hidden',
-      };
-    } else if (isPinned.value && (!introBelowCenter || !sectionNotExiting)) {
-      // Unpin conditions:
-      // 1. Scrolling up: indicator 2 moves back above indicator 1
-      // 2. Scrolling down: indicator 3 reaches indicator 1 (section exiting)
-      
-      if (!sectionNotExiting) {
-        // Case 1: Section is exiting (scrolling down far enough)
-        isPinned.value = false;
-
-        // Intro should stick to section, positioned at bottom - 50vh
-        introActive.value = 'unpinned';
-
-        // Hide placeholder by setting height to 0 (but keep in DOM)
-        placeholderStyle.value = {
-          height: '0px',
-          visibility: 'hidden',
-        };
-      } else if (!introBelowCenter) {
-        // Case 2: Scrolling back up, intro center moved above viewport center
-        isPinned.value = false;
-
-        // Reset to normal flow - hide placeholder
-        introActive.value = '';
-        placeholderStyle.value = {
-          height: '0px',
-          visibility: 'hidden',
-        };
-      }
+      isPinned.value = true;
+    } else if (indicator1Y > indicator3Y) {
+      // State 3: intro 置底 - viewport center below intro bottom boundary
+      introActive.value = 'unpinned-bottom';
+      isPinned.value = false;
     }
-  };  const startRAF = () => {
+
+    // console.log(
+    //   'Indicators:',
+    //   '1Y:',
+    //   indicator1Y,
+    //   '2Y:',
+    //   indicator2Y,
+    //   '3Y:',
+    //   indicator3Y,
+    //   '4Y:',
+    //   indicator4Y,
+    //   'State:',
+    //   introActive.value
+    // );
+  };
+
+  const startRAF = () => {
     const loop = () => {
       updatePinState();
       rafId = requestAnimationFrame(loop);
@@ -182,9 +133,6 @@ export const useIntroPin = (options: UseIntroPinOptions): UseIntroPinReturn => {
       return;
     }
 
-    // Store initial intro height for consistent placeholder
-    introHeight = intro.offsetHeight;
-
     // Start RAF loop
     startRAF();
   });
@@ -196,9 +144,7 @@ export const useIntroPin = (options: UseIntroPinOptions): UseIntroPinReturn => {
   return {
     isPinned,
     introActive,
-    placeholderStyle,
-    indicator1Style,
-    indicator2Style,
-    indicator3Style,
+    showIndicatorsFlag,
+    introHeight,
   };
 };
