@@ -3,7 +3,9 @@ import str from '../locales/section-a.json';
 import { SECTION_A_FRAME_TIMINGS, toCssTime } from '../utils/animationTimings';
 
 defineProps<{
-  active: boolean;
+  active: boolean; // 原本的 active 狀態（保留）
+  activePhase1: boolean; // 第一階段：進入 viewport 觸發
+  activePhase2: boolean; // 第二階段：首次滾動觸發
 }>();
 
 // Get timing constants for this frame and convert to CSS format
@@ -48,7 +50,8 @@ const imgBack2Paths = {
   <div
     class="l-seca-f1"
     :class="{
-      active: active,
+      'active-phase-1': activePhase1,
+      'active-phase-2': activePhase2,
     }"
   >
     <!--
@@ -346,13 +349,15 @@ const imgBack2Paths = {
     }
   }
 
-  &.active {
+  &.active-phase-1 {
     opacity: 1;
 
     .l-seca-f1__img-back-wrap {
       animation: cropImage var(--seca-f1-crop-duration) ease forwards;
     }
+  }
 
+  &.active-phase-2 {
     .l-seca-f1__img1-wrap {
       opacity: 0;
       transition: opacity var(--seca-f1-crossfade-duration)

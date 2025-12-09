@@ -8,23 +8,27 @@ import { useScroll, useIntersectionObserver } from '@vueuse/core';
 │ Frame    │ ACTIVE Conditions                │ INACTIVE Conditions                │
 ├──────────┼──────────────────────────────────┼────────────────────────────────────┤
 │ Frame 1  │ Case A: Page loaded at top       │ • No automatic deactivation        │
-│          │   • ENTER (any direction)        │ • [REMOVED] Reset on scroll to top │
+│          │   Phase 1: ENTER (any direction) │ • [REMOVED] Reset on scroll to top │
 │          │   → Activate immediately         │                                    │
+│          │   Phase 2: First scroll detected │                                    │
+│          │   → Trigger second phase         │                                    │
 │          │                                  │                                    │
 │          │ Case B: Page NOT loaded at top   │                                    │
 │          │   • ENTER (any direction)        │                                    │
-│          │   → Activate immediately         │                                    │
+│          │   → Activate both phases         │                                    │
 │          │   (skip sequential wait)         │                                    │
 │          │                                  │                                    │
 ├──────────┼──────────────────────────────────┼────────────────────────────────────┤
 │ Frame 2  │ Case A: Page loaded at top       │ • No automatic deactivation        │
 │          │   • ENTER (any direction)        │ • [REMOVED] Reset on scroll to top │
-│          │   + Previous frame active        │                                    │
-│          │   + Previous frame animation     │                                    │
-│          │     complete                     │                                    │
+│          │   + Frame 1 BOTH phases active   │                                    │
+│          │   + Frame 1 animation complete   │                                    │
+│          │   + First scroll detected        │                                    │
 │          │                                  │                                    │
-│          │   Path 1: Frame 1 active +       │                                    │
-│          │            animation complete    │                                    │
+│          │   Path 1: Frame 1 phase 1 +      │                                    │
+│          │            phase 2 + animation   │                                    │
+│          │            complete +            │                                    │
+│          │            first scroll done     │                                    │
 │          │   → Activate immediately         │                                    │
 │          │                                  │                                    │
 │          │   Path 2: Frame 1 NOT ready      │                                    │
@@ -42,6 +46,7 @@ import { useScroll, useIntersectionObserver } from '@vueuse/core';
 │ Frame 3-6│ • Same logic as Frame 2          │ • No automatic deactivation        │
 │          │   Must wait for previous frame   │ • [REMOVED] Reset on scroll to top │
 │          │   to be active first             │                                    │
+│          │   + First scroll detected        │                                    │
 │          │   (unless page NOT loaded at top)│                                    │
 └──────────┴──────────────────────────────────┴────────────────────────────────────┘
 
@@ -81,6 +86,7 @@ export type FrameData = {
   id: number;
   ref: HTMLElement | null;
   isEnter: Ref<boolean>;
+  isSecondPhase: Ref<boolean>; // Frame 1 第二階段：首次滾動觸發
   isAnimationComplete: Ref<boolean>;
   animationDuration: number;
 };
@@ -113,6 +119,7 @@ export function useSequentialFrames(
     id: config.id,
     ref: null,
     isEnter: ref(false),
+    isSecondPhase: ref(false), // Frame 1 第二階段狀態
     isAnimationComplete: ref(false),
     animationDuration: config.animationDuration,
   }));
@@ -140,6 +147,10 @@ export function useSequentialFrames(
   // Track if page was loaded at top (for direct activation logic)
   // Will be set in onMounted after scroll position is available
   const isPageLoadedAtTop = ref(true);
+
+  // Track first scroll event (only when page loaded at top)
+  let hasDetectedFirstScroll = false;
+  let firstScrollDetectorActive = false;
 
   // Watch each frame's isEnter state and manage animation completion
   frames.forEach((frame, index) => {
@@ -176,9 +187,12 @@ export function useSequentialFrames(
 
   /**
    * Create handler for Frame 1 (strict mode)
-   * Activates immediately on any ENTER, never deactivates (except on scroll-to-top reset)
+   * Two-phase activation:
+   * - Phase 1: Triggered by ENTER (viewport)
+   * - Phase 2: Triggered by first scroll (only when page loaded at top)
+   * Never deactivates (except on scroll-to-top reset)
    *
-   * Special case: If page is NOT loaded at top, directly activate without sequential wait
+   * Special case: If page is NOT loaded at top, directly activate BOTH phases
    */
   function createStrictHandler(frameIndex: number) {
     return (state: FrameState) => {
@@ -188,6 +202,11 @@ export function useSequentialFrames(
       if (state.action === 'ENTER') {
         framesInViewport.set(frameIndex, true);
         frame.isEnter.value = true;
+
+        // If page NOT loaded at top, activate second phase immediately
+        if (!isPageLoadedAtTop.value) {
+          frame.isSecondPhase.value = true;
+        }
         return;
       }
 
@@ -308,6 +327,7 @@ export function useSequentialFrames(
   /**
    * Check if previous frame allows current frame to activate
    * Rule: Previous frame must be active AND animation complete
+   * Special: Frame 2+ must wait for Frame 1's BOTH phases + first scroll detection complete
    */
   function canActivateByPreviousFrame(frameIndex: number): boolean {
     if (frameIndex === 0) return true;
@@ -315,12 +335,29 @@ export function useSequentialFrames(
     const prevFrame = frames[frameIndex - 1];
     if (!prevFrame) return false;
 
-    // Previous frame must be active AND animation must be complete
+    // For Frame 2+: Must wait for first scroll detector to complete
+    // (firstScrollDetectorActive becomes false after first scroll)
+    const isFirstScrollComplete =
+      !firstScrollDetectorActive || !isPageLoadedAtTop.value;
+
+    if (!isFirstScrollComplete) return false;
+
+    // For Frame 2 (index 1): Frame 1 must complete BOTH phases
+    if (frameIndex === 1) {
+      return (
+        prevFrame.isEnter.value &&
+        prevFrame.isSecondPhase.value &&
+        prevFrame.isAnimationComplete.value
+      );
+    }
+
+    // For other frames: Previous frame must be active AND animation must be complete
     return prevFrame.isEnter.value && prevFrame.isAnimationComplete.value;
   }
 
   /**
    * Wait for previous frame to become active AND complete animation using watchEffect
+   * For Frame 2+: Also wait for first scroll detection to complete (firstScrollDetectorActive = false)
    */
   function waitForPreviousFrame(frameIndex: number) {
     cleanupWatcher(frameIndex);
@@ -329,7 +366,30 @@ export function useSequentialFrames(
     if (!prevFrame) return;
 
     const stopWatch = watchEffect(() => {
-      if (prevFrame.isEnter.value && prevFrame.isAnimationComplete.value) {
+      // For Frame 2+: Must wait for first scroll detector to complete
+      // (firstScrollDetectorActive becomes false after first scroll)
+      const isFirstScrollComplete =
+        !firstScrollDetectorActive || !isPageLoadedAtTop.value;
+
+      // Check conditions based on frame index
+      let canActivate = false;
+
+      if (frameIndex === 1) {
+        // Frame 2: Must wait for Frame 1's BOTH phases + animation complete + first scroll
+        canActivate =
+          prevFrame.isEnter.value &&
+          prevFrame.isSecondPhase.value &&
+          prevFrame.isAnimationComplete.value &&
+          isFirstScrollComplete;
+      } else {
+        // Frame 3-6: Must wait for previous frame + first scroll
+        canActivate =
+          prevFrame.isEnter.value &&
+          prevFrame.isAnimationComplete.value &&
+          isFirstScrollComplete;
+      }
+
+      if (canActivate) {
         activateFrame(frameIndex);
         stopWatch();
       }
@@ -412,18 +472,27 @@ export function useSequentialFrames(
           frame.ref.classList.add('no-transition');
         }
         frame.isEnter.value = false;
+        frame.isSecondPhase.value = false; // Reset second phase state
         frame.isAnimationComplete.value = false;
+      });
 
+      // Reset first scroll detector state
+      hasDetectedFirstScroll = false;
+      if (isPageLoadedAtTop.value) {
+        firstScrollDetectorActive = true;
+      }
+
+      frames.forEach((frame, index) => {
         // Remove no-transition after style recalc
         // Why double rAF? (same reason as deactivateFrame)
         // Ensures browser fully processes the no-transition class before removing it
-        if (frame.ref) {
+        requestAnimationFrame(() => {
           requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              frame.ref?.classList.remove('no-transition');
-            });
+            if (frame.ref) {
+              frame.ref.classList.remove('no-transition');
+            }
           });
-        }
+        });
       });
 
       // 6. Don't clear viewport tracking - keep current intersection state
@@ -450,6 +519,7 @@ export function useSequentialFrames(
   /**
    * Check and activate frames that are initially in viewport on page load
    * If page is NOT loaded at top, directly activate all frames in viewport
+   * For Frame 1: Also activate second phase immediately
    */
   function checkInitialFramesInViewport() {
     frames.forEach((frame, index) => {
@@ -461,6 +531,10 @@ export function useSequentialFrames(
       // If page NOT loaded at top, directly activate (skip animation wait)
       if (!isPageLoadedAtTop.value) {
         activateFrame(index);
+        // For Frame 1, also activate second phase
+        if (index === 0) {
+          frame.isSecondPhase.value = true;
+        }
         return;
       }
 
@@ -490,6 +564,31 @@ export function useSequentialFrames(
       if (scrollY === 0 && hasScrolledDown) {
         hasScrolledDown = false;
         resetAllFrames();
+      }
+    });
+  }
+
+  /**
+   * Setup first scroll detector
+   * Detects the first scroll event only when page is loaded at top
+   * Triggers Frame 1's second phase animation
+   * Only triggers once and then deactivates
+   */
+  function setupFirstScrollDetector() {
+    watch(y, (scrollY) => {
+      // Only detect if:
+      // 1. Detector is active
+      // 2. First scroll hasn't been detected yet
+      // 3. User has scrolled (scrollY > 0)
+      if (firstScrollDetectorActive && !hasDetectedFirstScroll && scrollY > 0) {
+        hasDetectedFirstScroll = true;
+        firstScrollDetectorActive = false; // Deactivate after first detection
+
+        // Trigger Frame 1's second phase
+        const frame1 = frames[0];
+        if (frame1) {
+          frame1.isSecondPhase.value = true;
+        }
       }
     });
   }
@@ -535,6 +634,12 @@ export function useSequentialFrames(
     onMounted(() => {
       // Detect page entry position after mount (when scroll position is available)
       isPageLoadedAtTop.value = y.value < 100;
+
+      // Activate first scroll detector only if page loaded at top
+      if (isPageLoadedAtTop.value) {
+        firstScrollDetectorActive = true;
+        setupFirstScrollDetector();
+      }
 
       frames.forEach((frame, i) => {
         const handler =

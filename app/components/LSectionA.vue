@@ -8,6 +8,7 @@ import LSectionAFrame5 from './LSectionAFrame5.vue';
 import LSectionAFrame6 from './LSectionAFrame6.vue';
 import { useSequentialFrames } from '../composables/useSequentialFrames';
 import { SECTION_A_DURATIONS } from '../utils/animationTimings';
+import { computed } from 'vue';
 
 // Initialize sequential frames with animation durations
 // Durations are automatically synced from animationTimings.ts
@@ -22,6 +23,10 @@ const { frames, setup } = useSequentialFrames([
 
 // Setup frame watchers and intersection observers
 setup(true);
+
+// Create computed properties for reactive tracking
+const frame1Phase1 = computed(() => frames[0]?.isEnter.value ?? false);
+const frame1Phase2 = computed(() => frames[0]?.isSecondPhase.value ?? false);
 </script>
 
 <template>
@@ -49,7 +54,11 @@ setup(true);
           active: frames[0]?.isEnter.value,
         }"
       >
-        <LSectionAFrame1 :active="frames[0]?.isEnter.value ?? false" />
+        <LSectionAFrame1
+          :active="frames[0]?.isEnter.value ?? false"
+          :active-phase1="frame1Phase1"
+          :active-phase2="frame1Phase2"
+        />
       </div>
 
       <!-- frame 2 -->
