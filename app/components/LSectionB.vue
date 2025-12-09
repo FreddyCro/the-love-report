@@ -7,6 +7,7 @@ import LPic from './LPic.vue';
 import { useIntersectionObserver } from '@vueuse/core';
 import { useActiveOnViewport } from '../composables/useActiveOnViewport';
 import { useIntroPin } from '../composables/useIntroPin';
+import { useCardsAnimation } from '../composables/useCardsAnimation';
 import str from '../locales/section-b.json';
 
 type CartType = {
@@ -81,6 +82,9 @@ const JS_CLASSES = {
 const isEntered = ref(false);
 const isAnimationReady = ref(false);
 const sectionRef = ref<HTMLElement | null>(null);
+const indicator1Ref = ref<HTMLElement | null>(null);
+const indicator2Ref = ref<HTMLElement | null>(null);
+const indicator3Ref = ref<HTMLElement | null>(null);
 const scrollTriggerInstances: any[] = [];
 
 // Track active chart content elements in viewport
@@ -92,17 +96,18 @@ const { setup: setupActiveTracking, activeIndex } = useActiveOnViewport(
 
 // Pin intro when it reaches viewport center
 const {
-  isPinned,
+  // isPinned,
   introActive,
-  placeholderStyle,
-  indicator1Style,
-  indicator2Style,
-  indicator3Style,
+  showIndicatorsFlag,
+  introHeight,
 } = useIntroPin({
   sectionRef,
   introContainerClass: JS_CLASSES.INTRO_CONTAINER,
   introClassName: JS_CLASSES.INTRO,
-  showIndicators: true, // Set to false in production
+  indicator1Ref,
+  indicator2Ref,
+  indicator3Ref,
+  showIndicators: false,
 });
 
 // Setup intersection observer for viewport tracking
@@ -144,8 +149,16 @@ onMounted(async () => {
   // Wait for DOM and image to layout
   await nextTick();
 
-  // Initialize animation and wait for it to be ready
-  await handleAnimation(gsap, ScrollTrigger, lenis);
+  // Initialize animation using composable
+  await useCardsAnimation(gsap, ScrollTrigger, {
+    cardsContainerClass: '.sec-b__cards-container',
+    cardClass: `.${JS_CLASSES.CARD}`,
+    cardsFallbackClass: '.state-card',
+    cardData: data,
+    cardStaggerDelay: CARD_STAGGER_DELAY,
+    scrollPerCard: 135,
+    scrollTriggerInstances,
+  });
 
   // Mark as ready - triggers fade-in via CSS transition
   isAnimationReady.value = true;
@@ -164,107 +177,6 @@ onBeforeUnmount(() => {
   scrollTriggerInstances.length = 0;
 });
 
-async function handleAnimation(
-  gsap: any,
-  ScrollTrigger: any,
-  _lenis: any
-): Promise<void> {
-  const cardsContainer = document.querySelector('.sec-b__cards-container');
-
-  if (!cardsContainer) {
-    console.warn('Cards container not found');
-    return;
-  }
-
-  // Prefer JS-prefixed selector for script queries; fall back to regular class if missing
-  let cards = cardsContainer.querySelectorAll(`.${JS_CLASSES.CARD}`);
-  if (!cards || cards.length === 0) {
-    cards = cardsContainer.querySelectorAll('.state-card');
-  }
-  if (cards.length === 0) return;
-
-  // Use IntersectionObserver to optimize: only create ScrollTrigger when cards enter viewport
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          // Cards container entered viewport, create GSAP animation
-          createCardsAnimation(gsap, ScrollTrigger, cards);
-          observer.disconnect(); // Only observe once
-        }
-      });
-    },
-    {
-      root: null,
-      rootMargin: '200px', // Start animation 200px before entering viewport
-      threshold: 0,
-    }
-  );
-
-  observer.observe(cardsContainer);
-}
-
-function createCardsAnimation(
-  gsap: any,
-  ScrollTrigger: any,
-  cards: NodeListOf<Element>
-) {
-  const cardsContainer = document.querySelector('.sec-b__cards-container');
-  if (!cardsContainer) return;
-
-  // Create timeline for the stacking animation (only controls cards, not intro)
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: cardsContainer,
-      start: 'top top',
-
-      // Extend the scroll distance for smoother animation
-      end: '+=400%',
-
-      // Pin (freeze) only the cards container, not intro
-      pin: true,
-      scrub: 0.5,
-
-      // Smooth pin start
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-
-      // Control refresh behavior to prevent scroll jumps on resize
-      refreshPriority: 0,
-      fastScrollEnd: true,
-    },
-  });
-
-  // Set initial state: cards are below viewport
-  tl.set(cards, { y: '100vh', opacity: 1, rotation: 0 }, 0);
-
-  // Cards stack on top of intro (first card appears immediately)
-  cards.forEach((card, index) => {
-    const yOffset = index * 0; // Each card slightly offset from previous
-    const targetRotation = data[index]?.rotation || 0; // Use rotation from data
-
-    tl.to(
-      card,
-      {
-        y: yOffset,
-        opacity: 1,
-        rotation: targetRotation,
-        duration: 1,
-        ease: 'power2.out',
-      },
-      index * CARD_STAGGER_DELAY // First card starts immediately (no initial delay)
-    );
-  });
-
-  // Store the ScrollTrigger instance for cleanup
-  if (tl.scrollTrigger) {
-    scrollTriggerInstances.push(tl.scrollTrigger);
-  }
-
-  // Refresh ScrollTrigger
-  ScrollTrigger.refresh();
-}
-
 function handleIsEntered(shouldEnter: boolean) {
   // Set isEntered based on scroll direction and intersection
   isEntered.value = shouldEnter;
@@ -276,54 +188,52 @@ function handleIsEntered(shouldEnter: boolean) {
     id="insight"
     ref="sectionRef"
     class="sec-b l-article relative bg-black-6 sec-b-transition"
+    :style="{ '--intro-height': `${introHeight}px` }"
     :class="{
       'is-entered': isEntered,
       'bg-love-dark': isEntered,
       'text-white': isEntered,
     }"
   >
-    <!-- Indicator 1: Section top + 50vh -->
+    <!-- Indicators for debugging (styled in CSS) -->
     <div
-      v-if="indicator1Style.position"
-      :style="indicator1Style"
+      ref="indicator1Ref"
       class="indicator-1"
+      :style="{ opacity: showIndicatorsFlag ? 1 : 0 }"
     />
-
-    <!-- Indicator 3: Section bottom - 50vh -->
     <div
-      v-if="indicator3Style.position"
-      :style="indicator3Style"
+      ref="indicator2Ref"
+      class="indicator-2"
+      :style="{ opacity: showIndicatorsFlag ? 1 : 0 }"
+    />
+    <div
+      ref="indicator3Ref"
       class="indicator-3"
+      :style="{ opacity: showIndicatorsFlag ? 1 : 0 }"
     />
 
     <!-- intro (pinned by custom composable) -->
-    <div :class="JS_CLASSES.INTRO_CONTAINER" class="sec-b__intro-container">
-      <!-- Placeholder to maintain space when intro is fixed -->
-      <div
-        v-if="isPinned"
-        :style="placeholderStyle"
-        class="intro-placeholder"
-      ></div>
+    <!-- Fixed placeholder with 100vh height -->
+    <div class="sec-b__intro-placeholder" />
 
+    <!-- Intro container with absolute positioning -->
+    <div
+      class="sec-b__intro-container"
+      :class="{
+        [JS_CLASSES.INTRO_CONTAINER]: true,
+        'sec-b__intro-container--unpinned-top': introActive === 'unpinned-top',
+        'sec-b__intro-container--unpinned-bottom':
+          introActive === 'unpinned-bottom',
+      }"
+    >
       <div
-        :class="[
-          JS_CLASSES.INTRO,
-          'l-container',
-          'sec-b__intro',
-          {
-            'sec-b__intro--pinned': introActive === 'pinned',
-            'sec-b__intro--unpinned': introActive === 'unpinned',
-          },
-        ]"
+        class="l-container sec-b__intro"
+        :class="{
+          [JS_CLASSES.INTRO]: true,
+          'sec-b__intro--pinned': introActive === 'pinned',
+        }"
       >
         <div class="intro-title flex justify-center mb-[38px] lg:mb-10">
-          <!-- Indicators for debugging -->
-          <div
-            v-if="indicator2Style.position"
-            :style="indicator2Style"
-            class="indicator-2"
-          />
-
           <!-- title -->
           <LSectionBIntro :is-entered="isEntered" />
 
@@ -430,30 +340,87 @@ function handleIsEntered(shouldEnter: boolean) {
 @use '@/assets/styles/mixins' as *;
 
 .sec-b {
-  min-height: 100vh;
-  padding: 4rem 0;
-  padding-bottom: calc(4rem + 70px);
+  --section-padding-top: 94px;
+  --section-padding-bottom: 60px;
+
+  // 4rem 是 sectionC offset
+  padding-bottom: calc(4rem + var(--section-padding-bottom));
   overflow: hidden;
 
   @include rwd-min(sm) {
-    padding-bottom: calc(4rem + 100px);
+    --section-padding-top: 100px;
+    --section-padding-bottom: 80px;
   }
 
   @include rwd-min(lg) {
-    padding-bottom: calc(4rem + 120px);
+    --section-padding-top: 144px;
+    --section-padding-bottom: 100px;
+  }
+
+  // Indicators for debugging
+  // indicator-1: viewport center (fixed, yellow)
+  // indicator-2: intro top boundary (absolute, green)
+  // indicator-3: intro bottom boundary (absolute, blue)
+  .indicator-1 {
+    position: fixed;
+    z-index: 9999;
+    top: 50%;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background-color: yellow;
+    pointer-events: none;
+  }
+
+  .indicator-2,
+  .indicator-3 {
+    position: absolute;
+    z-index: 9999;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    pointer-events: none;
+  }
+
+  .indicator-2 {
+    top: calc(var(--intro-height) * 0.5 + var(--section-padding-top));
+    background-color: green;
+  }
+
+  .indicator-3 {
+    bottom: calc(var(--intro-height) * 0.5 + var(--section-padding-bottom));
+    background-color: blue;
+  }
+
+  &__intro-placeholder {
+    width: 100%;
+    height: 100vh;
+    position: relative;
   }
 
   &__intro-container {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    min-height: 100vh;
+    height: 100%;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: var(--section-padding-top) 0
+      calc(var(--section-padding-bottom) + 4rem) 0;
     z-index: 1;
+
+    &--unpinned-top {
+      align-items: flex-start;
+    }
+
+    &--unpinned-bottom {
+      align-items: flex-end;
+    }
   }
 
   &__intro {
+    position: relative;
+
     // Pinned state: fixed at viewport center
     &--pinned {
       position: fixed;
@@ -461,17 +428,6 @@ function handleIsEntered(shouldEnter: boolean) {
       left: 50%;
       width: 100%;
       transform: translate(-50%, -50%);
-      z-index: 1;
-    }
-
-    // Unpinned state: absolute at section bottom
-    &--unpinned {
-      position: absolute;
-      top: auto;
-      bottom: 50vh;
-      left: 0;
-      width: 100%;
-      transform: translateY(50%);
       z-index: 1;
     }
   }
@@ -485,12 +441,6 @@ function handleIsEntered(shouldEnter: boolean) {
     justify-content: center;
     padding: 0 20px;
     z-index: 2; // Above intro
-    pointer-events: none; // Allow interaction with intro before cards appear
-
-    // Re-enable pointer events for cards themselves
-    .state-card {
-      pointer-events: auto;
-    }
   }
 }
 
