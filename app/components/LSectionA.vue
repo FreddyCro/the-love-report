@@ -119,6 +119,10 @@ setup();
     margin-bottom: 0;
   }
 
+  @include rwd-min(xxs) {
+    --seca-px: 24px;
+  }
+
   &--f4 {
     @include rwd-min(sm) {
       margin-bottom: 84px;

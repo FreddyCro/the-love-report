@@ -175,7 +175,7 @@ const cssTimings = {
     right: 0;
     max-width: 169px;
     opacity: var(--seca-animation-opacity-start);
-    transform: translateX(100%);
+    transform: translateX(200%);
 
     @include rwd-min(sm) {
       max-width: none;
@@ -202,7 +202,7 @@ const cssTimings = {
     left: 0;
     max-width: 169px;
     opacity: var(--seca-animation-opacity-start);
-    transform: translateX(-100%);
+    transform: translateX(-200%);
 
     @include rwd-min(sm) {
       max-width: none;
@@ -229,7 +229,7 @@ const cssTimings = {
     right: 0;
     max-width: 169px;
     opacity: var(--seca-animation-opacity-start);
-    transform: translateX(100%);
+    transform: translateX(50%);
 
     @include rwd-min(sm) {
       top: calc(108 / 258 * 100%);

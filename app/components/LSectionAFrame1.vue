@@ -361,7 +361,7 @@ const imgBack2Paths = {
 
     .l-seca-f1__img2-wrap {
       opacity: 1;
-      border: solid 2px var(--color-love-red-03);
+      border: solid 2px var(--color-love-red-02);
       border-radius: 10px;
       overflow: hidden;
       transition: opacity var(--seca-f1-crossfade-duration)
