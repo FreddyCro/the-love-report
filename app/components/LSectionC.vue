@@ -258,25 +258,34 @@ const getTransformX = computed(() => {
 
 			<!-- Avatar Container -->
 			<div class="flex items-center gap-2 sm:gap-4">
-				<button
+				<div
 					v-for="{ case: caseItem, index } in visibleAvatars"
 					:key="caseItem.id"
 					:class="
 						activeAvatarIndex === index
-							? 'w-17.5 h-17.5 sm:w-25 sm:h-25 opacity-100'
-							: 'w-12.5 h-12.5 sm:w-20 sm:h-20 opacity-30'
+							? ''
+							: '-mx-2.5'
 					"
-					class="shrink-0 cursor-pointer transition-all duration-300"
-					@click="setActiveAvatar(index, caseItem.name)"
+					class="w-17.5 h-17.5 sm:w-25 sm:h-25 shrink-0 flex items-center justify-center transition-all duration-300"
 				>
-					<LPic
-						:src="caseItem.imgCircle"
-						ext="png"
-						:use-prefix="false"
-						:use2x="false"
-						:webp="true"
-					/>
-				</button>
+					<button
+						:class="
+							activeAvatarIndex === index
+								? 'w-17.5 h-17.5 sm:w-25 sm:h-25 opacity-100'
+								: 'w-12.5 h-12.5 sm:w-20 sm:h-20 opacity-30'
+						"
+						class="cursor-pointer transition-all duration-300"
+						@click="setActiveAvatar(index, caseItem.name)"
+					>
+						<LPic
+							:src="caseItem.imgCircle"
+							ext="png"
+							:use-prefix="false"
+							:use2x="false"
+							:webp="true"
+						/>
+					</button>
+				</div>
 			</div>
 
 			<!-- Right Arrow -->
@@ -312,7 +321,7 @@ const getTransformX = computed(() => {
 			<div
 				v-for="caseItem in cases"
 				:key="caseItem.id"
-				class="cursor-pointer bg-white rounded-[20px] border-2 border-love-blue-02  pt-4.5 pb-16.25 px-4.5 relative overflow-hidden shrink-0 w-full max-w-70 max-h-112.5
+				class="section-c__card cursor-pointer bg-white rounded-[20px] border-2 border-love-blue-02  pt-4.5 pb-16.25 px-4.5 relative overflow-hidden shrink-0 w-full max-w-70 max-h-112.5
 						sm:rounded-[30px] sm:pt-10 sm:px-6.5 sm:pb-12.5 sm:max-w-140.25 sm:max-h-121.5"
 				@click="openDialog(caseItem)"
 					>
@@ -451,6 +460,14 @@ const getTransformX = computed(() => {
 		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 	}
 
+	&__card {
+		&:hover .section-c__corner-button::before {
+			bottom: calc(-100px - 1.25rem);
+			right: calc(-100px - 1rem);
+			width: 200px;
+			height: 200px;
+		}
+	}
 
 	&__corner-button {
 		z-index: 1;
@@ -466,13 +483,6 @@ const getTransformX = computed(() => {
 			border-radius: 50%;
 			transition: all 0.3s;
 			z-index: -1;
-		}
-
-		&:hover::before {
-			bottom: calc(-100px - 1.25rem);
-			right: calc(-100px - 1rem);
-			width: 200px;
-			height: 200px;
 		}
 	}
 }

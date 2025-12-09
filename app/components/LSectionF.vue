@@ -84,7 +84,7 @@ const isFlipped = (index: number) => {
 			<div
 				v-for="caseItem in cases"
 				:key="caseItem.index"
-				class="perspective-midrange cursor-pointer"
+				class="perspective-midrange cursor-pointer group"
 				:class="{
 					'sm:-mt-15':
 						caseItem.index === 1 ||
@@ -118,7 +118,7 @@ const isFlipped = (index: number) => {
 							:height="211"
 						/>
 						<div
-							class="absolute bottom-0 right-0 w-25 h-25 bg-love-red-02 rounded-tl-[100px] overflow-hidden hover:w-31.25 hover:h-31.25 hover:rounded-tl-[125px] transition-all duration-300"
+							class="absolute bottom-0 right-0 w-25 h-25 bg-love-red-02 rounded-tl-[100px] overflow-hidden group-hover:w-31.25 group-hover:h-31.25 group-hover:rounded-tl-[125px] transition-all duration-300"
 						>
 							<div class="absolute bottom-6 right-6 w-7.5 h-7.5">
 								<LPic
@@ -141,7 +141,7 @@ const isFlipped = (index: number) => {
 						<h3 class="mb-5 text-black l-h3 font-bold">專家解答</h3>
 						<p class="l-p text-black">{{ caseItem.content.answer }}</p>
 						<div
-							class="absolute bottom-0 right-0 w-25 h-25 bg-white rounded-tl-[100px] overflow-hidden hover:w-31.25 hover:h-31.25 hover:rounded-tl-[125px] transition-all duration-300"
+							class="absolute bottom-0 right-0 w-25 h-25 bg-white rounded-tl-[100px] overflow-hidden group-hover:w-31.25 group-hover:h-31.25 group-hover:rounded-tl-[125px] transition-all duration-300"
 						>
 							<div class="absolute bottom-6 right-5 w-7.5 h-7.5">
 								<LPic

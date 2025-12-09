@@ -72,10 +72,9 @@ onMounted(async () => {
 
 		const trigger = ScrollTrigger.create({
 			trigger: item,
-			start: "top 80%",
+			start: "top 65%",
 			end: "bottom 10%",
 			onEnter: () => gsap.to(item, { opacity: 1, duration: 0.4, ease: "power2.out" }),
-			onLeave: () => gsap.to(item, { opacity: 0.3, duration: 0.4, ease: "power2.out" }),
 			onEnterBack: () => gsap.to(item, { opacity: 1, duration: 0.4, ease: "power2.out" }),
 			onLeaveBack: () => gsap.to(item, { opacity: 0.3, duration: 0.4, ease: "power2.out" }),
 		});
@@ -101,10 +100,6 @@ onMounted(async () => {
 			onEnter: () => {
 				gsap.to(firstImage, { opacity: 0, duration: 0.5 });
 				gsap.to(secondImage, { opacity: 1, duration: 0.5 });
-			},
-			onLeave: () => {
-				gsap.to(firstImage, { opacity: 1, duration: 0.5 });
-				gsap.to(secondImage, { opacity: 0, duration: 0.5 });
 			},
 			onEnterBack: () => {
 				gsap.to(firstImage, { opacity: 0, duration: 0.5 });
