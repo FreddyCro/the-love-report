@@ -398,7 +398,7 @@ function handleIsEntered(shouldEnter: boolean) {
   }
 
   .indicator-3 {
-    bottom: calc(var(--intro-height) * 0.5 + var(--section-padding-bottom));
+    bottom: calc(var(--intro-height) + var(--section-padding-bottom));
     background-color: blue;
   }
 
@@ -416,7 +416,7 @@ function handleIsEntered(shouldEnter: boolean) {
     height: 100%;
     display: flex;
     padding: var(--section-padding-top) 0
-      calc(var(--section-padding-bottom) + 4rem) 0;
+      calc(var(--section-padding-bottom) + calc(var(--intro-height)) + 4rem) 0;
     z-index: 1;
 
     &--unpinned-top {
