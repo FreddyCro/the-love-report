@@ -23,9 +23,9 @@ export const SECTION_A_FRAME_TIMINGS = {
   },
   FRAME_2: {
     IMG_DURATION: 1000,
-    IMG_DELAY: 2000, // Wait for Frame 1 second phase to complete
+    IMG_DELAY: 1500, // Wait for Frame 1 second phase to complete
     TEXT_DURATION: 1000,
-    TEXT_DELAY: 2300, // 1000ms (wait for Frame 1) + 300ms (original delay)
+    TEXT_DELAY: 1800, // 1000ms (wait for Frame 1) + 300ms (original delay)
   },
   FRAME_3: {
     IMG_DURATION: 1000,

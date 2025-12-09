@@ -327,7 +327,7 @@ export function useSequentialFrames(
   /**
    * Check if previous frame allows current frame to activate
    * Rule: Previous frame must be active AND animation complete
-   * Special: Frame 2+ must wait for Frame 1's BOTH phases + first scroll detection complete
+   * Special: ALL frames (Frame 2+) must wait for first scroll detection complete
    */
   function canActivateByPreviousFrame(frameIndex: number): boolean {
     if (frameIndex === 0) return true;
@@ -335,11 +335,12 @@ export function useSequentialFrames(
     const prevFrame = frames[frameIndex - 1];
     if (!prevFrame) return false;
 
-    // For Frame 2+: Must wait for first scroll detector to complete
+    // ALL frames must wait for first scroll detector to complete
     // (firstScrollDetectorActive becomes false after first scroll)
     const isFirstScrollComplete =
       !firstScrollDetectorActive || !isPageLoadedAtTop.value;
 
+    // If first scroll not complete, NO frame can activate
     if (!isFirstScrollComplete) return false;
 
     // For Frame 2 (index 1): Frame 1 must complete BOTH phases
@@ -351,7 +352,7 @@ export function useSequentialFrames(
       );
     }
 
-    // For other frames: Previous frame must be active AND animation must be complete
+    // For Frame 3-6: Previous frame must be active AND animation must be complete
     return prevFrame.isEnter.value && prevFrame.isAnimationComplete.value;
   }
 
