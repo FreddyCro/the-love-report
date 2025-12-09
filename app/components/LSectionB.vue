@@ -404,7 +404,8 @@ function handleIsEntered(shouldEnter: boolean) {
 
   &__intro-placeholder {
     width: 100%;
-    height: 100vh;
+    /* height: 100vh; */
+    height: 75vh;
     position: relative;
   }
 

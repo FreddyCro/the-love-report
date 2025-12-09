@@ -104,6 +104,10 @@ watch(
 .secb-love-chart {
   width: 100%;
 
+  @include rwd-min(sm) {
+    display: flex;
+  }
+
   &__title {
     margin-bottom: 1rem;
     font-size: 1.5rem;
