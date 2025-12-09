@@ -177,7 +177,7 @@ export function useSequentialFrames(
   /**
    * Create handler for Frame 1 (strict mode)
    * Activates immediately on any ENTER, never deactivates (except on scroll-to-top reset)
-   * 
+   *
    * Special case: If page is NOT loaded at top, directly activate without sequential wait
    */
   function createStrictHandler(frameIndex: number) {
@@ -341,7 +341,7 @@ export function useSequentialFrames(
    * Create handler for Frame 2-6 (sequential mode)
    * Activates on ENTER when previous frame is active
    * Never deactivates (only resets on scroll-to-top)
-   * 
+   *
    * Special case: If page is NOT loaded at top, directly activate frames in viewport
    * without waiting for previous frame animations
    */
@@ -474,26 +474,25 @@ export function useSequentialFrames(
   }
 
   /**
-   * [TEMPORARILY DISABLED]
    * Setup scroll-to-top reset watcher
    * Resets all frames when user scrolls to page top
    */
-  // function setupScrollToTopReset() {
-  //   let hasScrolledDown = false;
+  function setupScrollToTopReset() {
+    let hasScrolledDown = false;
 
-  //   watch(y, (scrollY) => {
-  //     // Track if user has scrolled down
-  //     if (scrollY > 100) {
-  //       hasScrolledDown = true;
-  //     }
+    watch(y, (scrollY) => {
+      // Track if user has scrolled down
+      if (scrollY > 100) {
+        hasScrolledDown = true;
+      }
 
-  //     // Reset only when scrolling back to top after scrolling down
-  //     if (scrollY === 0 && hasScrolledDown) {
-  //       hasScrolledDown = false;
-  //       resetAllFrames();
-  //     }
-  //   });
-  // }
+      // Reset only when scrolling back to top after scrolling down
+      if (scrollY === 0 && hasScrolledDown) {
+        hasScrolledDown = false;
+        resetAllFrames();
+      }
+    });
+  }
 
   /**
    * Watch frame intersection and call callback with state
@@ -530,8 +529,9 @@ export function useSequentialFrames(
   /**
    * Setup function to be called in onMounted
    * Wires up all frames with their respective handlers
+   * @param enableScrollToTopReset - Enable scroll-to-top reset behavior (default: false)
    */
-  function setup() {
+  function setup(enableScrollToTopReset: boolean = false) {
     onMounted(() => {
       // Detect page entry position after mount (when scroll position is available)
       isPageLoadedAtTop.value = y.value < 100;
@@ -549,8 +549,10 @@ export function useSequentialFrames(
         checkInitialFramesInViewport();
       }, initialCheckDelay);
 
-      // [TEMPORARILY DISABLED] Setup scroll-to-top reset watcher
-      // setupScrollToTopReset();
+      // Setup scroll-to-top reset watcher if enabled
+      if (enableScrollToTopReset) {
+        setupScrollToTopReset();
+      }
     });
   }
 

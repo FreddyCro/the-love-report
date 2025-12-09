@@ -21,7 +21,7 @@ const { frames, setup } = useSequentialFrames([
 ]);
 
 // Setup frame watchers and intersection observers
-setup();
+setup(true);
 </script>
 
 <template>
