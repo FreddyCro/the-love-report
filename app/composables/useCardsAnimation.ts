@@ -48,35 +48,17 @@ export const useCardsAnimation = async (
   }
   if (cards.length === 0) return;
 
-  // Use IntersectionObserver to optimize: only create ScrollTrigger when cards enter viewport
-  let isAnimationCreated = false;
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && !isAnimationCreated) {
-          // Cards container entered viewport, create GSAP animation
-          createCardsAnimation(
-            gsap,
-            ScrollTrigger,
-            cards,
-            cardsContainer,
-            cardData,
-            cardStaggerDelay,
-            scrollPerCard,
-            scrollTriggerInstances
-          );
-          isAnimationCreated = true;
-        }
-      });
-    },
-    {
-      root: null,
-      rootMargin: '300px', // Start animation 300px before entering viewport
-      threshold: 0,
-    }
+  // Create animation immediately on mount to support bi-directional scrolling
+  createCardsAnimation(
+    gsap,
+    ScrollTrigger,
+    cards,
+    cardsContainer,
+    cardData,
+    cardStaggerDelay,
+    scrollPerCard,
+    scrollTriggerInstances
   );
-
-  observer.observe(cardsContainer);
 
   // Handle window resize to prevent layout issues
   let resizeTimeout: NodeJS.Timeout;
@@ -93,7 +75,6 @@ export const useCardsAnimation = async (
 
   // Cleanup function
   return () => {
-    observer.disconnect();
     window.removeEventListener('resize', handleResize);
     clearTimeout(resizeTimeout);
   };

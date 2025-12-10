@@ -82,18 +82,22 @@ watch(
     </div>
 
     <!-- Percentage display -->
-    <div class="secb-love-chart__percentage">
-      {{ percentage }}<span class="secb-love-chart__percentage-sign">%</span>
-    </div>
+    <div
+      class="relative flex sm:flex-col justify-center sm:justify-end items-end"
+    >
+      <div class="secb-love-chart__percentage">
+        {{ percentage }}<span class="secb-love-chart__percentage-sign">%</span>
+      </div>
 
-    <!-- Legend -->
-    <div class="secb-love-chart__legend">
-      <LSectionBCardLove
-        :active="true"
-        :style="{ '--secb-love-chart-color': activeColor }"
-        class="secb-love-chart__legend-icon"
-      />
-      <span>=2%</span>
+      <!-- Legend -->
+      <div class="secb-love-chart__legend">
+        <LSectionBCardLove
+          :active="true"
+          :style="{ '--secb-love-chart-color': activeColor }"
+          class="secb-love-chart__legend-icon"
+        />
+        <span>=2%</span>
+      </div>
     </div>
   </div>
 </template>
@@ -103,9 +107,11 @@ watch(
 
 .secb-love-chart {
   width: 100%;
+  display: flex;
+  flex-direction: column-reverse;
 
   @include rwd-min(sm) {
-    display: flex;
+    flex-direction: row;
   }
 
   &__title {
@@ -168,11 +174,20 @@ watch(
   }
 
   &__legend {
+    position: absolute;
+    right: 0;
+    bottom: 0;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     margin-bottom: 1rem;
     font-size: 0.875rem;
+
+    @include rwd-min(sm) {
+      position: static;
+      right: auto;
+      bottom: auto;
+    }
   }
 
   &__legend-icon {
