@@ -2,6 +2,10 @@
 import str from '../locales/section-a.json';
 import { SECTION_A_FRAME_TIMINGS, toCssTime } from '../utils/animationTimings';
 
+// 使用 Nuxt 的 runtimeConfig 取得環境變數
+const config = useRuntimeConfig();
+const ASSETS_PATH = config.public.APP_ASSETS_PATH;
+
 defineProps<{
   active: boolean; // 原本的 active 狀態（保留）
   activePhase1: boolean; // 第一階段：進入 viewport 觸發
@@ -23,27 +27,27 @@ const cssTimings = {
 
 // Image paths for picture element
 const imgBack1Paths = {
-  webp_1920: '/img/intimate_relationships_p01_frame01_00_1920plus_pc.webp',
-  jpg_1920: '/img/intimate_relationships_p01_frame01_00_1920plus_pc.jpg',
-  webp_1280: '/img/intimate_relationships_p01_frame01_00_pc.webp',
-  jpg_1280: '/img/intimate_relationships_p01_frame01_00_pc.jpg',
-  webp_768: '/img/intimate_relationships_p01_frame01_01_pad.webp',
-  png_768: '/img/intimate_relationships_p01_frame01_01_pad.png',
-  webp_default: '/img/intimate_relationships_p01_frame01_01_mob.webp',
-  png_default: '/img/intimate_relationships_p01_frame01_01_mob.png',
-  fallback: '/img/intimate_relationships_p01_frame01_00_1920plus_pc.jpg',
+  webp_1920: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_1920plus_pc.webp`,
+  jpg_1920: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_1920plus_pc.jpg`,
+  webp_1280: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_pc.webp`,
+  jpg_1280: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_pc.jpg`,
+  webp_768: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_01_pad.webp`,
+  png_768: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_01_pad.png`,
+  webp_default: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_01_mob.webp`,
+  png_default: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_01_mob.png`,
+  fallback: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_1920plus_pc.jpg`,
 };
 
 const imgBack2Paths = {
-  webp_1920: '/img/intimate_relationships_p01_frame01_02_1920plus_pcpad.webp',
-  jpg_1920: '/img/intimate_relationships_p01_frame01_02_1920plus_pcpad.jpg',
-  webp_1280: '/img/intimate_relationships_p01_frame01_02_1280plus_pcpad.webp',
-  jpg_1280: '/img/intimate_relationships_p01_frame01_02_1280plus_pcpad.jpg',
-  webp_768: '/img/intimate_relationships_p01_frame01_02_pad.webp',
-  png_768: '/img/intimate_relationships_p01_frame01_02_pad.png',
-  webp_default: '/img/intimate_relationships_p01_frame01_02_mob.webp',
-  png_default: '/img/intimate_relationships_p01_frame01_02_mob.png',
-  fallback: '/img/intimate_relationships_p01_frame01_00_1920plus_pc.jpg',
+  webp_1920: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_1920plus_pcpad.webp`,
+  jpg_1920: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_1920plus_pcpad.jpg`,
+  webp_1280: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_1280plus_pcpad.webp`,
+  jpg_1280: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_1280plus_pcpad.jpg`,
+  webp_768: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_pad.webp`,
+  png_768: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_pad.png`,
+  webp_default: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_mob.webp`,
+  png_default: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_mob.png`,
+  fallback: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_1920plus_pc.jpg`,
 };
 </script>
 
