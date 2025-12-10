@@ -16,8 +16,12 @@ const props = withDefaults(defineProps<Props>(), {
 	introParagraphClass: "l-p",
 });
 
+// 使用 Nuxt 的 runtimeConfig 取得環境變數
+const config = useRuntimeConfig();
+const ASSETS_PATH = config.public.APP_ASSETS_PATH;
+
 const dialogboxStyle = computed(() => ({
-	backgroundImage: `url("/img/intimate_relationships_${props.dialogboxImg}.svg")`,
+	backgroundImage: `url("${ASSETS_PATH}/img/intimate_relationships_${props.dialogboxImg}.svg")`,
 }));
 </script>
 

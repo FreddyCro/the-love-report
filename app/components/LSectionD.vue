@@ -274,7 +274,6 @@ onBeforeUnmount(() => {
   &__step {
     width: 70px;
     height: 60px;
-    /* background-image: url("/img/intimate_relationships_p0402_heartsign_pcpadmob.svg"); */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
