@@ -284,7 +284,7 @@ function handleIsEntered(shouldEnter: boolean) {
             <!-- Render different placeholder content based on item.chart (A..F) -->
             <div
               v-if="item.chart === 'chartA'"
-              class="js-chart-content chart-a-placeholder"
+              class="js-chart-content w-full h-full"
             >
               <LSectionBCardLoveChart
                 :active-love-number="35"
@@ -297,7 +297,7 @@ function handleIsEntered(shouldEnter: boolean) {
 
             <div
               v-else-if="item.chart === 'chartB'"
-              class="js-chart-content chart-a-placeholder"
+              class="js-chart-content w-full h-full"
             >
               <LSectionBCardLoveChart
                 :active-love-number="20"

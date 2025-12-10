@@ -229,7 +229,7 @@ const cssTimings = {
     right: 0;
     max-width: 169px;
     opacity: var(--seca-animation-opacity-start);
-    transform: translateX(50%);
+    transform: translateX(200%);
 
     @include rwd-min(sm) {
       top: calc(108 / 258 * 100%);

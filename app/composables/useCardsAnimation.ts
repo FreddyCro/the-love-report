@@ -65,9 +65,7 @@ export const useCardsAnimation = async (
   const handleResize = () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
-      if (isAnimationCreated) {
-        ScrollTrigger.refresh();
-      }
+      ScrollTrigger.refresh();
     }, 150); // Debounce resize events
   };
 
