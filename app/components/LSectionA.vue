@@ -7,8 +7,12 @@ import LSectionAFrame4 from './LSectionAFrame4.vue';
 import LSectionAFrame5 from './LSectionAFrame5.vue';
 import LSectionAFrame6 from './LSectionAFrame6.vue';
 import { useSequentialFrames } from '../composables/useSequentialFrames';
+import { useBreakpoint } from '../composables/useBreakpoint';
 import { SECTION_A_DURATIONS } from '../utils/animationTimings';
 import { computed } from 'vue';
+
+// Get current breakpoint
+const { currentBreakpoint } = useBreakpoint();
 
 // Initialize sequential frames with animation durations
 // Durations are automatically synced from animationTimings.ts

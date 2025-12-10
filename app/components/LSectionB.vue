@@ -9,7 +9,11 @@ import { useActiveOnViewport } from '../composables/useActiveOnViewport';
 import { useIntroPin } from '../composables/useIntroPin';
 import { useCardsAnimation } from '../composables/useCardsAnimation';
 import { useSectionBState } from '../composables/useSectionBState';
+import { useBreakpoint } from '../composables/useBreakpoint';
 import str from '../locales/section-b.json';
+
+// Get current breakpoint
+const { currentBreakpoint } = useBreakpoint();
 
 type CartType = {
   title: string;
@@ -313,13 +317,88 @@ function handleIsEntered(shouldEnter: boolean) {
               />
             </div>
 
-            <div v-else-if="item.chart === 'chartD'">
-              <LPic
+            <div v-else-if="item.chart === 'chartD'" class="w-full h-full">
+              <div class="w-full h-full flex flex-col gap-2 mt-4">
+                <!-- 1. 我很享受自己已現在的生活 -->
+                <div
+                  class="w-fit"
+                  :class="{
+                    'rotate-[-5deg]': ['sm', 'md', 'lg', 'xl', '2xl'].includes(
+                      currentBreakpoint
+                    ),
+                    'rotate-0': ['xxs', 'xs'].includes(currentBreakpoint),
+                  }"
+                >
+                  <LChatBubble
+                    :shadow="true"
+                    pointer="top-left"
+                    bg-color="#FFE5E5"
+                  >
+                    <p class="l-p">
+                      {{ str.card4ChartText1 }}
+                    </p>
+                  </LChatBubble>
+                </div>
+
+                <!-- 2. 我目前想專心拚事業或學業 -->
+                <div class="w-fit rotate-[5deg] ml-auto">
+                  <LChatBubble
+                    :shadow="true"
+                    pointer="top-left"
+                    bg-color="#FFE5E5"
+                  >
+                    <p class="l-p">
+                      {{ str.card4ChartText2 }}
+                    </p>
+                  </LChatBubble>
+                </div>
+
+                <!-- 3. 我遭沒遇到想結婚的對象 -->
+                <div class="w-fit rotate-[-5deg]">
+                  <LChatBubble
+                    :shadow="true"
+                    pointer="top-left"
+                    bg-color="#FFE5E5"
+                  >
+                    <p class="l-p">
+                      {{ str.card4ChartText3 }}
+                    </p>
+                  </LChatBubble>
+                </div>
+
+                <!-- 4. 我擔心婚後的經濟狀況 -->
+                <div class="w-fit rotate-[5deg] ml-auto">
+                  <LChatBubble
+                    :shadow="true"
+                    pointer="top-left"
+                    bg-color="#FFE5E5"
+                  >
+                    <p class="l-p">
+                      {{ str.card4ChartText4 }}
+                    </p>
+                  </LChatBubble>
+                </div>
+
+                <!-- 5. 我還不覺得有結婚的必要 -->
+                <div class="w-fit rotate-[-5deg]">
+                  <LChatBubble
+                    :shadow="true"
+                    pointer="top-left"
+                    bg-color="#FFE5E5"
+                  >
+                    <p class="l-p">
+                      {{ str.card4ChartText5 }}
+                    </p>
+                  </LChatBubble>
+                </div>
+              </div>
+
+              <!-- <LPic
                 src="/img/intimate_relationships_p0202_card04_info01"
                 ext="svg"
                 :use2x="false"
                 :webp="false"
-              />
+              /> -->
             </div>
 
             <div v-else-if="item.chart === 'chartE'">
