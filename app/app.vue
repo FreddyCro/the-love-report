@@ -44,14 +44,14 @@ useHead({
     },
     {
       rel: 'stylesheet',
-      href: './nmd-loading.css',
+      href: `${ASSETS_PATH}/nmd-loading.css`,
       tagPosition: 'bodyOpen',
     },
   ],
   script: [
     {
       type: 'text/javascript',
-      src: './nmd-loading.min.js',
+      src: `${ASSETS_PATH}/nmd-loading.min.js`,
       tagPosition: 'bodyOpen',
     },
     {
