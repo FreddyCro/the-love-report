@@ -308,7 +308,7 @@ function handleIsEntered(shouldEnter: boolean) {
               />
             </div>
 
-            <div v-else-if="item.chart === 'chartC'">
+            <div v-else-if="item.chart === 'chartC'" class="js-chart-content">
               <LPic
                 src="/img/intimate_relationships_p0202_card03_info"
                 ext="svg"
@@ -317,19 +317,24 @@ function handleIsEntered(shouldEnter: boolean) {
               />
             </div>
 
-            <div v-else-if="item.chart === 'chartD'" class="w-full h-full">
+            <div
+              v-else-if="item.chart === 'chartD'"
+              class="js-chart-content w-full h-full"
+            >
               <div
                 class="w-full h-full flex flex-col gap-2 lg:mx-auto mt-4 mb-5"
               >
                 <!-- 1. 我很享受自己已現在的生活 -->
                 <div
-                  class="w-fit mb-5 sm:mb-1 lg:-mb-4 lg:translate-x-2"
+                  class="chat-bubble-wrapper w-fit mb-5 sm:mb-1 lg:-mb-4 lg:translate-x-2"
                   :class="{
                     'rotate-[-5deg]': ['sm', 'md', 'lg', 'xl', '2xl'].includes(
                       currentBreakpoint
                     ),
                     'rotate-0': ['xxs', 'xs'].includes(currentBreakpoint),
+                    active: activeIndex === 3,
                   }"
+                  style="--delay: 0.05s"
                 >
                   <LChatBubble
                     :shadow="true"
@@ -344,13 +349,15 @@ function handleIsEntered(shouldEnter: boolean) {
 
                 <!-- 2. 我目前想專心拚事業或學業 -->
                 <div
-                  class="w-fit mb-5 sm:mb-1 lg:-mb-4 ml-auto"
+                  class="chat-bubble-wrapper w-fit mb-5 sm:mb-1 lg:-mb-4 ml-auto"
                   :class="{
                     'rotate-[5deg]': ['sm', 'md', 'lg', 'xl', '2xl'].includes(
                       currentBreakpoint
                     ),
                     'rotate-[-5deg]': ['xxs', 'xs'].includes(currentBreakpoint),
+                    active: activeIndex === 3,
                   }"
+                  style="--delay: 0.15s"
                 >
                   <LChatBubble
                     :shadow="true"
@@ -365,13 +372,15 @@ function handleIsEntered(shouldEnter: boolean) {
 
                 <!-- 3. 我遭沒遇到想結婚的對象 -->
                 <div
-                  class="w-fit mb-5 sm:mb-1 lg:-mb-4 lg:translate-x-20"
+                  class="chat-bubble-wrapper w-fit mb-5 sm:mb-1 lg:-mb-4 lg:translate-x-20"
                   :class="{
                     'rotate-[5deg]': ['sm', 'md', 'lg', 'xl', '2xl'].includes(
                       currentBreakpoint
                     ),
                     'rotate-[-5deg]': ['xxs', 'xs'].includes(currentBreakpoint),
+                    active: activeIndex === 3,
                   }"
+                  style="--delay: 0.25s"
                 >
                   <LChatBubble
                     :shadow="true"
@@ -386,13 +395,15 @@ function handleIsEntered(shouldEnter: boolean) {
 
                 <!-- 4. 我擔心婚後的經濟狀況 -->
                 <div
-                  class="w-fit mb-5 sm:mb-1 lg:-mb-4 ml-auto"
+                  class="chat-bubble-wrapper w-fit mb-5 sm:mb-1 lg:-mb-4 ml-auto"
                   :class="{
                     'rotate-[-5deg]': ['sm', 'md', 'lg', 'xl', '2xl'].includes(
                       currentBreakpoint
                     ),
                     'rotate-[5deg]': ['xxs', 'xs'].includes(currentBreakpoint),
+                    active: activeIndex === 3,
                   }"
+                  style="--delay: 0.35s"
                 >
                   <LChatBubble
                     :shadow="true"
@@ -407,13 +418,15 @@ function handleIsEntered(shouldEnter: boolean) {
 
                 <!-- 5. 我還不覺得有結婚的必要 -->
                 <div
-                  class="w-fit mb-5 sm:mb-1 lg:-mb-4 lg:translate-x-2"
+                  class="chat-bubble-wrapper w-fit mb-5 sm:mb-1 lg:-mb-4 lg:translate-x-2"
                   :class="{
                     'rotate-[5deg]': ['sm', 'md', 'lg', 'xl', '2xl'].includes(
                       currentBreakpoint
                     ),
                     'rotate-[-5deg]': ['xxs', 'xs'].includes(currentBreakpoint),
+                    active: activeIndex === 3,
                   }"
+                  style="--delay: 0.45s"
                 >
                   <LChatBubble
                     :shadow="true"
@@ -491,6 +504,19 @@ function handleIsEntered(shouldEnter: boolean) {
       padding: 12px 22px;
       font-size: 20px;
       line-height: 32px;
+    }
+  }
+
+  // Chat bubble fade up animation
+  .chat-bubble-wrapper {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transition-delay: var(--delay, 0s);
+
+    &.active {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 
