@@ -569,8 +569,9 @@ function handleIsEntered(shouldEnter: boolean) {
     width: 100%;
     height: 100%;
     display: flex;
-    padding: var(--section-padding-top) 0
-      calc(var(--section-padding-bottom) + calc(var(--intro-height)) + 4rem) 0;
+    /* padding: var(--section-padding-top) 0
+      calc(var(--section-padding-bottom) + calc(var(--intro-height)) + 4rem) 0; */
+    padding-bottom: 150vh;
     z-index: 1;
 
     &--unpinned-top {
@@ -614,7 +615,7 @@ function handleIsEntered(shouldEnter: boolean) {
   transition: background-color 1s, color 1s;
 
   /* LSectionBIntro.vue */
-  path,
+  path:not(.secb-card-love path),
   rect {
     transition: fill 1s, stroke 1s;
   }

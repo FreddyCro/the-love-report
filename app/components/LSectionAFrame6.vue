@@ -27,7 +27,7 @@ const cssTimings = {
         <LPic
           src="/img/intimate_relationships_p01_frame06_10"
           :srcset="['pad', 'mob']"
-          ext="jpg"
+          ext="png"
           :use2x="false"
           :webp="true"
         />

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import LSectionBCardLove from './LSectionBCardLove.vue';
 
 interface Props {
@@ -14,75 +14,54 @@ const props = withDefaults(defineProps<Props>(), {
   active: false,
 });
 
-// Calculate which love icons should be active (total 50 icons: 5 rows × 10 columns)
-const totalLoves = 50;
-const activeCount = ref(0);
+// Track if animation has been activated at least once
+const hasBeenActivated = ref(false);
 
-const loves = Array.from({ length: totalLoves }, (_, index) => ({
-  id: index,
-  isActive: ref(false),
-}));
-
-// Store timeout ID for cleanup
-let animationTimeout: ReturnType<typeof setTimeout> | null = null;
-
-// Watch for active prop change to trigger sequential animation
+// Watch for active prop to become true, then lock it
 watch(
   () => props.active,
-  (newActive, oldActive) => {
-    // Clear any existing animation timeout
-    if (animationTimeout) {
-      clearTimeout(animationTimeout);
-      animationTimeout = null;
-    }
-
+  (newActive) => {
     if (newActive) {
-      // Reset all loves to inactive first when becoming active
-      loves.forEach((love) => {
-        love.isActive.value = false;
-      });
-      activeCount.value = 0;
-
-      // Sequentially activate loves
-      const animateLoves = () => {
-        // Ensure we don't attempt to access an out-of-range index
-        const target = Math.min(props.activeLoveNumber, loves.length);
-        if (activeCount.value < target) {
-          const current = loves[activeCount.value];
-          if (current) {
-            current.isActive.value = true;
-          }
-          activeCount.value++;
-          animationTimeout = setTimeout(animateLoves, 50); // 50ms delay between each activation
-        }
-      };
-      animateLoves();
+      hasBeenActivated.value = true;
     }
-    // When becoming inactive, keep the current state (don't reset)
   },
   { immediate: true }
+);
+
+// Calculate which love icons should be active (total 50 icons: 5 rows × 10 columns)
+const totalLoves = 50;
+
+// Create loves array with delay calculation
+const loves = computed(() =>
+  Array.from({ length: totalLoves }, (_, index) => ({
+    id: index,
+    isActive: index < props.activeLoveNumber,
+    delay: index * 0.05, // 50ms = 0.05s delay between each icon
+  }))
 );
 </script>
 
 <template>
   <div class="secb-love-chart">
     <!-- Love icons grid -->
-    <div class="secb-love-chart__loves">
+    <div class="secb-love-chart__loves" :class="{ 'is-active': hasBeenActivated }">
       <LSectionBCardLove
         v-for="love in loves"
         :key="love.id"
         class="secb-love-chart__love-icon"
-        :active="love.isActive.value"
+        :active="hasBeenActivated"
         :style="{
-          '--secb-love-chart-color': love.isActive.value
-            ? activeColor
-            : inactiveColor,
+          '--secb-love-chart-color':
+            hasBeenActivated && love.isActive ? activeColor : inactiveColor,
+          '--delay': `${love.delay}s`,
         }"
       />
     </div>
 
     <!-- Percentage display -->
-    <div class="relative sm:static flex sm:h-auto sm:flex-col justify-center items-end">
+    <div
+      class="relative sm:static flex sm:h-auto sm:flex-col justify-center items-end"
+    >
       <div class="secb-love-chart__percentage">
         {{ percentage }}<span class="secb-love-chart__percentage-sign">%</span>
       </div>

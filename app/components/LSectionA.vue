@@ -12,7 +12,7 @@ import { SECTION_A_DURATIONS } from '../utils/animationTimings';
 import { computed } from 'vue';
 
 // Get current breakpoint
-const { currentBreakpoint } = useBreakpoint();
+// const { currentBreakpoint } = useBreakpoint();
 
 // Initialize sequential frames with animation durations
 // Durations are automatically synced from animationTimings.ts
@@ -36,7 +36,7 @@ const frame1Phase2 = computed(() => frames[0]?.isSecondPhase.value ?? false);
 
 <template>
   <section
-    class="sec-a l-article pt-(--navbar-height) overflow-hidden pb-20"
+    class="sec-a l-article pt-(--navbar-height) overflow-hidden pb-20 lg:pb-[100px]"
   >
     <!-- visually hidden for seo -->
     <h1 class="visually-hidden">
