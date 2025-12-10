@@ -4,6 +4,9 @@ import sectionCData from "~/locales/section-c.json";
 import LPic from "./LPic.vue";
 import LSectionHeader from "./LSectionHeader.vue";
 import { useScrollAnimation } from "~/composables/useScrollAnimation";
+import useTrackingEvent from "~/composables/useTrackingEvent";
+
+const { gaClickAnchor, gaClickSeries, gaClickBtn } = useTrackingEvent();
 
 interface Section {
 	title: string;
@@ -47,6 +50,9 @@ const openDialog = async (caseItem: CaseItem) => {
 	dialogCase.value = caseItem;
 	isDialogOpen.value = true;
 
+	// GA tracking: 個案故事－展開按鈕
+	gaClickSeries(`story_${caseItem.name}打開`);
+
 	// 暫停 Lenis 平滑滾動
 	if (!lenisInstance) {
 		const { lenis } = await useScrollAnimation();
@@ -56,6 +62,11 @@ const openDialog = async (caseItem: CaseItem) => {
 };
 
 const closeDialog = () => {
+	// GA tracking: 個案故事－關閉按鈕
+	if (dialogCase.value) {
+		gaClickBtn(`story_${dialogCase.value.name}關閉`);
+	}
+
 	isDialogOpen.value = false;
 	dialogCase.value = null;
 
@@ -65,17 +76,23 @@ const closeDialog = () => {
 
 // 切換到上一個
 const goToPrevious = () => {
+	// GA tracking: 個案故事－錨點切換按鈕
+	gaClickBtn('left_左側按鈕');
 	activeAvatarIndex.value = Math.max(0, activeAvatarIndex.value - 1);
 };
 
 // 切換到下一個
 const goToNext = () => {
+	// GA tracking: 個案故事－錨點切換按鈕
+	gaClickBtn('right_右側按鈕');
 	const maxIndex = cases.length - 1;
 	activeAvatarIndex.value = Math.min(maxIndex, activeAvatarIndex.value + 1);
 };
 
 // 設定 active 頭像
-const setActiveAvatar = (index: number) => {
+const setActiveAvatar = (index: number, caseName: string) => {
+	// GA tracking: 個案故事－錨點按鈕
+	gaClickAnchor(caseName);
 	activeAvatarIndex.value = index;
 };
 
@@ -121,11 +138,18 @@ const cardConstants = computed(() => {
 			SIDE_PADDING: 119,
 			VISIBLE_AVATARS: 4,
 		};
-	} else {
+	} else if (width >= 414) {
 		return {
 			CARD_WIDTH: 280,
 			CARD_GAP: 20,
 			SIDE_PADDING: 24,
+			VISIBLE_AVATARS: 3,
+		};
+	} else {
+		return {
+			CARD_WIDTH: 280,
+			CARD_GAP: 20,
+			SIDE_PADDING: 20,
 			VISIBLE_AVATARS: 3,
 		};
 	}
@@ -197,7 +221,8 @@ const getTransformX = computed(() => {
 
 <template>
 	<section
-		class="section-c min-h-screen l-article bg-love-blue-01 relative overflow-x-hidden pt-12 pb-[130px] sm:pt-20 rounded-t-[70px] -mt-[70px] sm:rounded-t-[100px] sm:-mt-[100px] sm:pb-45 lg:rounded-t-[120px] lg:-mt-[120px] lg:pb-50"
+		id="story"
+		class="section-c min-h-screen l-article bg-love-blue-01 relative overflow-x-hidden pt-12 pb-32.5 sm:pt-20 rounded-t-[70px] -mt-17.5 sm:rounded-t-[100px] sm:-mt-25 sm:pb-45 lg:rounded-t-[120px] lg:-mt-30 lg:pb-50"
 	>
 		<LSectionHeader
 			:title="content.title"
@@ -208,11 +233,11 @@ const getTransformX = computed(() => {
 
 		<!-- Avatar Selection -->
 		<div
-			class="mt-9 mb-7 sm:my-9 flex justify-center items-center gap-2 sm:gap-4 max-w-[712px] mx-auto h-[70px] sm:h-[100px]"
+			class="mt-9 mb-7 sm:my-9 flex justify-center items-center gap-2 sm:gap-4 max-w-178 mx-auto h-17.5 sm:h-25"
 		>
 			<!-- Left Arrow -->
 			<button
-				class="w-[50px] h-[50px] shrink-0 transition-opacity duration-300"
+				class="w-12.5 h-12.5 shrink-0 transition-opacity duration-300"
 				:class="
 					canGoLeft ? 'opacity-100 cursor-pointer' : 'opacity-0 cursor-default'
 				"
@@ -233,30 +258,39 @@ const getTransformX = computed(() => {
 
 			<!-- Avatar Container -->
 			<div class="flex items-center gap-2 sm:gap-4">
-				<button
+				<div
 					v-for="{ case: caseItem, index } in visibleAvatars"
 					:key="caseItem.id"
 					:class="
 						activeAvatarIndex === index
-							? 'w-[70px] h-[70px] sm:w-[100px] sm:h-[100px] opacity-100'
-							: 'w-[50px] h-[50px] sm:w-20 sm:h-20 opacity-30'
+							? ''
+							: '-mx-2.5'
 					"
-					class="shrink-0 cursor-pointer transition-all duration-300"
-					@click="setActiveAvatar(index)"
+					class="w-17.5 h-17.5 sm:w-25 sm:h-25 shrink-0 flex items-center justify-center transition-all duration-300"
 				>
-					<LPic
-						:src="caseItem.imgCircle"
-						ext="png"
-						:use-prefix="false"
-						:use2x="false"
-						:webp="true"
-					/>
-				</button>
+					<button
+						:class="
+							activeAvatarIndex === index
+								? 'w-17.5 h-17.5 sm:w-25 sm:h-25 opacity-100'
+								: 'w-12.5 h-12.5 sm:w-20 sm:h-20 opacity-30'
+						"
+						class="cursor-pointer transition-all duration-300"
+						@click="setActiveAvatar(index, caseItem.name)"
+					>
+						<LPic
+							:src="caseItem.imgCircle"
+							ext="png"
+							:use-prefix="false"
+							:use2x="false"
+							:webp="true"
+						/>
+					</button>
+				</div>
 			</div>
 
 			<!-- Right Arrow -->
 			<button
-				class="w-[50px] h-[50px] shrink-0 transition-opacity duration-300"
+				class="w-12.5 h-12.5 shrink-0 transition-opacity duration-300"
 				:class="
 					canGoRight ? 'opacity-100 cursor-pointer' : 'opacity-0 cursor-default'
 				"
@@ -287,11 +321,12 @@ const getTransformX = computed(() => {
 			<div
 				v-for="caseItem in cases"
 				:key="caseItem.id"
-				class="bg-white rounded-[20px] border-2 border-love-blue-02  pt-[18px] pb-[65px] px-[18px]  relative overflow-hidden shrink-0 w-full max-w-70 max-h-[450px]
-						sm:rounded-[30px] sm:pt-10 sm:px-[26px] sm:pb-[50px] sm:max-w-[561px] sm:max-h-[486px]"
+				class="section-c__card cursor-pointer bg-white rounded-[20px] border-2 border-love-blue-02  pt-4.5 pb-16.25 px-4.5 relative overflow-hidden shrink-0 w-full max-w-70 max-h-112.5
+						sm:rounded-[30px] sm:pt-10 sm:px-6.5 sm:pb-12.5 sm:max-w-140.25 sm:max-h-121.5"
+				@click="openDialog(caseItem)"
 					>
 				<div class="flex gap-6 mb-7 flex-col sm:flex-row">
-					<div class="w:100% h:100% sm:w-[154px] sm:h-[158px] py-0.5">
+					<div class="w:100% h:100% sm:w-38.5 sm:h-39.5 py-0.5">
 						<LPic
 							:src="caseItem.imgSquare"
 							ext="jpg"
@@ -336,7 +371,6 @@ const getTransformX = computed(() => {
 				<button
 					class="section-c__corner-button absolute right-4 bottom-5 w-5 h-5 cursor-pointer"
 					aria-label="查看更多"
-					@click="openDialog(caseItem)"
 				>
 					<LPic
 						src="/img/button_card_plus_corner"
@@ -362,10 +396,10 @@ const getTransformX = computed(() => {
 						@wheel.prevent
 						@touchmove.prevent
 					>
-						<div class="relative mx-4 max-w-[944px]">
+						<div class="relative mx-5 xs:6 sm:mx-15 max-w-236 overflow-hidden rounded-[30px] bg-white border-2 border-love-blue-02">
 							<!-- Close Button -->
 							<button
-								class="absolute top-3 right-3 z-10 cursor-pointer w-10 h-10 rounded-full bg-love-blue-02 flex items-center justify-center"
+								class="absolute top-4 right-4 z-10 cursor-pointer w-10 h-10 rounded-full bg-love-blue-02 flex items-center justify-center"
 								aria-label="關閉"
 								@click="closeDialog"
 							>
@@ -383,17 +417,17 @@ const getTransformX = computed(() => {
 							</button>
 
 							<div
-								class="section-c__dialog bg-white rounded-[30px] border-2 border-love-blue-02 p-10 max-h-[83vh] overflow-y-auto overscroll-contain"
+								class="section-c__dialog py-15 px-8 sm:p-15 lg:py-15 lg:px-20 h-[86vh] xs:h-[83vh] overflow-y-auto overscroll-contain"
 								@wheel.stop
 								@touchmove.stop
 							>
 								<!-- Dialog Content -->
-								<div v-if="dialogCase" class="space-y-6 pr-8">
+								<div v-if="dialogCase" class="space-y-6">
 									<div
 										v-for="(section, sectionIndex) in dialogCase.sections"
 										:key="sectionIndex"
 									>
-										<h4 class="text-love-red-03 mb-2 l-h5 font-bold">
+										<h4 class="text-love-red-03 mb-2 l-h4 font-bold">
 											{{ section.title }}
 										</h4>
 										<p
@@ -426,6 +460,14 @@ const getTransformX = computed(() => {
 		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 	}
 
+	&__card {
+		&:hover .section-c__corner-button::before {
+			bottom: calc(-100px - 1.25rem);
+			right: calc(-100px - 1rem);
+			width: 200px;
+			height: 200px;
+		}
+	}
 
 	&__corner-button {
 		z-index: 1;
@@ -441,13 +483,6 @@ const getTransformX = computed(() => {
 			border-radius: 50%;
 			transition: all 0.3s;
 			z-index: -1;
-		}
-
-		&:hover::before {
-			bottom: calc(-100px - 1.25rem);
-			right: calc(-100px - 1rem);
-			width: 200px;
-			height: 200px;
 		}
 	}
 }

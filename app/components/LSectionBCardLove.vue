@@ -31,6 +31,7 @@ withDefaults(defineProps<Props>(), {
 
   path {
     transition: fill 0.3s ease;
+    transition-delay: var(--delay, 0s);
   }
 }
 </style>

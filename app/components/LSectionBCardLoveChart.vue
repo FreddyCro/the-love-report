@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import LSectionBCardLove from './LSectionBCardLove.vue';
 
 interface Props {
@@ -14,86 +14,67 @@ const props = withDefaults(defineProps<Props>(), {
   active: false,
 });
 
-// Calculate which love icons should be active (total 50 icons: 5 rows × 10 columns)
-const totalLoves = 50;
-const activeCount = ref(0);
+// Track if animation has been activated at least once
+const hasBeenActivated = ref(false);
 
-const loves = Array.from({ length: totalLoves }, (_, index) => ({
-  id: index,
-  isActive: ref(false),
-}));
-
-// Store timeout ID for cleanup
-let animationTimeout: ReturnType<typeof setTimeout> | null = null;
-
-// Watch for active prop change to trigger sequential animation
+// Watch for active prop to become true, then lock it
 watch(
   () => props.active,
-  (newActive, oldActive) => {
-    // Clear any existing animation timeout
-    if (animationTimeout) {
-      clearTimeout(animationTimeout);
-      animationTimeout = null;
-    }
-
+  (newActive) => {
     if (newActive) {
-      // Reset all loves to inactive first when becoming active
-      loves.forEach((love) => {
-        love.isActive.value = false;
-      });
-      activeCount.value = 0;
-
-      // Sequentially activate loves
-      const animateLoves = () => {
-        // Ensure we don't attempt to access an out-of-range index
-        const target = Math.min(props.activeLoveNumber, loves.length);
-        if (activeCount.value < target) {
-          const current = loves[activeCount.value];
-          if (current) {
-            current.isActive.value = true;
-          }
-          activeCount.value++;
-          animationTimeout = setTimeout(animateLoves, 50); // 50ms delay between each activation
-        }
-      };
-      animateLoves();
+      hasBeenActivated.value = true;
     }
-    // When becoming inactive, keep the current state (don't reset)
   },
   { immediate: true }
+);
+
+// Calculate which love icons should be active (total 50 icons: 5 rows × 10 columns)
+const totalLoves = 50;
+
+// Create loves array with delay calculation
+const loves = computed(() =>
+  Array.from({ length: totalLoves }, (_, index) => ({
+    id: index,
+    isActive: index < props.activeLoveNumber,
+    delay: index * 0.05, // 50ms = 0.05s delay between each icon
+  }))
 );
 </script>
 
 <template>
   <div class="secb-love-chart">
     <!-- Love icons grid -->
-    <div class="secb-love-chart__loves">
+    <div class="secb-love-chart__loves" :class="{ 'is-active': hasBeenActivated }">
       <LSectionBCardLove
         v-for="love in loves"
         :key="love.id"
         class="secb-love-chart__love-icon"
-        :active="love.isActive.value"
+        :active="hasBeenActivated"
         :style="{
-          '--secb-love-chart-color': love.isActive.value
-            ? activeColor
-            : inactiveColor,
+          '--secb-love-chart-color':
+            hasBeenActivated && love.isActive ? activeColor : inactiveColor,
+          '--delay': `${love.delay}s`,
         }"
       />
     </div>
 
     <!-- Percentage display -->
-    <div class="secb-love-chart__percentage">
-      {{ percentage }}<span class="secb-love-chart__percentage-sign">%</span>
-    </div>
+    <div
+      class="relative sm:static flex sm:h-auto sm:flex-col justify-center items-end"
+    >
+      <div class="secb-love-chart__percentage">
+        {{ percentage }}<span class="secb-love-chart__percentage-sign">%</span>
+      </div>
 
-    <!-- Legend -->
-    <div class="secb-love-chart__legend">
-      <LSectionBCardLove
-        :active="true"
-        :style="{ '--secb-love-chart-color': activeColor }"
-        class="secb-love-chart__legend-icon"
-      />
-      <span>=2%</span>
+      <!-- Legend -->
+      <div class="secb-love-chart__legend">
+        <LSectionBCardLove
+          :active="true"
+          :style="{ '--secb-love-chart-color': activeColor }"
+          class="secb-love-chart__legend-icon"
+        />
+        <span>=2%</span>
+      </div>
     </div>
   </div>
 </template>
@@ -102,7 +83,15 @@ watch(
 @use '@/assets/styles/mixins' as *;
 
 .secb-love-chart {
+  position: relative;
   width: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+
+  @include rwd-min(sm) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 
   &__title {
     margin-bottom: 1rem;
@@ -130,11 +119,25 @@ watch(
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(5, 1fr);
-    gap: 0.5rem;
+    gap: 18px 12px;
     margin-bottom: 1.5rem;
 
+    svg {
+      width: 20px;
+    }
+
     @include rwd-min(sm) {
-      gap: 0.75rem;
+      gap: 28px 12px;
+      margin-bottom: 0;
+    }
+
+    @include rwd-min(lg) {
+      /* gap: 24px 16px; */
+      gap: 20px 16px;
+
+      svg {
+        width: 25px;
+      }
     }
   }
 
@@ -144,18 +147,18 @@ watch(
   }
 
   &__percentage {
-    font-size: 4rem;
-    font-weight: bold;
-    line-height: 1;
+    font-size: 90px;
+    line-height: 100px;
     white-space: nowrap;
-    margin-bottom: 1.5rem;
 
     @include rwd-min(sm) {
-      font-size: 5rem;
+      font-size: 100px;
+      line-height: 110px;
     }
 
     @include rwd-min(lg) {
-      font-size: 6rem;
+      font-size: 120px;
+      line-height: 130px;
     }
   }
 
@@ -164,11 +167,22 @@ watch(
   }
 
   &__legend {
+    position: absolute;
+    right: 0;
+    bottom: 0;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    font-size: 0.875rem;
+    margin-bottom: 1.2rem;
+    font-size: 15px;
+    line-height: 22px;
+
+    svg {
+      width: 16px;
+    }
+
+    @include rwd-min(sm) {
+      margin-bottom: 0;
+    }
   }
 
   &__legend-icon {

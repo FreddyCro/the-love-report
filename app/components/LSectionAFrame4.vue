@@ -138,6 +138,14 @@ const cssTimings = {
     @include rwd-min(sm) {
       max-width: 380px;
       margin-bottom: 0;
+
+      &:nth-child(2) {
+        margin-top: -80px;
+      }
+
+      &:nth-child(3) {
+        margin-top: -28px;
+      }
     }
   }
 
@@ -155,6 +163,10 @@ const cssTimings = {
     @include rwd-min(xs) {
       margin-left: 24px;
     }
+
+    @include rwd-min(sm) {
+      margin-left: 0;
+    }
   }
 
   &__text1-wrap {
@@ -163,9 +175,10 @@ const cssTimings = {
     right: 0;
     max-width: 169px;
     opacity: var(--seca-animation-opacity-start);
-    transform: translateX(100%);
+    transform: translateX(200%);
 
     @include rwd-min(sm) {
+      max-width: none;
     }
   }
 
@@ -177,6 +190,10 @@ const cssTimings = {
     @include rwd-min(xs) {
       margin-right: 24px;
     }
+
+    @include rwd-min(sm) {
+      margin-right: 0;
+    }
   }
 
   &__text2-wrap {
@@ -185,9 +202,10 @@ const cssTimings = {
     left: 0;
     max-width: 169px;
     opacity: var(--seca-animation-opacity-start);
-    transform: translateX(-100%);
+    transform: translateX(-200%);
 
     @include rwd-min(sm) {
+      max-width: none;
     }
   }
 
@@ -199,6 +217,10 @@ const cssTimings = {
     @include rwd-min(xs) {
       margin-left: 24px;
     }
+
+    @include rwd-min(sm) {
+      margin-left: 0;
+    }
   }
 
   &__text3-wrap {
@@ -207,17 +229,19 @@ const cssTimings = {
     right: 0;
     max-width: 169px;
     opacity: var(--seca-animation-opacity-start);
-    transform: translateX(100%);
+    transform: translateX(200%);
 
     @include rwd-min(sm) {
       top: calc(108 / 258 * 100%);
+      max-width: 239px;
+      transform: translateX(100%);
     }
   }
 
   &__text4-wrap {
     opacity: var(--seca-animation-opacity-start);
     max-width: 292px;
-    margin-top: 88px;
+    margin-top: 64px;
     transform: translateX(-100%);
 
     @include rwd-min(sm) {
@@ -234,10 +258,14 @@ const cssTimings = {
     }
 
     .l-seca-f4__text1-wrap {
-      transform: translateX(0);
+      transform: translateX(calc(100vw - 252px - 21px));
       opacity: 1;
       transition: transform var(--seca-f4-text1-duration) ease,
         opacity var(--seca-f4-text1-duration) ease;
+
+      @include rwd-min(sm) {
+        transform: translateX(calc(100% + 51px));
+      }
     }
 
     .l-seca-f4__img2-wrap {
@@ -247,11 +275,15 @@ const cssTimings = {
     }
 
     .l-seca-f4__text2-wrap {
-      transform: translateX(0);
+      transform: translateX(calc((100vw - 252px - 21px) * -1));
       opacity: 1;
       transition: transform var(--seca-f4-text2-duration)
           var(--seca-f4-text2-delay) ease,
         opacity var(--seca-f4-text2-duration) var(--seca-f4-text2-delay) ease;
+
+      @include rwd-min(sm) {
+        transform: translateX(calc((100% + 20px) * -1));
+      }
     }
 
     .l-seca-f4__img3-wrap {
@@ -261,11 +293,15 @@ const cssTimings = {
     }
 
     .l-seca-f4__text3-wrap {
-      transform: translateX(0);
+      transform: translateX(calc(100vw - 252px - 21px));
       opacity: 1;
       transition: transform var(--seca-f4-text3-duration)
           var(--seca-f4-text3-delay) ease,
         opacity var(--seca-f4-text3-duration) var(--seca-f4-text3-delay) ease;
+
+      @include rwd-min(sm) {
+        transform: translateX(151px);
+      }
     }
 
     .l-seca-f4__text4-wrap {
@@ -274,6 +310,10 @@ const cssTimings = {
       transition: transform var(--seca-f4-text4-duration)
           var(--seca-f4-text4-delay) ease,
         opacity var(--seca-f4-text4-duration) var(--seca-f4-text4-delay) ease;
+
+      @include rwd-min(sm) {
+        transform: translateX(-21px);
+      }
     }
   }
 }

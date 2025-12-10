@@ -21,13 +21,13 @@ const cssTimings = {
       active: active,
     }"
   >
-    <div class="w-full max-w-7xl aspect-1280/720 mx-auto">
+    <div class="w-full max-w-7xl mx-auto">
       <!-- img 1 -->
       <div class="l-seca-f6__img-wrap">
         <LPic
           src="/img/intimate_relationships_p01_frame06_10"
           :srcset="['pad', 'mob']"
-          ext="jpg"
+          ext="png"
           :use2x="false"
           :webp="true"
         />
@@ -55,6 +55,10 @@ const cssTimings = {
   width: 100%;
 
   &__img-wrap {
+    position: relative;
+    width: calc(100% - var(--seca-px) * 2);
+    max-width: var(--seca-img-max-w);
+    margin: 0 auto;
     opacity: var(--seca-animation-opacity-start);
   }
 

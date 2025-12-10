@@ -18,7 +18,7 @@ const CURRENT_YEAR = new Date().getFullYear();
         <template #統籌製作>{{ strFooter.editor1 }}</template>
         <template #採訪撰稿>{{ strFooter.editor2 }}</template>
         <template #視覺設計>{{ strFooter.editor3 }}</template>
-        <template #插畫視覺>{{ strFooter.editor4 }}</template>
+        <template #插畫>{{ strFooter.editor4 }}</template>
         <template #工程>{{ strFooter.editor5 }}</template>
         <template #監製>{{ strFooter.editor6 }}</template>
         <template #製作單位>{{ strFooter.editor7 }}</template>

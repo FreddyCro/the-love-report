@@ -44,7 +44,7 @@ const cases = sectionEData.cases as CaseItem[];
 </script>
 
 <template>
-	<section class="section-e min-h-screen l-article bg-white rounded-t-[120px]">
+	<section class="section-e min-h-screen l-article bg-white rounded-t-[120px] py-15 sm:pt-20 sm:pb-30">
 		<div class="l-container">
 			<LSectionHeader
 				:title="content.title"
@@ -55,16 +55,16 @@ const cases = sectionEData.cases as CaseItem[];
 			/>
 
 			<!-- Cases -->
-			<div v-for="caseItem in cases" :key="caseItem.index" class="mt-[68px]">
+			<div v-for="caseItem in cases" :key="caseItem.index" class="mt-14 sm:mt-17">
 				<!-- Step Indicator -->
-				<h3 class="pb-2 mb-2 border-b border-black l-h3 font-bold">
+				<h3 class="section-e__step pb-2 mb-2 border-b border-black font-bold">
 					{{ caseItem.title }}
 				</h3>
 
 				<!-- Content Blocks -->
 				<div v-for="(block, blockIndex) in caseItem.content" :key="blockIndex">
 					<!-- Title Block -->
-					<h5 v-if="block.type === 'title'" class="mb-5 l-h5 font-bold">
+					<h5 v-if="block.type === 'title'" class="mb-5 l-h5 font-bold pb-2 border-b border-black sm:pb-0 sm:border-0">
 						{{ block.desc }}
 					</h5>
 
@@ -81,7 +81,7 @@ const cases = sectionEData.cases as CaseItem[];
 					<!-- Comment Block -->
 					<div
 						v-else-if="block.type === 'comment'"
-						class="px-6 py-2.5 border-2 max-w-[469px] mb-9 mx-auto"
+						class="px-6 py-2.5 border-2 max-w-117.25 mb-9 mx-auto"
 						:class="[
 							block.style?.color === 'red'
 								? 'border-love-red-03'
@@ -93,15 +93,15 @@ const cases = sectionEData.cases as CaseItem[];
 								: 'rounded-[20px]',
 						]"
 					>
-						<h5 class="l-h5 font-bold">{{ block.desc }}</h5>
+						<h5 class="l-pc-h5 font-bold">{{ block.desc }}</h5>
 					</div>
 
 					<!-- Data Block -->
 					<div v-else-if="block.type === 'data'" class="my-9">
-						<h5 v-if="block.title" class="l-mob-h5 text-black font-bold">
+						<h5 v-if="block.title" class="l-h5 text-black font-bold">
 							{{ block.title }}
 						</h5>
-						<div class="mt-5 mx-auto max-w-[530px]">
+						<div class="mt-5 mx-auto max-w-132.5">
 							<LPic
 								v-if="block.img.src"
 								:src="block.img.src"
@@ -137,7 +137,14 @@ const cases = sectionEData.cases as CaseItem[];
 @use "@/assets/styles/mixins" as *;
 
 .section-e {
-	padding: 80px 0 120px;
 
+	&__step {
+		font-size: var(--mob-h3-font-size);
+  		line-height: var(--mob-h3-line-height);
+		  @include rwd-min(sm) {
+			font-size: var(--pc-h4-font-size);
+			line-height: var(--pc-h4-line-height);
+		}
+	}
 }
 </style>

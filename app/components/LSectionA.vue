@@ -7,7 +7,12 @@ import LSectionAFrame4 from './LSectionAFrame4.vue';
 import LSectionAFrame5 from './LSectionAFrame5.vue';
 import LSectionAFrame6 from './LSectionAFrame6.vue';
 import { useSequentialFrames } from '../composables/useSequentialFrames';
+import { useBreakpoint } from '../composables/useBreakpoint';
 import { SECTION_A_DURATIONS } from '../utils/animationTimings';
+import { computed } from 'vue';
+
+// Get current breakpoint
+// const { currentBreakpoint } = useBreakpoint();
 
 // Initialize sequential frames with animation durations
 // Durations are automatically synced from animationTimings.ts
@@ -21,12 +26,17 @@ const { frames, setup } = useSequentialFrames([
 ]);
 
 // Setup frame watchers and intersection observers
+// setup(true);
 setup();
+
+// Create computed properties for reactive tracking
+const frame1Phase1 = computed(() => frames[0]?.isEnter.value ?? false);
+const frame1Phase2 = computed(() => frames[0]?.isSecondPhase.value ?? false);
 </script>
 
 <template>
   <section
-    class="sec-a l-article pt-(--navbar-height) bg-black-6 overflow-hidden"
+    class="sec-a l-article pt-(--navbar-height) overflow-hidden pb-20 lg:pb-[100px]"
   >
     <!-- visually hidden for seo -->
     <h1 class="visually-hidden">
@@ -49,7 +59,11 @@ setup();
           active: frames[0]?.isEnter.value,
         }"
       >
-        <LSectionAFrame1 :active="frames[0]?.isEnter.value ?? false" />
+        <LSectionAFrame1
+          :active="frames[0]?.isEnter.value ?? false"
+          :active-phase1="frame1Phase1"
+          :active-phase2="frame1Phase2"
+        />
       </div>
 
       <!-- frame 2 -->
@@ -82,7 +96,7 @@ setup();
       <!-- frame 5 -->
       <div
         :ref="el => frames[4]!.ref = el as HTMLElement"
-        class="sec-a-part sect-a-part--f5"
+        class="sec-a-part sec-a-part--f5"
         :class="{ active: frames[4]?.isEnter.value }"
       >
         <LSectionAFrame5 :active="frames[4]?.isEnter.value ?? false" />
@@ -119,6 +133,10 @@ setup();
     margin-bottom: 0;
   }
 
+  @include rwd-min(xxs) {
+    --seca-px: 24px;
+  }
+
   &--f4 {
     @include rwd-min(sm) {
       margin-bottom: 84px;
@@ -127,6 +145,10 @@ setup();
 
   &--f5 {
     margin-top: 40px;
+
+    @include rwd-min(sm) {
+      margin-bottom: 40px;
+    }
   }
 
   @include rwd-min(xs) {

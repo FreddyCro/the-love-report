@@ -14,6 +14,7 @@ const menu = [
   {
     title: str.navbarMenu1Text,
     link: str.navbarMenu1Link,
+    isCurrent: true
   },
   {
     title: str.navbarMenu2Text,
@@ -36,7 +37,7 @@ const menu = [
       <NmdHamburger />
     </NmdHeader>
     <NmdMenu>
-      <NmdMenuItem v-for="(item, index) in menu" :key="index" :to="item.link">
+      <NmdMenuItem v-for="(item, index) in menu" :key="index" :to="item.link" :is-current="item.isCurrent">
         {{ item.title }}
       </NmdMenuItem>
     </NmdMenu>

@@ -9,11 +9,14 @@ interface Props {
   shadow?: boolean | string;
   /** 指向的泡泡角落：四個選項 */
   pointer?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'none';
+  /** 背景顏色：CSS color 值 */
+  bgColor?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   shadow: false,
   pointer: 'none',
+  bgColor: '#fff',
 });
 </script>
 
@@ -21,6 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
   <div
     class="l-chat-bubble"
     :class="[`pointer--${props.pointer}`, { 'has-shadow': !!props.shadow }]"
+    :style="{ '--lcb-bg-color': props.bgColor }"
   >
     <slot />
   </div>

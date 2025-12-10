@@ -14,6 +14,7 @@
 export const SECTION_A_FRAME_TIMINGS = {
   FRAME_1: {
     CROP_DURATION: 1000,
+    CROP_DELAY: 2000,
     CROSSFADE_DURATION: 1000,
     CROSSFADE_DELAY: 1000,
     IMG3_DURATION: 1000,
@@ -23,8 +24,9 @@ export const SECTION_A_FRAME_TIMINGS = {
   },
   FRAME_2: {
     IMG_DURATION: 1000,
+    IMG_DELAY: 1500, // Wait for Frame 1 second phase to complete
     TEXT_DURATION: 1000,
-    TEXT_DELAY: 300,
+    TEXT_DELAY: 1800, // 1000ms (wait for Frame 1) + 300ms (original delay)
   },
   FRAME_3: {
     IMG_DURATION: 1000,
@@ -87,9 +89,9 @@ function calculateTotalDuration(timings: Record<string, number>): number {
  * These are automatically calculated from SECTION_A_FRAME_TIMINGS
  */
 export const SECTION_A_DURATIONS = {
-  FRAME_1: calculateTotalDuration(SECTION_A_FRAME_TIMINGS.FRAME_1), // 3000ms (2000 + 1000)
-  FRAME_2: calculateTotalDuration(SECTION_A_FRAME_TIMINGS.FRAME_2), // 2000ms (1000 + 1000)
-  FRAME_3: calculateTotalDuration(SECTION_A_FRAME_TIMINGS.FRAME_3), // 2000ms (1000 + 1000)
+  FRAME_1: calculateTotalDuration(SECTION_A_FRAME_TIMINGS.FRAME_1), // 2000ms (1000 + 1000)
+  FRAME_2: calculateTotalDuration(SECTION_A_FRAME_TIMINGS.FRAME_2), // 2300ms (1300 + 1000)
+  FRAME_3: calculateTotalDuration(SECTION_A_FRAME_TIMINGS.FRAME_3), // 1300ms (300 + 1000)
   FRAME_4: calculateTotalDuration(SECTION_A_FRAME_TIMINGS.FRAME_4), // 2500ms (1500 + 1000)
   FRAME_5: calculateTotalDuration(SECTION_A_FRAME_TIMINGS.FRAME_5), // 1000ms
   FRAME_6: calculateTotalDuration(SECTION_A_FRAME_TIMINGS.FRAME_6), // 1000ms

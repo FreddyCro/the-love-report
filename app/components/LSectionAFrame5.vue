@@ -42,7 +42,7 @@ const cssTimings = {
 
         <!-- text 2 -->
         <div class="l-seca-f5__text2-wrap l-p">
-          <LChatBubble :shadow="true" pointer="bottom-left">
+          <LChatBubble :shadow="true" pointer="bottom-right">
             {{ str.frame5_2 }}
           </LChatBubble>
         </div>
@@ -72,13 +72,20 @@ const cssTimings = {
 
   &__text1-wrap {
     position: absolute;
-    top: 0;
+    top: calc((100vw - var(--seca-px) * 2) * 316 / 366 - 20px);
     right: 0;
+    max-width: 330px;
     opacity: var(--seca-animation-opacity-start);
     transform: translateX(100%);
+
+    @include rwd-min(sm) {
+      top: 0;
+      transform: translate(100%, -50%);
+    }
   }
 
   &__text2-wrap {
+    margin-top: 88px;
     opacity: var(--seca-animation-opacity-start);
     transform: translateX(-100%);
 
@@ -86,6 +93,8 @@ const cssTimings = {
       position: absolute;
       bottom: 0;
       left: 0;
+      margin-top: 0;
+      transform: translate(-100%, 50%);
     }
   }
 
@@ -96,17 +105,26 @@ const cssTimings = {
     }
 
     .l-seca-f5__text1-wrap {
-      transform: translateX(0);
+      transform: translateX(var(--seca-px));
       opacity: 1;
       transition: transform var(--seca-f5-text1-duration) ease,
         opacity var(--seca-f5-text1-duration) ease;
+
+      @include rwd-min(sm) {
+        top: 0;
+        transform: translate(var(--seca-px), -50%);
+      }
     }
 
     .l-seca-f5__text2-wrap {
-      transform: translateX(0);
+      transform: translateX(calc(-1 * var(--seca-px)));
       opacity: 1;
       transition: transform var(--seca-f5-text2-duration) ease,
         opacity var(--seca-f5-text2-duration) ease;
+
+      @include rwd-min(sm) {
+        transform: translate(calc(-1 * var(--seca-px)), 50%);
+      }
     }
   }
 }

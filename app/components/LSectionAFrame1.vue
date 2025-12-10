@@ -2,14 +2,21 @@
 import str from '../locales/section-a.json';
 import { SECTION_A_FRAME_TIMINGS, toCssTime } from '../utils/animationTimings';
 
+// 使用 Nuxt 的 runtimeConfig 取得環境變數
+const config = useRuntimeConfig();
+const ASSETS_PATH = config.public.APP_ASSETS_PATH;
+
 defineProps<{
-  active: boolean;
+  active: boolean; // 原本的 active 狀態（保留）
+  activePhase1: boolean; // 第一階段：進入 viewport 觸發
+  activePhase2: boolean; // 第二階段：首次滾動觸發
 }>();
 
 // Get timing constants for this frame and convert to CSS format
 const timings = SECTION_A_FRAME_TIMINGS.FRAME_1;
 const cssTimings = {
   cropDuration: toCssTime(timings.CROP_DURATION),
+  cropDelay: toCssTime(timings.CROP_DELAY),
   crossfadeDuration: toCssTime(timings.CROSSFADE_DURATION),
   crossfadeDelay: toCssTime(timings.CROSSFADE_DELAY),
   img3Duration: toCssTime(timings.IMG3_DURATION),
@@ -17,81 +24,171 @@ const cssTimings = {
   textDuration: toCssTime(timings.TEXT_DURATION),
   textDelay: toCssTime(timings.TEXT_DELAY),
 };
+
+// Image paths for picture element
+const imgBack1Paths = {
+  webp_1920: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_1920plus_pc.webp`,
+  jpg_1920: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_1920plus_pc.jpg`,
+  webp_1280: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_pc.webp`,
+  jpg_1280: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_pc.jpg`,
+  webp_768: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_01_pad.webp`,
+  png_768: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_01_pad.png`,
+  webp_default: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_01_mob.webp`,
+  png_default: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_01_mob.png`,
+  fallback: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_1920plus_pc.jpg`,
+};
+
+const imgBack2Paths = {
+  webp_1920: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_1920plus_pcpad.webp`,
+  jpg_1920: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_1920plus_pcpad.jpg`,
+  webp_1280: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_1280plus_pcpad.webp`,
+  jpg_1280: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_1280plus_pcpad.jpg`,
+  webp_768: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_pad.webp`,
+  png_768: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_pad.png`,
+  webp_default: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_mob.webp`,
+  png_default: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_mob.png`,
+  fallback: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_1920plus_pc.jpg`,
+};
 </script>
 
 <template>
   <div
     class="l-seca-f1"
     :class="{
-      active: active,
+      'active-phase-1': activePhase1,
+      'active-phase-2': activePhase2,
     }"
   >
-    <!-- <LPic
-      src="/img/intimate_relationships_p01_frame01_00_pc"
-      ext="jpg"
-      :use-prefix="false"
-      :use2x="false"
-      :webp="true"
-    />
-    <LPic
-      src="/img/intimate_relationships_p01_frame01_00_1920plus_pc"
-      ext="jpg"
-      :use-prefix="false"
-      :use2x="false"
-      :webp="true"
-    />
-    <LPic
-      src="/img/intimate_relationships_p01_frame01_02_pad"
-      ext="jpg"
-      :use-prefix="false"
-      :use2x="false"
-      :webp="true"
-    />
-    <LPic
-      src="/img/intimate_relationships_p01_frame01_01"
-      :srcset="['pad', 'mob']"
-      ext="jpg"
-      :use2x="false"
-      :webp="true"
-    />
-    <LPic
-      src="/img/intimate_relationships_p01_frame01_02"
-      :srcset="['pad', 'mob']"
-      ext="jpg"
-      :use2x="false"
-      :webp="true"
-    /> -->
-
     <!--
       Animation Script:
       Step 1 (0s-1s): img1 crop - clip-path from full to center (20% each side)
       Step 2 (1s-2s): img1 fade out + img2 fade in (crossfade)
       Step 2 (1s-2s): img3 fly in from right to left
       Step 2 (1s-2s): text fly in from left to right
-    -->
+      -->
     <div class="relative w-full flex justify-center">
       <!-- img back wrapper (for crop effect) -->
+
+      <!-- <div
+        class="w-full aspect-280/556 xxs:aspect-366/716 mx-5 xxs:mx-6 flex justify-center border-2 border-love-red-03 rounded-lg overflow-hidden transition"
+      ></div> -->
       <div class="l-seca-f1__img-back-wrap">
         <!-- img back 1 -->
         <div class="l-seca-f1__img1-wrap">
-          <LPic
+          <picture>
+            <!-- 1920+ -->
+            <source
+              type="image/webp"
+              media="(min-width:1920px)"
+              :srcset="imgBack1Paths.webp_1920"
+            />
+            <source
+              type="image/jpeg"
+              media="(min-width:1920px)"
+              :srcset="imgBack1Paths.jpg_1920"
+            />
+
+            <!-- 1280+ -->
+            <source
+              type="image/webp"
+              media="(min-width:1280px)"
+              :srcset="imgBack1Paths.webp_1280"
+            />
+            <source
+              type="image/jpeg"
+              media="(min-width:1280px)"
+              :srcset="imgBack1Paths.jpg_1280"
+            />
+
+            <!-- 768+ (tablet) -->
+            <source
+              type="image/webp"
+              media="(min-width:768px)"
+              :srcset="imgBack1Paths.webp_768"
+            />
+            <source
+              type="image/png"
+              media="(min-width:768px)"
+              :srcset="imgBack1Paths.png_768"
+            />
+
+            <!-- default (mobile) -->
+            <source type="image/webp" :srcset="imgBack1Paths.webp_default" />
+            <source type="image/png" :srcset="imgBack1Paths.png_default" />
+
+            <img
+              :src="imgBack1Paths.fallback"
+              loading="lazy"
+              :alt="str.frame1_1"
+            />
+          </picture>
+
+          <!-- <LPic
             src="/img/intimate_relationships_p01_frame01_00_pc"
             ext="jpg"
             :use-prefix="false"
             :use2x="false"
             :webp="true"
-          />
+          /> -->
         </div>
 
         <!-- img back 2 -->
         <div class="l-seca-f1__img2-wrap">
-          <LPic
+          <picture>
+            <!-- 1920+ -->
+            <source
+              type="image/webp"
+              media="(min-width:1920px)"
+              :srcset="imgBack2Paths.webp_1920"
+            />
+            <source
+              type="image/jpeg"
+              media="(min-width:1920px)"
+              :srcset="imgBack2Paths.jpg_1920"
+            />
+
+            <!-- 1280+ -->
+            <source
+              type="image/webp"
+              media="(min-width:1280px)"
+              :srcset="imgBack2Paths.webp_1280"
+            />
+            <source
+              type="image/jpeg"
+              media="(min-width:1280px)"
+              :srcset="imgBack2Paths.jpg_1280"
+            />
+
+            <!-- 768+ (tablet) -->
+            <source
+              type="image/webp"
+              media="(min-width:768px)"
+              :srcset="imgBack2Paths.webp_768"
+            />
+            <source
+              type="image/png"
+              media="(min-width:768px)"
+              :srcset="imgBack2Paths.png_768"
+            />
+
+            <!-- default (mobile) -->
+            <source type="image/webp" :srcset="imgBack2Paths.webp_default" />
+            <source type="image/png" :srcset="imgBack2Paths.png_default" />
+
+            <img
+              :src="imgBack2Paths.fallback"
+              loading="lazy"
+              :alt="str.frame1_1"
+            />
+          </picture>
+
+          <!-- <LPic
             src="/img/intimate_relationships_p01_frame01_02_pad"
             ext="jpg"
             :use-prefix="false"
             :use2x="false"
             :webp="true"
-          />
+          /> -->
         </div>
       </div>
 
@@ -115,7 +212,7 @@ const cssTimings = {
 
       <!-- Read more -->
       <div
-        class="absolute bottom-0 left-1/2 flex flex-col items-center transform -translate-x-1/2 text-white"
+        class="absolute bottom-0.5 left-1/2 flex flex-col items-center transform -translate-x-1/2 text-white"
       >
         {{ str.readMore }}
         <div class="h-[60px] w-0.5 mt-0.5 bg-white" role="presentation" />
@@ -128,10 +225,9 @@ const cssTimings = {
 @use '@/assets/styles/mixins' as *;
 
 .l-seca-f1 {
-  --seca-f1-img-h: 700px;
-
   /* Animation timing variables - synced from animationTimings.ts */
   --seca-f1-crop-duration: v-bind('cssTimings.cropDuration');
+  --seca-f1-crop-delay: v-bind('cssTimings.cropDelay');
   --seca-f1-crossfade-duration: v-bind('cssTimings.crossfadeDuration');
   --seca-f1-crossfade-delay: v-bind('cssTimings.crossfadeDelay');
   --seca-f1-img3-duration: v-bind('cssTimings.img3Duration');
@@ -139,15 +235,72 @@ const cssTimings = {
   --seca-f1-text-duration: v-bind('cssTimings.textDuration');
   --seca-f1-text-delay: v-bind('cssTimings.textDelay');
 
+  /* CSS variables for responsive clip-path */
+  --clip-path: 20px;
+
   width: 100%;
   opacity: 0;
   transition: opacity 0.5s ease-out;
 
+  @include rwd-min(xxs) {
+    --clip-path: 24px;
+  }
+
+  @include rwd-min(sm) {
+    --clip-path: calc((100% - var(--seca-img-max-w)) / 2);
+  }
+
+  @include rwd-min(2xl) {
+    --clip-path: calc((1920px - var(--seca-img-max-w)) / 2);
+  }
+
   &__img-back-wrap {
     position: relative;
     width: 100%;
-    height: var(--seca-f1-img-h);
+    height: 556px;
     clip-path: inset(0 0 0 0);
+
+    @include rwd-min(xxs) {
+      height: 716px;
+    }
+
+    @include rwd-min(sm) {
+      height: 700px;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__img1-wrap {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+
+    img {
+      object-fit: cover;
+    }
+  }
+
+  &__img2-wrap {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: calc(100% - var(--seca-px) * 2);
+    aspect-ratio: 280/556;
+    transform: translateX(-50%);
+    opacity: 0;
+
+    @include rwd-min(xxs) {
+      aspect-ratio: 366/716;
+    }
+
+    @include rwd-min(sm) {
+      width: 672px;
+      aspect-ratio: 672/700;
+    }
 
     img {
       width: 100%;
@@ -156,31 +309,20 @@ const cssTimings = {
     }
   }
 
-  &__img1-wrap {
-    width: 100%;
-    height: 100%;
-    opacity: 1;
-  }
-
-  &__img2-wrap {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-  }
-
   &__img3-wrap {
     position: absolute;
     right: 0;
     top: calc(52 / 716 * 100%);
-    max-width: 165px;
+    max-width: 213px;
     display: inline-block;
     border-radius: 10px;
     box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
     transform: translateX(100%);
     opacity: 0;
+
+    @include rwd-min(xs) {
+      max-width: 241px;
+    }
 
     @include rwd-min(sm) {
       right: calc((100vw - 720px) / 2);
@@ -213,27 +355,15 @@ const cssTimings = {
     }
   }
 
-  &.active {
+  &.active-phase-1 {
     opacity: 1;
 
     .l-seca-f1__img-back-wrap {
-      width: calc(100% - var(--seca-px) * 2);
-      clip-path: inset(
-        0 calc((100% - var(--seca-img-max-w)) / 2) 0
-          calc((100% - var(--seca-img-max-w)) / 2)
-      );
-      transition: clip-path var(--seca-f1-crop-duration) ease,
-        width var(--seca-f1-crop-duration) ease;
-
-      @include rwd-min(2xl) {
-        width: 100%;
-        clip-path: inset(
-          0 calc((1920px - var(--seca-img-max-w)) / 2) 0
-            calc((1920px - var(--seca-img-max-w)) / 2)
-        );
-      }
+      animation: cropImage var(--seca-f1-crop-duration) ease var(--seca-f1-crop-delay) forwards;
     }
+  }
 
+  &.active-phase-2 {
     .l-seca-f1__img1-wrap {
       opacity: 0;
       transition: opacity var(--seca-f1-crossfade-duration)
@@ -242,6 +372,9 @@ const cssTimings = {
 
     .l-seca-f1__img2-wrap {
       opacity: 1;
+      border: solid 2px var(--color-love-red-02);
+      border-radius: 10px;
+      overflow: hidden;
       transition: opacity var(--seca-f1-crossfade-duration)
         var(--seca-f1-crossfade-delay) ease;
     }
@@ -261,6 +394,16 @@ const cssTimings = {
           var(--seca-f1-text-delay) ease,
         opacity var(--seca-f1-text-duration) var(--seca-f1-text-delay) ease;
     }
+  }
+}
+
+@keyframes cropImage {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+
+  to {
+    clip-path: inset(0 var(--clip-path) 0 var(--clip-path));
   }
 }
 </style>
