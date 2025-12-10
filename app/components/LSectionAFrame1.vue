@@ -25,30 +25,49 @@ const cssTimings = {
   textDelay: toCssTime(timings.TEXT_DELAY),
 };
 
-// Image paths for picture element
-const imgBack1Paths = {
-  webp_1920: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_1920plus_pc.webp`,
-  jpg_1920: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_1920plus_pc.jpg`,
-  webp_1280: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_pc.webp`,
-  jpg_1280: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_pc.jpg`,
-  webp_768: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_01_pad.webp`,
-  png_768: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_01_pad.png`,
-  webp_default: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_01_mob.webp`,
-  png_default: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_01_mob.png`,
-  fallback: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_1920plus_pc.jpg`,
+// Helper function to build image paths with proper slash handling
+const buildImgPath = (filename: string) => {
+  const basePath = ASSETS_PATH.endsWith('/')
+    ? ASSETS_PATH.slice(0, -1)
+    : ASSETS_PATH;
+  return `${basePath}/img/${filename}`;
 };
 
-const imgBack2Paths = {
-  webp_1920: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_1920plus_pcpad.webp`,
-  jpg_1920: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_1920plus_pcpad.jpg`,
-  webp_1280: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_1280plus_pcpad.webp`,
-  jpg_1280: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_1280plus_pcpad.jpg`,
-  webp_768: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_pad.webp`,
-  png_768: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_pad.png`,
-  webp_default: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_mob.webp`,
-  png_default: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_02_mob.png`,
-  fallback: `${ASSETS_PATH}/img/intimate_relationships_p01_frame01_00_1920plus_pc.jpg`,
+// Helper function to generate responsive image paths
+const generateImagePaths = (
+  baseName: string,
+  variants: { [key: string]: string }
+) => {
+  return Object.entries(variants).reduce((acc, [key, value]) => {
+    acc[key] = buildImgPath(value);
+    return acc;
+  }, {} as Record<string, string>);
 };
+
+// Image paths for picture element
+const imgBack1Paths = generateImagePaths('frame01_00', {
+  webp_1920: 'intimate_relationships_p01_frame01_00_1920plus_pc.webp',
+  jpg_1920: 'intimate_relationships_p01_frame01_00_1920plus_pc.jpg',
+  webp_1280: 'intimate_relationships_p01_frame01_00_pc.webp',
+  jpg_1280: 'intimate_relationships_p01_frame01_00_pc.jpg',
+  webp_768: 'intimate_relationships_p01_frame01_01_pad.webp',
+  png_768: 'intimate_relationships_p01_frame01_01_pad.png',
+  webp_default: 'intimate_relationships_p01_frame01_01_mob.webp',
+  png_default: 'intimate_relationships_p01_frame01_01_mob.png',
+  fallback: 'intimate_relationships_p01_frame01_00_1920plus_pc.jpg',
+});
+
+const imgBack2Paths = generateImagePaths('frame01_02', {
+  webp_1920: 'intimate_relationships_p01_frame01_02_1920plus_pcpad.webp',
+  jpg_1920: 'intimate_relationships_p01_frame01_02_1920plus_pcpad.jpg',
+  webp_1280: 'intimate_relationships_p01_frame01_02_1280plus_pcpad.webp',
+  jpg_1280: 'intimate_relationships_p01_frame01_02_1280plus_pcpad.jpg',
+  webp_768: 'intimate_relationships_p01_frame01_02_pad.webp',
+  png_768: 'intimate_relationships_p01_frame01_02_pad.png',
+  webp_default: 'intimate_relationships_p01_frame01_02_mob.webp',
+  png_default: 'intimate_relationships_p01_frame01_02_mob.png',
+  fallback: 'intimate_relationships_p01_frame01_00_1920plus_pc.jpg',
+});
 </script>
 
 <template>
@@ -359,7 +378,8 @@ const imgBack2Paths = {
     opacity: 1;
 
     .l-seca-f1__img-back-wrap {
-      animation: cropImage var(--seca-f1-crop-duration) ease var(--seca-f1-crop-delay) forwards;
+      animation: cropImage var(--seca-f1-crop-duration) ease
+        var(--seca-f1-crop-delay) forwards;
     }
   }
 

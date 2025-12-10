@@ -54,6 +54,10 @@ useHead({
       src: './nmd-loading.min.js',
       tagPosition: 'bodyOpen',
     },
+    {
+      src: 'https://main.protico.io/api/v1/vip.udn.com/protico-frame.js',
+      tagPosition: 'bodyClose',
+    },
   ],
 });
 
