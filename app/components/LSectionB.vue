@@ -318,10 +318,12 @@ function handleIsEntered(shouldEnter: boolean) {
             </div>
 
             <div v-else-if="item.chart === 'chartD'" class="w-full h-full">
-              <div class="w-full h-full flex flex-col gap-2 mt-4">
+              <div
+                class="w-full h-full flex flex-col gap-2 lg:mx-auto mt-4 mb-5"
+              >
                 <!-- 1. 我很享受自己已現在的生活 -->
                 <div
-                  class="w-fit"
+                  class="w-fit mb-5 sm:mb-1 lg:-mb-4 lg:translate-x-2"
                   :class="{
                     'rotate-[-5deg]': ['sm', 'md', 'lg', 'xl', '2xl'].includes(
                       currentBreakpoint
@@ -331,62 +333,94 @@ function handleIsEntered(shouldEnter: boolean) {
                 >
                   <LChatBubble
                     :shadow="true"
-                    pointer="top-left"
+                    pointer="bottom-right"
                     bg-color="#FFE5E5"
                   >
-                    <p class="l-p">
+                    <p>
                       {{ str.card4ChartText1 }}
                     </p>
                   </LChatBubble>
                 </div>
 
                 <!-- 2. 我目前想專心拚事業或學業 -->
-                <div class="w-fit rotate-[5deg] ml-auto">
+                <div
+                  class="w-fit mb-5 sm:mb-1 lg:-mb-4 ml-auto"
+                  :class="{
+                    'rotate-[5deg]': ['sm', 'md', 'lg', 'xl', '2xl'].includes(
+                      currentBreakpoint
+                    ),
+                    'rotate-[-5deg]': ['xxs', 'xs'].includes(currentBreakpoint),
+                  }"
+                >
                   <LChatBubble
                     :shadow="true"
-                    pointer="top-left"
+                    pointer="bottom-left"
                     bg-color="#FFE5E5"
                   >
-                    <p class="l-p">
+                    <p>
                       {{ str.card4ChartText2 }}
                     </p>
                   </LChatBubble>
                 </div>
 
                 <!-- 3. 我遭沒遇到想結婚的對象 -->
-                <div class="w-fit rotate-[-5deg]">
+                <div
+                  class="w-fit mb-5 sm:mb-1 lg:-mb-4 lg:translate-x-20"
+                  :class="{
+                    'rotate-[5deg]': ['sm', 'md', 'lg', 'xl', '2xl'].includes(
+                      currentBreakpoint
+                    ),
+                    'rotate-[-5deg]': ['xxs', 'xs'].includes(currentBreakpoint),
+                  }"
+                >
                   <LChatBubble
                     :shadow="true"
-                    pointer="top-left"
+                    pointer="bottom-right"
                     bg-color="#FFE5E5"
                   >
-                    <p class="l-p">
+                    <p>
                       {{ str.card4ChartText3 }}
                     </p>
                   </LChatBubble>
                 </div>
 
                 <!-- 4. 我擔心婚後的經濟狀況 -->
-                <div class="w-fit rotate-[5deg] ml-auto">
+                <div
+                  class="w-fit mb-5 sm:mb-1 lg:-mb-4 ml-auto"
+                  :class="{
+                    'rotate-[-5deg]': ['sm', 'md', 'lg', 'xl', '2xl'].includes(
+                      currentBreakpoint
+                    ),
+                    'rotate-[5deg]': ['xxs', 'xs'].includes(currentBreakpoint),
+                  }"
+                >
                   <LChatBubble
                     :shadow="true"
-                    pointer="top-left"
+                    pointer="bottom-left"
                     bg-color="#FFE5E5"
                   >
-                    <p class="l-p">
+                    <p>
                       {{ str.card4ChartText4 }}
                     </p>
                   </LChatBubble>
                 </div>
 
                 <!-- 5. 我還不覺得有結婚的必要 -->
-                <div class="w-fit rotate-[-5deg]">
+                <div
+                  class="w-fit mb-5 sm:mb-1 lg:-mb-4 lg:translate-x-2"
+                  :class="{
+                    'rotate-[5deg]': ['sm', 'md', 'lg', 'xl', '2xl'].includes(
+                      currentBreakpoint
+                    ),
+                    'rotate-[-5deg]': ['xxs', 'xs'].includes(currentBreakpoint),
+                  }"
+                >
                   <LChatBubble
                     :shadow="true"
-                    pointer="top-left"
+                    pointer="bottom-right"
                     bg-color="#FFE5E5"
                   >
-                    <p class="l-p">
+                    <p>
                       {{ str.card4ChartText5 }}
                     </p>
                   </LChatBubble>
@@ -444,6 +478,20 @@ function handleIsEntered(shouldEnter: boolean) {
   @include rwd-min(lg) {
     --section-padding-top: 144px;
     --section-padding-bottom: 100px;
+  }
+
+  .l-chat-bubble {
+    box-shadow: 0 3px 3px rgba(115, 115, 115, 1);
+    padding: 8px 20px;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 30px;
+
+    @include rwd-min(sm) {
+      padding: 12px 22px;
+      font-size: 20px;
+      line-height: 32px;
+    }
   }
 
   // Indicators for debugging

@@ -14,7 +14,7 @@ defineProps<{
     <p class="l-p">{{ description }}</p>
     <div
       v-if="$slots.default"
-      class="sm:flex items-center justify-center my-4 sm:my-2 lg:mt-[22px] lg:mb-3"
+      class="sm:flex items-center justify-center my-4 sm:my-2 lg:mt-[22px] lg:mb-5"
     >
       <slot />
     </div>
