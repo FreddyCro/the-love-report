@@ -12,9 +12,9 @@ import useTrackingEvent from './useTrackingEvent';
  *   useGaSectionView();
  * });
  *
- * // 2. 在需要追蹤的位置放置 marker
- * <div class="js-ga-sec-view" data-ga-label="keyvisual-up" />
- * <div class="js-ga-sec-view" data-ga-label="overview" />
+ * // 2. 在需要追蹤的位置放置 LGaMarker 元件
+ * <LGaMarker label="keyvisual-upper" />
+ * <LGaMarker label="overview" />
  *
  * // Label 參考: keyvisual-upper, keyvisual-lower, overview, story,
  * // AI_CH1, AI_CH2, AI_CH3, AI_CH4, value, trust, busy, 3C, unrealistic, question, editor
