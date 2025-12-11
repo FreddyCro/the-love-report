@@ -1,18 +1,19 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
-import AppHeader from './components/AppHeader.vue';
-import AppFooter from './components/AppFooter.vue';
-import LSectionA from './components/LSectionA.vue';
-import LSectionB from './components/LSectionB.vue';
-import LSectionC from './components/LSectionC.vue';
-import LSectionD from './components/LSectionD.vue';
-import LSectionE from './components/LSectionE.vue';
-import LSectionF from './components/LSectionF.vue';
+import { ref, onMounted } from "vue";
+import AppHeader from "./components/AppHeader.vue";
+import AppFooter from "./components/AppFooter.vue";
+import LSectionA from "./components/LSectionA.vue";
+import LSectionB from "./components/LSectionB.vue";
+import LSectionC from "./components/LSectionC.vue";
+import LSectionD from "./components/LSectionD.vue";
+import LSectionE from "./components/LSectionE.vue";
+import LSectionF from "./components/LSectionF.vue";
 // import TestGA from './components/TestGA.vue';
 // import TestAllImg from './components/TestAllImg.vue';
-import { useTracking } from '~/assets/js/tracking.js';
-import { useSectionBState } from './composables/useSectionBState';
-import meta from './locales/meta.json';
+import { useTracking } from "~/assets/js/tracking.js";
+import { useSectionBState } from "./composables/useSectionBState";
+import { useGaSectionView } from "./composables/useGaSectionView";
+import meta from "./locales/meta.json";
 
 const config = useRuntimeConfig();
 const APP_MODE = config.public.APP_MODE;
@@ -24,46 +25,46 @@ const { sectionBEntered } = useSectionBState();
 useSeoMeta({
   title: meta.metaTitle,
   description: meta.metaDesc,
-  'og:title': meta.metaTitle,
-  'og:description': meta.metaXDesc,
-  'og:image': `${ASSETS_PATH}/img/${meta.metaImage}`,
-  'twitter:title': meta.metaTitle,
-  'twitter:description': meta.metaXDesc,
-  twitterCard: 'summary_large_image',
+  "og:title": meta.metaTitle,
+  "og:description": meta.metaXDesc,
+  "og:image": `${ASSETS_PATH}/img/${meta.metaImage}`,
+  "twitter:title": meta.metaTitle,
+  "twitter:description": meta.metaXDesc,
+  twitterCard: "summary_large_image",
   keywords: meta.metaKeywords,
-  robots: APP_MODE === 'production' ? 'index, follow' : 'noindex, nofollow',
+  robots: APP_MODE === "production" ? "index, follow" : "noindex, nofollow",
 });
 
 useHead(useTracking());
 useHead({
   link: [
     {
-      rel: 'stylesheet',
-      href: 'https://newmedia.udn.com.tw/cms_assets/icons_v4/icons.css',
-      tagPosition: 'bodyOpen',
+      rel: "stylesheet",
+      href: "https://newmedia.udn.com.tw/cms_assets/icons_v4/icons.css",
+      tagPosition: "bodyOpen",
     },
     {
-      rel: 'stylesheet',
+      rel: "stylesheet",
       href: `${ASSETS_PATH}/nmd-loading.css`,
-      tagPosition: 'bodyOpen',
+      tagPosition: "bodyOpen",
     },
   ],
   script: [
     {
-      type: 'text/javascript',
+      type: "text/javascript",
       src: `${ASSETS_PATH}/nmd-loading.min.js`,
-      tagPosition: 'bodyOpen',
+      tagPosition: "bodyOpen",
     },
     {
-      src: 'https://main.protico.io/api/v1/vip.udn.com/protico-frame.js',
-      tagPosition: 'bodyClose',
+      src: "https://main.protico.io/api/v1/vip.udn.com/protico-frame.js",
+      tagPosition: "bodyClose",
     },
   ],
 });
 
 useJsonld({
-  '@context': 'https://schema.org',
-  '@type': 'WebPage',
+  "@context": "https://schema.org",
+  "@type": "WebPage",
   name: meta.metaTitle,
   description: meta.metaDesc,
 });
@@ -71,6 +72,9 @@ useJsonld({
 const isReady = ref(false);
 
 onMounted(() => {
+  // GA section view tracking
+  useGaSectionView();
+
   // Wait for next tick to ensure DOM is fully ready
   nextTick(() => {
     isReady.value = true;
