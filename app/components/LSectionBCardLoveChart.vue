@@ -76,7 +76,7 @@ const loves = computed(() =>
           :style="{ '--secb-love-chart-color': activeColor }"
           class="secb-love-chart__legend-icon"
         />
-        <span> =2%</span>
+        <span class="inline-block ml-2">=2%</span>
       </div>
     </div>
   </div>
