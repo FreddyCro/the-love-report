@@ -142,10 +142,10 @@ defineProps<{
   --l-sec-b-intro-highlight: #4c4c4c;
   --l-sec-b-intro-bg: #fafafa;
 
-  /* path,
+  path,
   rect {
-    transition: fill 1s ease;
-  } */
+    transition: fill 2s ease;
+  }
 
   &--entered {
     --l-sec-b-intro-primary: #fff;
