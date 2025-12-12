@@ -44,7 +44,10 @@ const loves = computed(() =>
 <template>
   <div class="secb-love-chart">
     <!-- Love icons grid -->
-    <div class="secb-love-chart__loves" :class="{ 'is-active': hasBeenActivated }">
+    <div
+      class="secb-love-chart__loves"
+      :class="{ 'is-active': hasBeenActivated }"
+    >
       <LSectionBCardLove
         v-for="love in loves"
         :key="love.id"
@@ -60,7 +63,7 @@ const loves = computed(() =>
 
     <!-- Percentage display -->
     <div
-      class="relative sm:static flex sm:h-auto sm:flex-col justify-center items-end"
+      class="relative sm:static flex sm:h-auto sm:flex-col justify-center items-end text-black"
     >
       <div class="secb-love-chart__percentage">
         {{ percentage }}<span class="secb-love-chart__percentage-sign">%</span>
@@ -73,7 +76,7 @@ const loves = computed(() =>
           :style="{ '--secb-love-chart-color': activeColor }"
           class="secb-love-chart__legend-icon"
         />
-        <span>=2%</span>
+        <span> =2%</span>
       </div>
     </div>
   </div>
