@@ -618,7 +618,8 @@ function handleIsEntered(shouldEnter: boolean) {
 .sec-b-transition {
   // Only transition visual properties, not layout/transform properties
   // This prevents conflicts with GSAP animations during fast scrolling
-  transition: background-color 2s, color 2s;
+  transition: background-color 2s cubic-bezier(0.25, 0.1, 0.25, 1),
+    color 2s cubic-bezier(0.25, 0.1, 0.25, 1);
 
   /* LSectionBIntro.vue */
   path:not(.secb-card-love path),
