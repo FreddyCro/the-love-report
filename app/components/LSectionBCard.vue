@@ -1,14 +1,26 @@
 <script lang="ts" setup>
-defineProps<{
+const props = defineProps<{
   title: string;
   description: string;
   note?: string;
+  index?: number;
 }>();
+
+// Determine if this card is odd or even (1-based index)
+const isOdd = computed(() => {
+  if (props.index === undefined) return true;
+  return (props.index + 1) % 2 === 1;
+});
+
+const borderColor = computed(() => {
+  return isOdd.value ? 'var(--color-love-red-03)' : 'var(--color-love-blue-03)';
+});
 </script>
 
 <template>
   <div
-    class="state-card px-6 py-7 md:px-8 lg:py-8 lg:px-[39px] rounded-[20px] border border-love-red-03 bg-white text-text"
+    class="state-card px-6 py-7 md:px-8 lg:py-8 lg:px-[39px] rounded-[20px] border bg-white text-text"
+    :style="{ borderColor }"
   >
     <h3 class="l-h3 font-bold mb-2 sm:mb-1">{{ title }}</h3>
     <p class="l-p" v-html="description" />

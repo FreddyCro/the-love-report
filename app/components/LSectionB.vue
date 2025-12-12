@@ -158,15 +158,16 @@ onMounted(async () => {
   await nextTick();
 
   // Initialize animation using composable
-  cleanupCardsAnimation = await useCardsAnimation(gsap, ScrollTrigger, {
-    cardsContainerClass: '.sec-b__cards-container',
-    cardClass: `.${JS_CLASSES.CARD}`,
-    cardsFallbackClass: '.state-card',
-    cardData: data,
-    cardStaggerDelay: CARD_STAGGER_DELAY,
-    scrollPerCard: 135,
-    scrollTriggerInstances,
-  });
+  cleanupCardsAnimation =
+    (await useCardsAnimation(gsap, ScrollTrigger, {
+      cardsContainerClass: '.sec-b__cards-container',
+      cardClass: `.${JS_CLASSES.CARD}`,
+      cardsFallbackClass: '.state-card',
+      cardData: data,
+      cardStaggerDelay: CARD_STAGGER_DELAY,
+      scrollPerCard: 135,
+      scrollTriggerInstances,
+    })) ?? null;
 
   // Mark as ready - triggers fade-in via CSS transition
   isAnimationReady.value = true;
@@ -284,6 +285,7 @@ function handleIsEntered(shouldEnter: boolean) {
             :title="item.title"
             :description="item.description"
             :note="item.note"
+            :index="index + 1"
           >
             <!-- Render different placeholder content based on item.chart (A..F) -->
             <div
@@ -653,19 +655,15 @@ function handleIsEntered(shouldEnter: boolean) {
   &--1,
   &--3,
   &--5 {
-    .state-card {
-      span {
-        background-color: var(--color-love-blue-01);
-      }
+    .mark {
+      background-color: var(--color-love-blue-01);
     }
   }
 
   &--2,
   &--6 {
-    .state-card {
-      span {
-        background-color: var(--color-love-red-01);
-      }
+    .mark {
+      background-color: var(--color-love-red-01);
     }
   }
 }
