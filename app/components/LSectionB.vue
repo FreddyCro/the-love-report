@@ -273,7 +273,11 @@ function handleIsEntered(shouldEnter: boolean) {
         <div
           v-for="(item, index) in data"
           :key="index"
-          :class="['state-card-wrapper', JS_CLASSES.WRAPPER]"
+          :class="{
+            [JS_CLASSES.WRAPPER]: true,
+            'state-card-wrapper': true,
+            [`state-card-wrapper--${index + 1}`]: true,
+          }"
         >
           <LSectionBCard
             :class="['state-card', JS_CLASSES.CARD]"
@@ -645,6 +649,25 @@ function handleIsEntered(shouldEnter: boolean) {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &--1,
+  &--3,
+  &--5 {
+    .state-card {
+      span {
+        background-color: var(--color-love-blue-01);
+      }
+    }
+  }
+
+  &--2,
+  &--6 {
+    .state-card {
+      span {
+        background-color: var(--color-love-red-01);
+      }
+    }
+  }
 }
 
 // LSectionBCard.vue
