@@ -17,7 +17,6 @@ interface CaseItem {
 	id: string;
 	name: string;
 	age: string;
-	occupation: string;
 	tag?: string;
 	story: string;
 	sections: Section[];
@@ -341,10 +340,6 @@ const getTransformX = computed(() => {
 					<div class="flex-1 text-black">
 						<h3 class="mb-2 l-h4 font-bold">
 							{{ caseItem.name }}
-							<span class="text-card-regular"
-								>{{ caseItem.age }}{{ caseItem.occupation ? " | " : ""
-								}}{{ caseItem.occupation }}</span
-							>
 						</h3>
 						<div v-if="caseItem.tag" class="text-card-bold mb-2">
 							{{ caseItem.tag }}

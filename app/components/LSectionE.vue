@@ -44,7 +44,7 @@ const cases = sectionEData.cases as CaseItem[];
 </script>
 
 <template>
-	<section class="section-e min-h-screen l-article bg-white rounded-t-[120px] py-15 sm:pt-20 sm:pb-30">
+	<section class="section-e min-h-screen l-article bg-background pt-35 pb-30 sm:pt-45 lg:pt-50 -mt-20 sm:-mt-25 lg:-mt-30">
 		<div class="l-container">
 			<LSectionHeader
 				:title="content.title"
@@ -57,14 +57,14 @@ const cases = sectionEData.cases as CaseItem[];
 			<!-- Cases -->
 			<div v-for="caseItem in cases" :key="caseItem.index" class="mt-14 sm:mt-17">
 				<!-- Step Indicator -->
-				<h3 class="section-e__step pb-2 mb-2 border-b border-black font-bold">
+				<h3 class="section-e__step text-black pb-2 mb-2 border-b border-black font-bold">
 					{{ caseItem.title }}
 				</h3>
 
 				<!-- Content Blocks -->
 				<div v-for="(block, blockIndex) in caseItem.content" :key="blockIndex">
 					<!-- Title Block -->
-					<h5 v-if="block.type === 'title'" class="mb-5 l-h5 font-bold pb-2 border-b border-black sm:pb-0 sm:border-0">
+					<h5 v-if="block.type === 'title'" class="mb-5 l-h5 font-bold">
 						{{ block.desc }}
 					</h5>
 
@@ -81,7 +81,7 @@ const cases = sectionEData.cases as CaseItem[];
 					<!-- Comment Block -->
 					<div
 						v-else-if="block.type === 'comment'"
-						class="px-6 py-2.5 border-2 max-w-117.25 mb-9 mx-auto"
+						class="text-black px-5.5 py-2.5 border-2 max-w-118.25 mb-9 mx-auto"
 						:class="[
 							block.style?.color === 'red'
 								? 'border-love-red-03'

@@ -154,7 +154,7 @@ onBeforeUnmount(() => {
         >
           <p class="text-love-red-03">{{ caseItem.index }}</p>
         </div>
-        <h3 class="mt-1 pb-3 text-center border-b border-black l-h3 font-bold">
+        <h3 class="mt-1 pb-3 text-center border-b border-black l-h3 font-bold text-black">
           {{ caseItem.title }}
         </h3>
         <h5 class="pt-3 l-h5 font-bold">{{ caseItem.desc }}</h5>
@@ -222,7 +222,7 @@ onBeforeUnmount(() => {
                   :height="138"
                 />
               </div>
-              <h4 class="mb-0 sm:hidden l-h4 font-bold">
+              <h4 class="mb-0 sm:hidden l-h4 text-black font-bold">
                 {{ story.name }}
               </h4>
             </div>
@@ -232,7 +232,7 @@ onBeforeUnmount(() => {
               class="flex-1 flex flex-col"
               :class="story.position === 'left' ? 'items-start' : 'items-end'"
             >
-              <h4 class="mb-1 l-h4 font-bold hidden sm:block">
+              <h4 class="mb-1 l-h4 text-black font-bold hidden sm:block">
                 {{ story.name }}
               </h4>
               <!-- Content -->
